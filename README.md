@@ -12,6 +12,14 @@ Futuramente, o player contará com novas funcionalidades úteis.
 Website oficial: http://fabiopichler.net/tche-media-player/
 
 
+### Projeto para Estudos
+Este projeto, tem a única finalidade de estudos, portanto, não aceito ajuda, de nenhum tipo, seja Pull Request ou o que for.
+
+E aceito, sem problemas, que me reportem bugs em [Issues](https://github.com/fabiopichler/Tche-Media-Player/issues) (ou sei lá como) ou deem sugestões.
+
+Em outras palavras, não aceito que me enviem códigos, ou seja, que não façam por mim. Porém, caso queira implementar suas próprias funcionalidades, terá que fazer sua própria versão do programa, respeitando a licença BSD e licença das bibliotecas usadas.
+
+
 ### Baixar
 Acesse: http://fabiopichler.net/download/tche-media-player/
 
