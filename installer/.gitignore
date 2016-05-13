@@ -1,0 +1,7 @@
+linux/files-x64/*
+linux/files-x86/*
+linux/output/*
+windows/files-MinGW-x86/*
+windows/files-x64/*
+windows/files-x86/*
+windows/output/*

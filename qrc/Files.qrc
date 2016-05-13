@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icon.png</file>
+        <file>icon2.png</file>
+        <file>tray-icons/icon-1.png</file>
+        <file>fonts/verdana.ttf</file>
+        <file>fonts/verdanab.ttf</file>
+        <file>RadioList.tmpr</file>
+    </qresource>
+</RCC>

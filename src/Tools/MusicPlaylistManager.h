@@ -1,0 +1,105 @@
+/*******************************************************************************
+  Tchê Media Player
+
+  Copyright (c) 2016, Fábio Pichler
+  All rights reserved.
+
+  License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
+  Author: Fábio Pichler
+  Website: http://fabiopichler.net
+
+*******************************************************************************/
+
+#pragma once
+
+#include "../Core/Database.h"
+#include "../Gui/DialogBase.h"
+#include "../Gui/DropArea.h"
+
+#include <qdialog.h>
+#include <QTreeView>
+#include <QStandardItem>
+#include <QSettings>
+#include <QDir>
+#include <QFile>
+#include <QDebug>
+#include <QMenu>
+#include <QFileDialog>
+#include <QInputDialog>
+
+class MusicPlaylistTreeView;
+class MusicPlaylistManager : public DialogBase
+{
+    Q_OBJECT
+
+public:
+    MusicPlaylistManager(QWidget *);
+    ~MusicPlaylistManager();
+    void loadPlaylist();
+
+public slots:
+    void closePlaylist();
+    void updatePlaylistStyle(bool arg = false);
+
+private:
+    void createWidgets();
+    void createLabels();
+    void createButtons();
+    void createBoxLayout();
+    void createEvents();
+    bool eventFilter(QObject * obj, QEvent *event);
+
+private slots:
+    void ok();
+    void addFiles();
+    void addDirectory();
+    bool newPlaylist(bool close = true);
+    void openPlaylist();
+    void savePlaylist(int arg = 0);
+    void savePlaylistAs();
+    void closeDefaultPlaylist();
+    void shuffle();
+    void receiveMessage(QStringList);
+
+public:
+    MusicPlaylistTreeView *playlist;
+    bool playlistChanged;
+
+private:
+    QWidget *parent;
+    Widget *topWidget, *selectPlWidget;
+    DropArea *dropArea;
+    QMenu *menu;
+    QLabel *plSelectedLabel, *topTitle, *topDesc;
+    QPushButton *menuButton, *openPlButton, *okButton, *applyButton, *cancelButton;
+    QAction *addFilesAction, *addDirAction, *newPlAction, *openPlAction, *savePlAction, *savePlAsAction, *closePlAction,
+    *selectAllRowsAction, *delSelectedAction, *delAllAction, *shuffleAction;
+};
+
+class MusicPlaylistTreeView : public QTreeView
+{
+    Q_OBJECT
+
+public:
+    MusicPlaylistTreeView(QWidget *parent = 0);
+    ~MusicPlaylistTreeView();
+    void addRow(const QString &);
+    int length();
+    bool isEmpty();
+    QStringList getAllRows();
+
+public slots:
+    void selectAllRows();
+    void removeSelectedRows();
+    void clear(bool update = true);
+
+private:
+    void keyPressEvent(QKeyEvent *);
+
+signals:
+    void updatePlaylistStyle();
+
+private:
+    QStandardItemModel* model;
+    QWidget *parent;
+};

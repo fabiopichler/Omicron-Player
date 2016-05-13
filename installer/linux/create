@@ -1,0 +1,30 @@
+#!/bin/bash
+
+#*******************************************************************************
+#  Tchê Media Player Installer
+#
+#  Copyright (c) 2016, Fábio Pichler
+#  All rights reserved.
+#
+#  License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
+#  Author: Fábio Pichler
+#  Website: http://fabiopichler.net
+#
+#*******************************************************************************
+
+DIR_NAME="TcheMediaPlayer-1.0-setup-Linux-x64"
+
+mkdir output/${DIR_NAME}
+
+cd output
+
+cp 7zr "${DIR_NAME}"
+cp ../install "${DIR_NAME}"
+cp ../LICENSE "${DIR_NAME}"
+cp ../uninstall "${DIR_NAME}"
+
+chmod +x "${DIR_NAME}/7zr"
+chmod +x "${DIR_NAME}/install"
+chmod +x "${DIR_NAME}/uninstall"
+
+./7zr a "${DIR_NAME}/data.bin" "../Tche-Media-Player"

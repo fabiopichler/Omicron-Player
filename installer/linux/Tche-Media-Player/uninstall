@@ -1,0 +1,56 @@
+#!/bin/bash
+
+#*******************************************************************************
+#  Tchê Media Player Installer
+#
+#  Copyright (c) 2016, Fábio Pichler
+#  All rights reserved.
+#
+#  License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
+#  Author: Fábio Pichler
+#  Website: http://fabiopichler.net
+#
+#*******************************************************************************
+
+echo
+echo "Tchê Media Player (Desinstalação)"
+echo "Copyright (c) 2016 Fábio Pichler, Todos os direitos Reservados"
+echo
+
+if [ ! `whoami` = "root" ]
+then
+    echo "Para iniciar a desinstalação, é preciso fazer login como root"
+    echo
+    exit
+fi
+
+count=0
+
+echo "Iniciando o programa de desinstalação..."
+echo
+echo "Removendo arquivos..."
+
+if rm "/opt/Tche-Media-Player/" -R
+then
+    let count++
+else
+    echo "Erro ao remover os arquivos em: /opt/Tche-Media-Player/"
+fi
+
+if rm "/usr/share/applications/Tche-Media-Player.desktop"
+then
+    let count++
+else
+    echo "Erro ao remover o arquivo: /usr/share/applications/Tche-Media-Player.desktop"
+fi
+
+echo
+
+if [ $count -eq 2 ]
+then
+    echo "O Tchê Media Player foi desinstalado com sucesso"
+else
+    echo "Erro ao desinstalar o Tchê Media Player"
+fi
+
+echo

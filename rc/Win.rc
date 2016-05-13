@@ -1,0 +1,51 @@
+/*******************************************************************************
+  Tchê Media Player
+
+  Copyright (c) 2016, Fábio Pichler
+  All rights reserved.
+
+  License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
+  Author: Fábio Pichler
+  Website: http://fabiopichler.net
+
+*******************************************************************************/
+
+#include <windows.h>
+#include "../src/Version.h"
+
+MAIN_ICON ICON "icon.ico"
+MUSIC_ICON ICON "music.ico"
+PLAYLIST_ICON ICON "playlist.ico"
+
+1 VERSIONINFO
+ FILEVERSION PRODUCT_VERSION
+ PRODUCTVERSION PRODUCT_VERSION
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS VOS__WINDOWS32
+ FILETYPE VFT_APP
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+			VALUE "CompanyName",       "Fábio Pichler"
+            VALUE "FileDescription",   "Tchê Media Player"
+            VALUE "FileVersion",       FILE_VERSION
+            VALUE "InternalName",      ORIGINAL_FILENAME
+            VALUE "LegalCopyright",    "Copyright © 2016, Fábio Pichler"
+            VALUE "OriginalFilename",  ORIGINAL_FILENAME ".exe"
+            VALUE "ProductName",       "Tchê Media Player"
+            VALUE "ProductVersion",    PRODUCT_VERSION_STR
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0416, 1200
+    END
+END

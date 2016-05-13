@@ -1,0 +1,75 @@
+#!/bin/bash
+
+#*******************************************************************************
+#  Tchê Media Player Installer
+#
+#  Copyright (c) 2016, Fábio Pichler
+#  All rights reserved.
+#
+#  License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
+#  Author: Fábio Pichler
+#  Website: http://fabiopichler.net
+#
+#*******************************************************************************
+
+echo
+echo "Tchê Media Player 1.0 (Instalação)"
+echo "Copyright (c) 2016 Fábio Pichler, Todos os direitos Reservados"
+echo
+
+if [ ! `whoami` = "root" ]
+then
+    echo "Para iniciar a instalação, é preciso fazer login como root."
+    echo "Abortado..."
+    echo
+    exit
+fi
+
+echo "Iniciando o programa de instalação..."
+echo
+
+INSTALL_PATH="/opt/"
+INSTALL_DIR="Tche-Media-Player/"
+CURRENT_PATH=`echo $0|sed 's/install//'`
+count=0
+
+chmod +x "${CURRENT_PATH}7zr"
+
+echo "Extraindo arquivos..."
+
+if "${CURRENT_PATH}7zr" x -y "${CURRENT_PATH}data.bin" -o"${INSTALL_PATH}" $1 > /dev/null 2> /dev/null
+then
+    let count++
+    
+    echo "Arquivos extraídos... Ok"
+    echo
+    echo "Instalando arquivos necessários..."
+
+    chmod +x "${INSTALL_PATH}${INSTALL_DIR}Tche-Media-Player"
+    chmod +x "${INSTALL_PATH}${INSTALL_DIR}uninstall"
+    chmod +x "${INSTALL_PATH}${INSTALL_DIR}7zr"
+
+    if mv -f "${INSTALL_PATH}${INSTALL_DIR}Tche-Media-Player.desktop" "/usr/share/applications/" $1 > /dev/null 2> /dev/null
+    then
+        let count++
+        echo "Arquivos instalados... Ok"
+    else
+        echo "Erro ao instalar alguns arquivos"
+    fi
+else
+    echo "Houve um erro ao extrair os arquivos"
+fi
+
+echo
+
+if [ $count -eq 2 ]
+then
+    echo "O Tchê Media Player foi instalado com sucesso"
+    echo
+    echo "Caso queira desinstalá-lo, execute este comando como administrador (root):"
+    echo "/opt/Tche-Media-Player/uninstall"
+else
+    echo "ERRO! Não foi possível instalar o Tchê Media Player"
+fi
+
+echo
