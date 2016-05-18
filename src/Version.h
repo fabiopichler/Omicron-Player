@@ -34,7 +34,7 @@
 #define OFFICIAL_WEBSITE "http://fabiopichler.net/tche-media-player/"
 
 ;// Nome do arquivo da lista de rádios
-#define FILE_RADIOLIST "RadioList_2016-04-19.tmpr"
+#define FILE_RADIOLIST "RadioList_2016-05-16.tmpr"
 
 ;// Data de lançamento da lista de rádios
-#define FILE_RADIOLIST_DATE "2016-04-19"
+#define FILE_RADIOLIST_DATE "2016-05-16"
