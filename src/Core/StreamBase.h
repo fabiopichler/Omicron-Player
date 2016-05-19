@@ -26,6 +26,7 @@ public:
 
 public slots:
     void updateFX(int, int);
+    void setVolume(int);
 
 protected:
     void setupDSP_EQ();
@@ -35,4 +36,7 @@ protected:
 
     bool mplay, mpause, mprev;
     bool mstop;
+
+private:
+    int volume;
 };

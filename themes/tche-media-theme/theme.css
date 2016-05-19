@@ -254,7 +254,8 @@ QPushButton#random,
 QPushButton#musicPlaylist,
 QPushButton#changeFavorite,
 QPushButton#openLink,
-QPushButton#radioPlaylist{
+QPushButton#radioPlaylist,
+QPushButton#volumeBt {
     background: none;
     border: none;
     height: 30px;
@@ -270,7 +271,8 @@ QPushButton#random,
 QPushButton#musicPlaylist,
 QPushButton#changeFavorite,
 QPushButton#openLink,
-QPushButton#radioPlaylist {
+QPushButton#radioPlaylist,
+QPushButton#volumeBt {
     height: 24px;
     width: 24px;
     min-width: 24px;
@@ -287,7 +289,8 @@ QPushButton#random:hover,
 QPushButton#musicPlaylist:hover,
 QPushButton#changeFavorite:hover,
 QPushButton#openLink:hover,
-QPushButton#radioPlaylist:hover {
+QPushButton#radioPlaylist:hover,
+QPushButton#volumeBt:hover{
     background: rgba(250,250,250,0.5);
     border: 1px solid #777;
 }
@@ -558,15 +561,6 @@ QSlider#timeSlider::sub-page:horizontal {
     background: rgb(94,145,203);
     border-radius: 4px;
 }
-/*QSlider#volumeSlider::groove:horizontal {
-    border: 1px solid rgb(185,190,210);
-    height: 16px;
-    margin: 0;
-}
-QSlider#volumeSlider::handle:horizontal {
-    width: 8px;
-    margin: -1px;
-}*/
 
 /* QComboBox
 --------------------------------------------------------- */

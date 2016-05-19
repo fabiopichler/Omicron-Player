@@ -70,7 +70,8 @@ SOURCES += src/Main.cpp \
     src/Tools/RadioPlaylistManager.cpp \
     src/Core/Theme.cpp \
     src/Gui/Widget.cpp \
-    src/Gui/MainWindow.cpp
+    src/Gui/MainWindow.cpp \
+    src/Gui/VolumeControl.cpp
 
 HEADERS += src/Main.h \
     src/Version.h \
@@ -96,6 +97,7 @@ HEADERS += src/Main.h \
     src/Tools/RadioPlaylistManager.h \
     src/Core/Theme.h \
     src/Gui/Widget.h \
-    src/Gui/MainWindow.h
+    src/Gui/MainWindow.h \
+    src/Gui/VolumeControl.h
 
 win32:RC_FILE = rc/Win.rc

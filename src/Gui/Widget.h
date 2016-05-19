@@ -38,7 +38,7 @@ public:
 class Slider : public QSlider
 {
 public:
-    Slider(Qt::Orientation);
+    Slider(Qt::Orientation, QWidget *parent = nullptr);
 
 private:
     void mousePressEvent(QMouseEvent *);

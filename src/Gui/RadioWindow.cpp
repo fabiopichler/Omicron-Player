@@ -38,6 +38,8 @@ RadioWindow::RadioWindow(QObject *parentMain, QWidget *parent) : Widget(parent)
 
 RadioWindow::~RadioWindow()
 {
+    Database::setValue("Current", "volume", volumeControl->volume());
+
     delete radioStream;
     delete errorWindow;
 }
@@ -79,6 +81,12 @@ void RadioWindow::createMenuBar()
 
 void RadioWindow::createWidgets()
 {
+    int volume = Database::value("Current", "volume", 100).toInt();
+
+    volumeControl = new VolumeControl(this);
+    volumeControl->setVolume(volume);
+    radioStream->setVolume(volume);
+
     loaderMovie = new QMovie(Global::getThemePath("images/ajax-loader.gif"));
 
     searchLineEdit = new QLineEdit;
@@ -212,6 +220,7 @@ void RadioWindow::createLayouts()
     bottomLayout->addWidget(nextButton);
     bottomLayout->addWidget(recordButton);
     bottomLayout->addLayout(channelLayout);
+    bottomLayout->addWidget(volumeControl);
     bottomLayout->setAlignment(Qt::AlignBottom);
     bottomLayout->setSpacing(5);
     bottomLayout->setContentsMargins(8,0,8,0);
@@ -241,6 +250,7 @@ void RadioWindow::createLayouts()
 void RadioWindow::createEvents()
 {
     connect(errorWindow, SIGNAL(stopStream()), radioStream, SLOT(stop()));
+    connect(volumeControl, &VolumeControl::volumeChanged, radioStream, &RadioStream::setVolume);
 
     connect(this, SIGNAL(showNotification(QString)), parentMain, SLOT(showNotification(QString)));
     connect(this, SIGNAL(showError(QString)), parentMain, SLOT(showError(QString)));
@@ -443,7 +453,7 @@ void RadioWindow::changeFavorite()
     {
         if (Database::value("RadioMode", "playlistMode").toInt() == 2)
         {
-            if (Database::remove("RadioFavorites", playlist->getRadioName(selectedRows[0].row()).replace("'","&#39;"), "title"))
+            if (Database::remove("RadioFavorites", "title", playlist->getRadioName(selectedRows[0].row()).replace("'","&#39;")))
             {
                 emit showNotification("Favorito Removido");
                 playlist->removeRow(selectedRows[0].row());

@@ -19,6 +19,7 @@
 #include "../Tools/RadioPlaylistManager.h"
 #include "ErrorWindow.h"
 #include "Widget.h"
+#include "VolumeControl.h"
 
 #include <QPushButton>
 #include <QHBoxLayout>
@@ -85,6 +86,7 @@ private:
     QMovie *loaderMovie;
     QProgressBar *leftChProgressBar, *rightChProgressBar, *bufferProgressBar;
     QLineEdit *searchLineEdit;
+    VolumeControl *volumeControl;
     ErrorWindow *errorWindow;
     bool showLoader;
 };

@@ -35,7 +35,7 @@ ComboBox::ComboBox()
 // class Slider
 //================================================================================================================
 
-Slider::Slider(Qt::Orientation orientation) : QSlider(orientation)
+Slider::Slider(Qt::Orientation orientation, QWidget *parent) : QSlider(orientation, parent)
 {
     sendEvent = false;
     setPageStep(0);

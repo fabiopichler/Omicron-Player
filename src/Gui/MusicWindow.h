@@ -18,6 +18,7 @@
 #include "../Tools/Equalizer.h"
 #include "DropArea.h"
 #include "ErrorWindow.h"
+#include "VolumeControl.h"
 
 #include <QPushButton>
 #include <QHBoxLayout>
@@ -86,11 +87,12 @@ private:
         *clearPlaylistAction,*exitAction,*radioModeAction,*playlistAction,*equalizerAction,*checkUpdateAction,
         *websiteAction, *aboutAction, *configAction;
     QPushButton *playButton,*pauseButton,*stopButton,*prevButton,*nextButton,*repeatButton,*randomButton,*playlistButton,
-        *playlistModeButton,*musicModeButton,*favoriteButton, *changeFavoriteButton, *muteButton;
+        *playlistModeButton,*musicModeButton,*favoriteButton, *changeFavoriteButton;
     QLabel *timeLabel,*totalTimeLabel,*currentSoundLabel,*totalSoundLabel,*currentTagLabel,*separatorLabel;
-    Slider *timeSlider, *volumeSlider;
+    Slider *timeSlider;
     QProgressBar *leftChProgressBar, *rightChProgressBar;
     QLineEdit *searchLineEdit;
+    VolumeControl *volumeControl;
     ErrorWindow *errorWindow;
     bool notDisableButtons, updateListStyle;
 };

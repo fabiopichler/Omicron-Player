@@ -16,7 +16,7 @@
 
 StreamBase::StreamBase()
 {
-
+    volume = 0;
 }
 
 //================================================================================================================
@@ -40,6 +40,12 @@ void StreamBase::updateFX(int index, int value)
         eq.fGain = static_cast<float>(value);
         BASS_FXSetParameters(fxEQ, &eq);
     }
+}
+
+void StreamBase::setVolume(int volume)
+{
+    this->volume = volume;
+    BASS_ChannelSetAttribute(stream, BASS_ATTRIB_VOL, static_cast<float>(volume) / 100.0f);
 }
 
 //================================================================================================================
@@ -70,4 +76,6 @@ void StreamBase::setupDSP_EQ()
 
     for (i = 0; i < 16; i++)
         updateFX(i, Global::equalizerValues[i]);
+
+    setVolume(volume);
 }

@@ -273,7 +273,8 @@ QPushButton#random,
 QPushButton#musicPlaylist,
 QPushButton#changeFavorite,
 QPushButton#openLink,
-QPushButton#radioPlaylist {
+QPushButton#radioPlaylist,
+QPushButton#volumeBt {
     background: none;
     height: 24px;
     width: 24px;
@@ -286,7 +287,8 @@ QPushButton#random:hover,
 QPushButton#musicPlaylist:hover,
 QPushButton#changeFavorite:hover,
 QPushButton#openLink:hover,
-QPushButton#radioPlaylist:hover {
+QPushButton#radioPlaylist:hover,
+QPushButton#volumeBt:hover {
     background: #cecece;
 }
 QPushButton#tabStyle {

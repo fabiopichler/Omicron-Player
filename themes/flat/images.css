@@ -87,3 +87,10 @@ QPushButton#radioPlaylist {
     qproperty-icon: url("{theme_path}images/Document.png");
     qproperty-iconSize: 24px 24px;
 }
+QPushButton#volumeBt {
+    qproperty-icon: url("{theme_path}images/Volume.png");
+    qproperty-iconSize: 24px 24px;
+}
+QPushButton#volumeBt[mute="true"] {
+    qproperty-icon: url("{theme_path}images/Volume-Mute.png");
+}

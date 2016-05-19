@@ -52,6 +52,8 @@ MusicWindow::MusicWindow(QObject *parentMain, QWidget *parent) : DropArea(parent
 
 MusicWindow::~MusicWindow()
 {
+    Database::setValue("Current", "volume", volumeControl->volume());
+
     delete musicStream;
     delete errorWindow;
 }
@@ -101,16 +103,16 @@ void MusicWindow::createMenuBar()
 
 void MusicWindow::createWidgets()
 {
+    int volume = Database::value("Current", "volume", 100).toInt();
+
+    volumeControl = new VolumeControl(this);
+    volumeControl->setVolume(volume);
+    musicStream->setVolume(volume);
+
     timeSlider = new Slider(Qt::Horizontal);
     timeSlider->setEnabled(false);
     timeSlider->setMaximum(0);
     timeSlider->setObjectName("timeSlider");
-
-    /*volumeSlider = new Slider(Qt::Horizontal);
-    volumeSlider->setMaximum(100);
-    volumeSlider->setFixedWidth(100);
-    volumeSlider->setStyleSheet("background: none");
-    volumeSlider->setObjectName("volumeSlider");*/
 
     searchLineEdit = new QLineEdit;
     searchLineEdit->setObjectName("searchLineEdit");
@@ -186,7 +188,6 @@ void MusicWindow::createButtons()
     playlistModeButton = new QPushButton("Playlist");
     musicModeButton = new QPushButton("Músicas/CD");
     favoriteButton = new QPushButton("Favoritos");
-    //muteButton = new QPushButton;
 
     playButton->setToolTip("Reproduzir");
     pauseButton->setToolTip("Pausar");
@@ -207,7 +208,6 @@ void MusicWindow::createButtons()
     playlistModeButton->setObjectName("tabStyle");
     musicModeButton->setObjectName("tabStyle");
     favoriteButton->setObjectName("tabStyleLast");
-    //muteButton->setObjectName("volumeButton");
 
     pauseButton->setEnabled(false);
     stopButton->setEnabled(false);
@@ -226,8 +226,6 @@ void MusicWindow::createLayouts()
     labelLayout->setSpacing(0);
 
     QHBoxLayout *topLayout = new QHBoxLayout;
-    //topLayout->addWidget(volumeSlider);
-    //topLayout->addWidget(muteButton);
     topLayout->addWidget(changeFavoriteButton);
     topLayout->addStretch(1);
     topLayout->addLayout(labelLayout);
@@ -277,6 +275,7 @@ void MusicWindow::createLayouts()
     bottomLayout->addWidget(prevButton);
     bottomLayout->addWidget(nextButton);
     bottomLayout->addLayout(channelLayout);
+    bottomLayout->addWidget(volumeControl);
     bottomLayout->setAlignment(Qt::AlignBottom);
     bottomLayout->setSpacing(5);
     bottomLayout->setContentsMargins(8,0,8,0);
@@ -314,6 +313,8 @@ void MusicWindow::createEvents()
     connect(musicStream, SIGNAL(updatePlaylistStyle()), this, SLOT(updatePlaylistStyle()));
     connect(this, SIGNAL(dragAndDrop(bool)), this, SLOT(updatePlaylistStyle(bool)));
     connect(errorWindow, SIGNAL(stopStream()), musicStream, SLOT(stop()));
+
+    connect(volumeControl, &VolumeControl::volumeChanged, musicStream, &MusicStream::setVolume);
 
     connect(openMusicAction, SIGNAL(triggered()), this, SLOT(openMusic()));
     connect(addMusicAction, SIGNAL(triggered()), this, SLOT(addMusic()));
@@ -732,7 +733,7 @@ void MusicWindow::changeFavorite()
     {
         if (Database::value("MusicMode", "playlistMode").toInt() == 2)
         {
-            if (Database::remove("MusicFavorites", playlist->getRow(selectedRows[0].row()).replace("'","&#39;"), "path"))
+            if (Database::remove("MusicFavorites", "path", playlist->getRow(selectedRows[0].row()).replace("'","&#39;")))
             {
                 emit showNotification("Favorito Removido");
                 playlist->removeRow(selectedRows[0].row());
