@@ -25,14 +25,16 @@ public:
     static void free();
 
     // Values
-    static bool addValue(const QString &, const QString &, const QVariant &);
+    static bool add(const QString &, const QString &, const QVariant &);
     static bool setValue(const QString &, const QString &, const QVariant &);
     static bool setValues(const QString &, const QVariantList &, const QVariantList &);
     static QVariant value(const QString &, const QString &, const QVariant &defValue = QVariant());
+    static bool exist(const QString &, const QString &);
 
     // Remove
     static bool clear(const QString &, const QString &);
-    static bool remove(const QString &, const QString &id = QString(), const QString &col = QString());
+    static bool remove(const QString &, const QString &, const QString &);
+    static bool removeRows(const QString &);
     static bool removeTable(const QString &);
     static bool removeDatabase();
 
@@ -51,6 +53,7 @@ public:
 
     // Others
     static void defaultConfig();
+    static void upgrade();
 
 private:
     static QSqlDatabase *db;

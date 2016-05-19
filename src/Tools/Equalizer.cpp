@@ -315,7 +315,7 @@ void Equalizer::deletePreset()
         if (QMessageBox::question(this, "Apagar", "Confirmar a exclusão de: " + presetCombo->currentText() + "?",
                                   QMessageBox::Yes|QMessageBox::No) == QMessageBox::Yes)
         {
-            Database::remove("EqualizerPreset", presetCombo->currentData().toString());
+            Database::remove("EqualizerPreset", "id", presetCombo->currentData().toString());
             loadPresetIndex();
         }
     }

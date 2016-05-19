@@ -196,6 +196,7 @@ bool Main::init(const int &argc)
     {
         if (Database::value("Version", "current").toString() != CurrentVersion)
         {
+            Database::upgrade();
             Database::setValue("Version", "current", CurrentVersion);
             Database::setValue("Version", "checkUpdateDay", 0);
 #ifdef Q_OS_WIN

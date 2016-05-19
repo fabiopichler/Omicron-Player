@@ -60,7 +60,7 @@ void Database::free()
 // Values
 //================================================================================================================
 
-bool Database::addValue(const QString &table, const QString &id, const QVariant &value)
+bool Database::add(const QString &table, const QString &id, const QVariant &value)
 {
     if (!db) return false;
 
@@ -118,6 +118,19 @@ QVariant Database::value(const QString &table, const QString &id, const QVariant
     return (!value.toString().isEmpty() ? value : defValue);
 }
 
+bool Database::exist(const QString &table, const QString &id)
+{
+    if (!db) return false;
+
+    QSqlQuery query(*db);
+    query.exec(QString("SELECT id FROM %1 WHERE id = '%2'").arg(table, id));
+
+    if (query.next())
+        return !query.value(0).toString().isEmpty();
+
+    return false;
+}
+
 //================================================================================================================
 // Remove
 //================================================================================================================
@@ -127,10 +140,16 @@ bool Database::clear(const QString &table, const QString &id)
     return setValue(table, id, QVariant());
 }
 
-bool Database::remove(const QString &table, const QString &id, const QString &col)
+bool Database::remove(const QString &table, const QString &col, const QString &row)
 {
     if (!db) return false;
-    return QSqlQuery(*db).exec("DELETE FROM " + table + (id.isEmpty() ? "" : " WHERE " + (col.isEmpty() ? "id" : col) + " = '" + id + "'"));
+    return QSqlQuery(*db).exec("DELETE FROM " + table + " WHERE " + col + " = '" + row + "'");
+}
+
+bool Database::removeRows(const QString &table)
+{
+    if (!db) return false;
+    return QSqlQuery(*db).exec("DELETE FROM " + table);
 }
 
 bool Database::removeTable(const QString &table)
@@ -324,13 +343,13 @@ void Database::defaultConfig()
 
     QSqlQuery query(*db);
 
-    query.exec("CREATE TABLE Version (id TEXT PRIMARY KEY, value TEXT)");
+    query.exec("CREATE TABLE IF NOT EXISTS Version (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO Version VALUES "
                "('current', '0'), "
                "('checkUpdate', 'true'), "
                "('checkUpdateDay', '0')");
 
-    query.exec("CREATE TABLE Config (id TEXT PRIMARY KEY, value TEXT)");
+    query.exec("CREATE TABLE IF NOT EXISTS Config (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO Config VALUES "
                "('theme', 'app:tche-media-theme'), "
                "('style', 'default'), "
@@ -349,15 +368,16 @@ void Database::defaultConfig()
                "('net_proxy', '0'), "
                "('allowAnyFile', 'false')");
 
-    query.exec("CREATE TABLE Current (id TEXT PRIMARY KEY, value TEXT)");
+    query.exec("CREATE TABLE IF NOT EXISTS Current (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO Current VALUES "
                "('mode', 'Music'), "
                "('fileDialog', ''), "
                "('fileDialogDir', ''), "
                "('fileDialogPl', ''), "
+               "('volume', '100'), "
                "('EqualizerPreset', '0')");
 
-    query.exec("CREATE TABLE MusicMode (id TEXT PRIMARY KEY, value TEXT)");
+    query.exec("CREATE TABLE IF NOT EXISTS MusicMode (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO MusicMode VALUES "
                "('playlist', ''), "
                "('playlistMode', '0'), "
@@ -368,7 +388,7 @@ void Database::defaultConfig()
                "('repeat', '0'), "
                "('random', '0')");
 
-    query.exec("CREATE TABLE RadioMode (id TEXT PRIMARY KEY, value TEXT)");
+    query.exec("CREATE TABLE IF NOT EXISTS RadioMode (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO RadioMode VALUES "
                "('playlist', ''), "
                "('playlistMode', '0'), "
@@ -377,16 +397,16 @@ void Database::defaultConfig()
                "('indexFavorites', '0'), "
                "('quick-link', '')");
 
-    query.exec("CREATE TABLE MusicFavorites (path TEXT PRIMARY KEY)");
+    query.exec("CREATE TABLE IF NOT EXISTS MusicFavorites (path TEXT PRIMARY KEY)");
 
-    query.exec("CREATE TABLE RadioFavorites (title TEXT PRIMARY KEY, genre TEXT, contry TEXT, "
+    query.exec("CREATE TABLE IF NOT EXISTS RadioFavorites (title TEXT PRIMARY KEY, genre TEXT, contry TEXT, "
                "url1 TEXT, url2 TEXT, url3 TEXT, url4 TEXT, url5 TEXT)");
 
-    query.exec("CREATE TABLE EqualizerPreset (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, "
+    query.exec("CREATE TABLE IF NOT EXISTS EqualizerPreset (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, "
                "eq0 INTEGER, eq1 INTEGER, eq2 INTEGER, eq3 INTEGER, eq4 INTEGER, eq5 INTEGER, eq6 INTEGER, eq7 INTEGER, "
                "eq8 INTEGER, eq9 INTEGER, eq10 INTEGER, eq11 INTEGER, eq12 INTEGER, eq13 INTEGER, eq14 INTEGER, eq15 INTEGER)");
 
-    query.exec("CREATE TABLE CurrentEqualizer (id INTEGER PRIMARY KEY, value INTEGER)");
+    query.exec("CREATE TABLE IF NOT EXISTS CurrentEqualizer (id INTEGER PRIMARY KEY, value INTEGER)");
     query.exec("INSERT INTO CurrentEqualizer VALUES "
                "(0, 0), "
                "(1, 0), "
@@ -405,3 +425,10 @@ void Database::defaultConfig()
                "(14, 0), "
                "(15, 0)");
 }
+
+void Database::upgrade()
+{
+    if (!exist("Current", "volume"))
+        add("Current", "volume", "100");
+}
+
