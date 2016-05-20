@@ -26,6 +26,8 @@ QWidget#titleBar {
 QWidget#window {
     background: rgba(0,0,0,0,0);
     border: 1px solid #36b;
+    qproperty-marginLayout: 1;
+    qproperty-spacingLayout: 0;
 }
 QWidget#topWidgetDialog {
     background: #cecece;

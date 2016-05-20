@@ -40,13 +40,31 @@ void DialogBase::setLayout(QLayout *layout)
     Widget *mainWidget = new Widget(this);
     mainWidget->setLayout(layout);
 
-    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout = new QVBoxLayout;
     mainLayout->addWidget(titleBar);
     mainLayout->addWidget(mainWidget);
-    mainLayout->setMargin(Theme::get("Margin").toInt());
-    mainLayout->setSpacing(Theme::get("Spacing").toInt());
 
     QDialog::setLayout(mainLayout);
+}
+
+int DialogBase::marginLayout() const
+{
+    return mainLayout->margin();
+}
+
+int DialogBase::spacingLayout() const
+{
+    return mainLayout->spacing();
+}
+
+void DialogBase::setMarginLayout(int margin)
+{
+    mainLayout->setMargin(margin);
+}
+
+void DialogBase::setSpacingLayout(int spacing)
+{
+    mainLayout->setSpacing(spacing);
 }
 
 //================================================================================================================

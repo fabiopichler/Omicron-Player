@@ -28,19 +28,37 @@ void MainWindow::initWindow(Widget *widget)
 {
     centralWidget = widget;
 
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget(titleBar);
-    layout->addWidget(widget, 1);
-    layout->setMargin(Theme::get("Margin").toInt());
-    layout->setSpacing(Theme::get("Spacing").toInt());
+    mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(titleBar);
+    mainLayout->addWidget(widget, 1);
 
-    setLayout(layout);
+    setLayout(mainLayout);
     show();
 }
 
 QString &MainWindow::currentMode()
 {
     return centralWidget->mode;
+}
+
+int MainWindow::marginLayout() const
+{
+    return mainLayout->margin();
+}
+
+int MainWindow::spacingLayout() const
+{
+    return mainLayout->spacing();
+}
+
+void MainWindow::setMarginLayout(int margin)
+{
+    mainLayout->setMargin(margin);
+}
+
+void MainWindow::setSpacingLayout(int spacing)
+{
+    mainLayout->setSpacing(spacing);
 }
 
 //================================================================================================================
