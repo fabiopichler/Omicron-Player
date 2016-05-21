@@ -488,9 +488,14 @@ QProgressBar:horizontal {
     background: #fff;
 }
 QProgressBar::chunk:horizontal {
-    background: rgb(94,145,203);
     width: 3px;
     margin: 0.5px 0.5px 0.5px 0;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 rgb(94,145,203), 
+                                stop: 0.5 rgb(94,145,203),
+                                stop: 0.51 rgb(65,125,175),
+                                stop: 0.54 rgb(65,125,175),
+                                stop: 1.0 rgb(65,125,175));
 }
 
 /* QSlider
