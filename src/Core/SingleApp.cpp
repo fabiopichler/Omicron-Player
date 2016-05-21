@@ -7,6 +7,7 @@
 
 #include <QLocalSocket>
 #include "SingleApp.h"
+#include "Global.h"
 
 SingleApplication::SingleApplication(int &argc, char **argv, const QString &uniqueKey) : QApplication(argc, argv), _uniqueKey(uniqueKey)
 {
@@ -96,7 +97,7 @@ void SingleApplication::receiveMessage()
         return;
     }
 
-    QString message = QString::fromLatin1(localSocket->readAll().constData());
+    QString message = Global::cStrToQString(localSocket->readAll());
 
     message.replace("\\", "/");
 

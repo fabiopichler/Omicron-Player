@@ -64,6 +64,7 @@ public slots:
 
 private:
     void createEvents();
+    bool startRecord();
     static void CALLBACK statusProc(const void *buffer, DWORD length, void *user);
     bool buffering(int &);
     void showTimedout();
@@ -100,7 +101,7 @@ private:
     bool iswma;
     QString fileType, recordFileName, quickLink;
     QFile *recordFile;
-    int selectedUrl, tentativa;
+    int selectedUrl, reconnect;
     double recordTime;
 };
 

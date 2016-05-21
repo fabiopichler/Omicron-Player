@@ -621,7 +621,8 @@ void RadioWindow::update(RadioStream::Event type, QVariant value)
         break;
 
     case RadioStream::RadioName:
-        nameLabel->setText(playlist->getRadioName(value.toInt()));
+        if (!radioStream->isRunning())
+            nameLabel->setText(playlist->getRadioName(value.toInt()));
         break;
 
     case RadioStream::Recording:
@@ -678,6 +679,7 @@ void RadioWindow::threadFinished(bool stop, bool isQuickLink)
     statusLabel->setText("---");
     streamTitleLabel->setText("Parado");
     loaderMovie->stop();
+    recordButton->setEnabled(true);
 
     if (isQuickLink)
         nameLabel->setText("Link Rápido");
@@ -690,7 +692,6 @@ void RadioWindow::threadFinished(bool stop, bool isQuickLink)
     {
         playButton->setEnabled(true);
         stopButton->setEnabled(false);
-        recordButton->setEnabled(true);
     }
 }
 

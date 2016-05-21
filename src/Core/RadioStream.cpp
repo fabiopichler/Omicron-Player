@@ -22,11 +22,12 @@ RadioStream::RadioStream(QWidget *parent) : StreamBase()
     mnext = false;
     newRadio = false;
     isQuickLink = false;
+    iswma = false;
     mrecord = false;
     recordFile = nullptr;
     recordTime = 0;
     selectedUrl = 0;
-    tentativa = 0;
+    reconnect = 0;
 
     playlist = new RadioPlaylist(parent, playlistMode);
     statusTimer = new QTimer(this);
@@ -239,10 +240,7 @@ void RadioStream::next()
 void RadioStream::record()
 {
     if (iswma)
-    {
-        Information(parent, "Não é possível gravar um stream WMA! Esse problema, será corrigido numa próxima versão.");
         return;
-    }
 
     stopRecord();
     emit recordButtonEnabled(false);
@@ -332,6 +330,36 @@ void RadioStream::createEvents()
     connect(metaTimer, &QTimer::timeout, [=]() { doMeta(); });
 }
 
+bool RadioStream::startRecord()
+{
+    QString newRecordPath = Database::value("Config", "recordPath").toString();
+
+    if (Database::value("Config", "recordSubDir").toBool())
+    {
+        newRecordPath += "/" + (isQuickLink ? "Quick Link"
+                                            : playlist->getCurrentTitle().replace(QRegExp("[/:*?\"<>|]"), "-")
+                                              .replace("\\", "-").replace(QRegExp("[-]+"), "-")) + "/";
+        newRecordPath.replace("//", "/");
+
+        if (!QDir().exists(newRecordPath))
+            QDir().mkdir(newRecordPath);
+    }
+
+    recordFileName = QDateTime::currentDateTime().toString("yyyy-MM-dd_HH.mm.ss");
+    recordFile = new QFile(newRecordPath + "Recording... (" + recordFileName + ")");
+    recordTime = BASS_ChannelBytes2Seconds(stream, BASS_ChannelGetPosition(stream, BASS_POS_BYTE));
+
+    if (!recordFile->open(QIODevice::WriteOnly))
+    {
+        stopRecord();
+        return true;
+    }
+
+    emit recordButtonEnabled(false);
+    emit updateValues(Recording, true);
+    return false;
+}
+
 void CALLBACK RadioStream::statusProc(const void *buffer, DWORD length, void *user)
 {
     RadioStream *instance = static_cast<RadioStream *>(user);
@@ -341,38 +369,10 @@ void CALLBACK RadioStream::statusProc(const void *buffer, DWORD length, void *us
         instance->status = Global::cStrToQString(static_cast<const char *>(buffer));
         emit instance->updateValues(StatusLabel, instance->status);
     }
-
-    if (instance->mrecord)
+    else if (instance->mrecord)
     {
-        if (!instance->recordFile && buffer && length > 0)
-        {
-            QString newRecordPath = Database::value("Config", "recordPath").toString();
-
-            if (Database::value("Config", "recordSubDir").toBool())
-            {
-                newRecordPath += "/"
-                        + (instance->isQuickLink ? "Quick Link"
-                                                  : instance->playlist->getCurrentTitle().replace(QRegExp("[/:*?\"<>|]"),"-")
-                                                    .replace("\\","-").replace(QRegExp("[-]+"),"-")) + "/";
-                newRecordPath.replace("//", "/");
-
-                if (!QDir().exists(newRecordPath))
-                    QDir().mkdir(newRecordPath);
-            }
-
-            instance->recordFileName = QDateTime::currentDateTime().toString("yyyy-MM-dd_HH.mm.ss");
-            instance->recordFile = new QFile(newRecordPath + "Recording... (" + instance->recordFileName + ")");
-            instance->recordTime = BASS_ChannelBytes2Seconds(instance->stream, BASS_ChannelGetPosition(instance->stream,BASS_POS_BYTE));
-
-            if (!instance->recordFile->open(QIODevice::WriteOnly))
-            {
-                instance->stopRecord();
-                return;
-            }
-
-            emit instance->recordButtonEnabled(false);
-            emit instance->updateValues(Recording, true);
-        }
+        if (!instance->recordFile && buffer && length > 0 && instance->startRecord())
+            return;
 
         if (buffer && length > 0)
             instance->recordFile->write(static_cast<const char *>(buffer), length);
@@ -487,7 +487,7 @@ void RadioStream::showTimedout()
 void RadioStream::run()
 {
     mstop = false;
-    tentativa = 0;
+    reconnect = 0;
 
     do
     {
@@ -544,6 +544,12 @@ void RadioStream::run()
             break;
 
         iswma = !!BASS_ChannelGetTags(stream, 8/*BASS_TAG_WMA*/);
+
+        if (iswma)
+        {
+            mrecord = false;
+            emit recordButtonEnabled(false);
+        }
 
         if (errorCode == 0)
         {
@@ -670,7 +676,7 @@ void RadioStream::run()
                 mnext = false;
                 selectedUrl = 0;
             }
-            else if (Database::value("Config", "radioMode").toInt() == 0 || (++tentativa > 2))
+            else if (Database::value("Config", "radioMode").toInt() == 0 || (++reconnect > 2))
             {
                 mstop = true;
                 break;
@@ -679,9 +685,10 @@ void RadioStream::run()
     } while (!mstop);
 
     isQuickLink = false;
+    iswma = false;
     mrecord = false;
     mstop = false;
-    tentativa = 0;
+    reconnect = 0;
     emit threadFinished(true, false);
 }
 
