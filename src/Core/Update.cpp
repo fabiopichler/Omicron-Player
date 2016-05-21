@@ -21,7 +21,7 @@ UpdateApp::UpdateApp(QObject *parent, QSettings *iniSettings) : QObject(parent)
     this->iniSettings = iniSettings;
     blockRequest = false;
     playlistFile = nullptr;
-    currentDay = QDate::currentDate().day();
+    currentDate = QDate::currentDate();
 
     updateManager = new QNetworkAccessManager(this);
     downloadManager = new QNetworkAccessManager(this);
@@ -32,8 +32,18 @@ UpdateApp::UpdateApp(QObject *parent, QSettings *iniSettings) : QObject(parent)
     connect(startTimer, SIGNAL(timeout()), this, SLOT(startChecking()));
     connect(this, SIGNAL(showNotification(QString)), parent, SLOT(showNotification(QString)));
 
-    if (Database::value("Version", "checkUpdate", true).toBool()
-                     && Database::value("Version", "checkUpdateDay").toInt() != currentDay)
+    int checkUpdate = Database::value("Version", "updates_check", 1).toInt();
+
+    if (checkUpdate == 0)
+        return;
+
+    if (checkUpdate == 2)
+        checkUpdate = 7;
+
+    QDate lastCheck(QDate::fromString(Database::value("Version", "updates_lastCheck").toString(), "yyyy-MM-dd"));
+    lastCheck = lastCheck.addDays(checkUpdate);
+
+    if (lastCheck < currentDate)
         startTimer->start(1000);
 }
 
@@ -134,7 +144,7 @@ void UpdateApp::finishedChecking(QNetworkReply *reply)
         if (!version.isEmpty())
         {
             stdCout("Checking update is completed");
-            Database::setValue("Version", "checkUpdateDay", currentDay);
+            Database::setValue("Version", "updates_lastCheck", currentDate.toString("yyyy-MM-dd"));
 
             QDate listInstalled(QDate::fromString(iniSettings->value("Radiolist/Date").toString(), "yyyy-MM-dd"));
             QDate dateChecked(QDate::fromString(newPlaylistDate, "yyyy-MM-dd"));

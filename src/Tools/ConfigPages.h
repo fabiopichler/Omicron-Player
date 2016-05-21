@@ -198,6 +198,9 @@ class UpdatePage : public Widget
 public:
     UpdatePage(QWidget *);
 
+public slots:
+    void changeUpdade(int);
+
 private:
 };
 

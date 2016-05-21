@@ -643,18 +643,26 @@ UpdatePage::UpdatePage(QWidget *parent) : Widget(parent)
 {
     setObjectName("configPagesWidget");
 
-    QCheckBox *updateChBox = new QCheckBox("Ativar a verificação de atualizações");
-
+    QLabel *infoLabel = new QLabel("Ao manter a verificação de atualizações ativada,<br>será possível que o programa, automaticamente:"
+                                   "<ul><li>Verifique se existe uma nova versão disponível,<br>com melhorias e correções de erros.<br></li>"
+                                   "<li>Atualize a base de estações de rádio (lista padrão),<br>caso exista uma nova atualização disponível.</li></ul>");
     QLabel *updateLabel = new QLabel("Verificar a cada:");
 
     ComboBox *updateCombo = new ComboBox;
+    updateCombo->addItem("Desativado");
     updateCombo->addItem("1 dia");
     updateCombo->addItem("1 semana");
-    updateCombo->addItem("1 mês");
 
-    updateChBox->setChecked(Database::value("Config", "checkUpdate", true).toBool());
-    updateChBox->setEnabled(false);
-    updateCombo->setEnabled(false);
+    QString value = Database::value("Version", "updates_check", "1").toString();
+
+    if (value == "0")
+        updateCombo->setCurrentIndex(0);
+    else if (value == "2")
+        updateCombo->setCurrentIndex(2);
+    else
+        updateCombo->setCurrentIndex(1);
+
+    connect(updateCombo, SIGNAL(activated(int)), this, SLOT(changeUpdade(int)));
 
     QHBoxLayout *updateLayout = new QHBoxLayout;
     updateLayout->addWidget(updateLabel);
@@ -667,9 +675,18 @@ UpdatePage::UpdatePage(QWidget *parent) : Widget(parent)
     configGroup->setLayout(configLayout);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->addWidget(updateChBox);
+    mainLayout->addWidget(infoLabel);
     mainLayout->addWidget(configGroup);
     mainLayout->addStretch(100);
     setLayout(mainLayout);
 }
 
+void UpdatePage::changeUpdade(int index)
+{
+    if (index == 0)
+        Database::setValue("Version", "updates_check", 0);
+    else if (index == 2)
+        Database::setValue("Version", "updates_check", 2);
+    else
+        Database::setValue("Version", "updates_check", 1);
+}

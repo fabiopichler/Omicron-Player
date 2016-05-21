@@ -53,5 +53,5 @@ private:
     QString newURL, newPlaylistDate, newPlaylistName;
     QFile *playlistFile;
     bool alert, blockRequest, requestAborted;
-    int currentDay;
+    QDate currentDate;
 };

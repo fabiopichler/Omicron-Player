@@ -198,7 +198,7 @@ bool Main::init(const int &argc)
         {
             Database::upgrade();
             Database::setValue("Version", "current", CurrentVersion);
-            Database::setValue("Version", "checkUpdateDay", 0);
+            Database::setValue("Version", "updates_lastCheck", "0000-00-00");
 #ifdef Q_OS_WIN
             FileAssociation(QApplication::applicationFilePath()).registerList(Global::supportedFiles, false);
 #endif

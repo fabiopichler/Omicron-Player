@@ -346,8 +346,8 @@ void Database::defaultConfig()
     query.exec("CREATE TABLE IF NOT EXISTS Version (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO Version VALUES "
                "('current', '0'), "
-               "('checkUpdate', 'true'), "
-               "('checkUpdateDay', '0')");
+               "('updates_check', '1'), "
+               "('updates_lastCheck', '0000-00-00')");
 
     query.exec("CREATE TABLE IF NOT EXISTS Config (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO Config VALUES "
@@ -428,6 +428,12 @@ void Database::defaultConfig()
 
 void Database::upgrade()
 {
+    if (!exist("Version", "updates_check"))
+        add("Version", "updates_check", "1");
+
+    if (!exist("Version", "updates_lastCheck"))
+        add("Version", "updates_lastCheck", "0000-00-00");
+
     if (!exist("Current", "volume"))
         add("Current", "volume", "100");
 }
