@@ -642,6 +642,6 @@ QListView#ComboBox::item {
     color: #435576;
 }
 QListView#ComboBox::item:selected {
-    background: rgb(160,200,255);
-    color: #346;
+    color: #fff;
+    background: rgb(70,130,180);
 }

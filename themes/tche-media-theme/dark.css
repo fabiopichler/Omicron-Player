@@ -189,8 +189,13 @@ QHeaderView::section {
                                 stop: 1.0 #1f1f1f);
 }
 QHeaderView::section:hover {
-    background: #464646;
     color: #fff;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #3e3e3e, 
+                                stop: 0.5 #3e3e3e,
+                                stop: 0.51 #2a2a2a,
+                                stop: 0.54 #2a2a2a,
+                                stop: 1.0 #2a2a2a);
 }
 
 /* QTreeView
@@ -295,6 +300,11 @@ QListView#ComboBox::item {
     color: #444;
 }
 QListView#ComboBox::item:selected {
-    background: #6d6d6d;
     color: #fff;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #323232, 
+                                stop: 0.5 #323232,
+                                stop: 0.51 #1f1f1f,
+                                stop: 0.54 #1f1f1f,
+                                stop: 1.0 #1f1f1f);
 }
