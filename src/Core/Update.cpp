@@ -38,7 +38,7 @@ UpdateApp::UpdateApp(QObject *parent, QSettings *iniSettings) : QObject(parent)
         return;
 
     if (checkUpdate == 2)
-        checkUpdate = 7;
+        checkUpdate = 6;
 
     QDate lastCheck(QDate::fromString(Database::value("Version", "updates_lastCheck").toString(), "yyyy-MM-dd"));
     lastCheck = lastCheck.addDays(checkUpdate);
