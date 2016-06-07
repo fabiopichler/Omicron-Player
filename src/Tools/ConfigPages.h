@@ -14,7 +14,7 @@
 
 #include "../Core/Global.h"
 #include "../Core/Database.h"
-#include "../Gui/Widget.h"
+#include "../Gui/Widgets.h"
 
 #include <QWidget>
 

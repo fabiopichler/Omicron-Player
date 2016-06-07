@@ -78,7 +78,7 @@ signals:
 
 private:
     QObject *parentMain;
-    Widget *infoWidget;
+    Widget *infoWidget, *tracksWidget;
     MusicStream *musicStream;
     MusicPlaylist *playlist;
     QMenu *fileMenu, *modeMenu, *toolsMenu, *settingsMenu, *aboutMenu;
@@ -86,9 +86,10 @@ private:
     QAction *openMusicAction,*addMusicAction,*openDirAction,*addDirAction,*openCDAction,*openPlaylistAction,
         *clearPlaylistAction,*exitAction,*radioModeAction,*playlistAction,*equalizerAction,*checkUpdateAction,
         *websiteAction, *aboutAction, *configAction;
-    QPushButton *playButton,*pauseButton,*stopButton,*prevButton,*nextButton,*repeatButton,*randomButton,*playlistButton,
-        *playlistModeButton,*musicModeButton,*favoriteButton, *changeFavoriteButton;
-    QLabel *timeLabel,*totalTimeLabel,*currentSoundLabel,*totalSoundLabel,*currentTagLabel,*separatorLabel;
+    QPushButton *playButton,*pauseButton,*stopButton,*prevButton,*nextButton,*repeatButton,*randomButton,
+        *playlistButton,*playlistModeButton,*musicModeButton,*favoriteButton, *changeFavoriteButton;
+    QLabel *timeLabel,*totalTimeLabel,*currentTrackLabel,*totalTracksLabel,*currentTagLabel,*separatorLabel,
+        *fileTypeLabel;
     Slider *timeSlider;
     QProgressBar *leftChProgressBar, *rightChProgressBar;
     QLineEdit *searchLineEdit;

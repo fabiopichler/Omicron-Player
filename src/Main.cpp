@@ -405,6 +405,7 @@ bool Main::setupBass()
         }
     }
 
+#ifndef Q_OS_ANDROID // Desativar os plugins no Android, apenas para os testes (ainda não funciona nele).
     if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+bass_aac).toLocal8Bit().constData(),0))
         QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+bass_aac));
 
@@ -422,7 +423,7 @@ bool Main::setupBass()
 
     if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+bassopus).toLocal8Bit().constData(),0))
         QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+bassopus));
-
+#endif
 #ifdef Q_OS_WIN
     if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+basswma).toLocal8Bit().constData(),0))
         QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+basswma));

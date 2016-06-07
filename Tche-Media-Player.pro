@@ -20,31 +20,68 @@ QT = core widgets gui network sql xml
 TEMPLATE = app
 CONFIG += c++11
 
+CONFIG += mobility
+MOBILITY =
+
 CONFIG(debug, debug|release) {
+
     BUILDDIR = Debug
     TARGET = "Tche-Media-Player-Debug"
     unix:MAKEFILE = Makefile.debug
+
 } else {
+
     BUILDDIR = Release
     TARGET = "Tche-Media-Player"
     unix:MAKEFILE = Makefile.release
     RESOURCES += qrc/Files.qrc
+
 }
 
 OBJECTS_DIR = obj/$${BUILDDIR}
 MOC_DIR = moc/$${BUILDDIR}
 RCC_DIR = rcc/$${BUILDDIR}
-DESTDIR = Build
+!android:DESTDIR = Build
 
 unix:INCLUDEPATH += "/home/Frameworks/bass"
 win32:INCLUDEPATH += "D:/Frameworks/bass"
 
 contains(QMAKE_HOST.arch, x86_64) {
-    unix:LIBS += -Wl,-rpath=./lib -L"/home/Frameworks/bass/x64" -lbass -lbass_fx -lbasscd -ltags
+
     win32:LIBS += -L"D:/Frameworks/bass/x64" -lbass -lbass_fx -lbasscd -ltags -lUser32 -lAdvapi32
+
+    linux:!android {
+        LIBS += -Wl,-rpath=./lib -L"/home/Frameworks/bass/x64" -lbass -lbass_fx -lbasscd -ltags
+    }
+
 } else {
-    unix:LIBS += -Wl,-rpath=./lib -L"/home/Frameworks/bass" -lbass -lbass_fx -lbasscd -ltags
+
     win32:LIBS += -L"D:/Frameworks/bass" -lbass -lbass_fx -lbasscd -ltags -lUser32 -lAdvapi32
+
+    linux:!android {
+        LIBS += -Wl,-rpath=./lib -L"/home/Frameworks/bass" -lbass -lbass_fx -lbasscd -ltags
+    }
+}
+
+contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
+
+    LIBS += -L"/home/Frameworks/bass/android-arm" -lbass -lbass_fx -ltags
+
+    ANDROID_EXTRA_LIBS = \
+        /home/Frameworks/bass/android-arm/libbass_fx.so \
+        /home/Frameworks/bass/android-arm/libbass.so \
+        /home/Frameworks/bass/android-arm/libtags.so
+}
+
+contains(ANDROID_TARGET_ARCH,x86) {
+
+    LIBS += -L"/home/Frameworks/bass/android-x86" -lbass -lbass_fx -ltags
+
+    ANDROID_EXTRA_LIBS = \
+        /home/Frameworks/bass/android-x86/libbass_fx.so \
+        /home/Frameworks/bass/android-x86/libbass.so \
+        /home/Frameworks/bass/android-x86/libtags.so
+
 }
 
 SOURCES += src/Main.cpp \
@@ -69,9 +106,9 @@ SOURCES += src/Main.cpp \
     src/Tools/MusicPlaylistManager.cpp \
     src/Tools/RadioPlaylistManager.cpp \
     src/Core/Theme.cpp \
-    src/Gui/Widget.cpp \
     src/Gui/MainWindow.cpp \
-    src/Gui/VolumeControl.cpp
+    src/Gui/VolumeControl.cpp \
+    src/Gui/Widgets.cpp
 
 HEADERS += src/Main.h \
     src/Version.h \
@@ -96,8 +133,9 @@ HEADERS += src/Main.h \
     src/Tools/MusicPlaylistManager.h \
     src/Tools/RadioPlaylistManager.h \
     src/Core/Theme.h \
-    src/Gui/Widget.h \
     src/Gui/MainWindow.h \
-    src/Gui/VolumeControl.h
+    src/Gui/VolumeControl.h \
+    src/Gui/Widgets.h
 
 win32:RC_FILE = rc/Win.rc
+

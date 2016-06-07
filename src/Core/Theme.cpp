@@ -16,6 +16,10 @@ void Theme::free()
 
 bool Theme::load()
 {
+#ifdef Q_OS_ANDROID // Não carregar o tema personalizado no android. (apenas para testes)
+    return true;
+#endif
+
     QString css,
             style,
             themePath = Database::value("Config", "theme").toString();

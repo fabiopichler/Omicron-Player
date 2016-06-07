@@ -305,11 +305,16 @@ void RadioStream::playNewRadio(int row, int selected)
 
 void RadioStream::updateStatus()
 {
-    if (statusListCount >= statusList.length())
-        statusListCount = 0;
+    int len = statusList.length();
 
-    emit updateValues(StatusLabel, statusList[statusListCount]);
-    statusListCount++;
+    if (len > 0)
+    {
+        if (statusListCount >= len)
+            statusListCount = 0;
+
+        emit updateValues(StatusLabel, statusList[statusListCount]);
+        statusListCount++;
+    }
 }
 
 //================================================================================================================
@@ -805,7 +810,7 @@ void RadioPlaylist::clear()
 
 int RadioPlaylist::length()
 {
-    return model->rowCount();
+    return proxyModel->rowCount();
 }
 
 bool RadioPlaylist::isEmpty()

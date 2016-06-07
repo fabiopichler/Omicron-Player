@@ -13,7 +13,7 @@
 #pragma once
 
 ;// Nome do Aplicativo
-#define APP_NAME "Tchê Media Player"
+#define APP_NAME "FPM Player"
 
 ;// Nome da Conpanhia/Autor
 #define COMPANY_NAME "Fábio Pichler"
@@ -22,13 +22,13 @@
 #define ORIGINAL_FILENAME "Tche-Media-Player"
 
 ;// Versão do produto
-#define PRODUCT_VERSION 1,0,0,0
+#define PRODUCT_VERSION 1,1,0,0
 
 ;// Versão do Produto em string
-#define PRODUCT_VERSION_STR "1.0"
+#define PRODUCT_VERSION_STR "1.1"
 
 ;// Versão do arquivo
-#define FILE_VERSION "1.0"
+#define FILE_VERSION "1.1"
 
 ;// Website oficial
 #define OFFICIAL_WEBSITE "http://fabiopichler.net/tche-media-player/"

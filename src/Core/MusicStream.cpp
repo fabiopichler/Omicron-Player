@@ -30,7 +30,10 @@ MusicStream::MusicStream(QWidget *parent) : StreamBase()
 
     playlist = new MusicPlaylist(parent, playlistMode, repeat, random, mstop);
     timerTag = new QTimer(this);
+
+#ifndef Q_OS_ANDROID
     cdTimer = new QTimer(this);
+#endif
 
     createEvents();
 
@@ -65,11 +68,15 @@ MusicStream::~MusicStream()
 
     stop();
     delete timerTag;
+
+#ifndef Q_OS_ANDROID
     delete cdTimer;
+#endif
 }
 
 void MusicStream::setupCDMode(const bool &active, const int &drive)
 {
+#ifndef Q_OS_ANDROID
     if (active && !isCDMode)
     {
         if (currentDrive == -1)
@@ -93,6 +100,7 @@ void MusicStream::setupCDMode(const bool &active, const int &drive)
         playlist->clear();
         playlist->setCurrentIndex(0);
     }
+#endif
 }
 
 void MusicStream::loadPlaylist(const int &mode, const bool &disableCdMode, const bool &load,
@@ -347,15 +355,21 @@ void MusicStream::setPosition(int arg)
 
 void MusicStream::updateTag()
 {
-    if (tagListCount >= tagList.length())
-        tagListCount = 0;
+    int len = tagList.length();
 
-    emit updateValues(CurrentTag, tagList[tagListCount]);
-    tagListCount++;
+    if (len > 0)
+    {
+        if (tagListCount >= len)
+            tagListCount = 0;
+
+        emit updateValues(CurrentTag, tagList[tagListCount]);
+        tagListCount++;
+    }
 }
 
 void MusicStream::updateCDMode()
 {
+#ifndef Q_OS_ANDROID
     if (playlist->isEmpty())
     {
         if (BASS_CD_IsReady(currentDrive))
@@ -386,6 +400,7 @@ void MusicStream::updateCDMode()
             emit stopTagTimer();
         emit updateValues(CurrentTag, "Sem CD de Áudio");
     }
+#endif
 }
 
 //================================================================================================================
@@ -398,15 +413,18 @@ void MusicStream::createEvents()
     connect(this, SIGNAL(startTagTimer(int)), timerTag, SLOT(start(int)));
     connect(this, SIGNAL(stopTagTimer()), timerTag, SLOT(stop()));
 
+#ifndef Q_OS_ANDROID
     connect(cdTimer, SIGNAL(timeout()), this, SLOT(updateCDMode()));
     connect(this, SIGNAL(startCDTimer(int)), cdTimer, SLOT(start(int)));
     connect(this, SIGNAL(stopCDTimer()), cdTimer, SLOT(stop()));
+#endif
 
     connect(playlist, SIGNAL(playNewMusic(QVariant)), this, SLOT(playNewMusic(QVariant)));
 }
 
 void MusicStream::updateTrackList()
 {
+#ifndef Q_OS_ANDROID
     int tc = BASS_CD_GetTracks(currentDrive);
     playlist->clear();
 
@@ -440,6 +458,7 @@ void MusicStream::updateTrackList()
 
     emit updateValues(PlaylistLength);
     emit updateValues(CurrentTag, "Modo CD de Áudio");
+#endif
 }
 
 void MusicStream::run()
@@ -450,6 +469,7 @@ void MusicStream::run()
 
     do
     {
+        emit updateValues(FileTypeLabel, "Carregando...");
         QString currentFile = playlist->getCurrentFile();
         if (currentFile.isEmpty())
             break;
@@ -459,8 +479,10 @@ void MusicStream::run()
 
         if (isCDMode)
         {
+#ifndef Q_OS_ANDROID
             if ((stream = BASS_CD_StreamCreate(currentDrive, playlist->getCurrentIndex(), 0)))
                 mplay = true;
+#endif
         }
         else if ((stream = BASS_StreamCreateFile(0, currentFile.toLocal8Bit().constData(), 0, 0, 0)))
         {
@@ -475,34 +497,70 @@ void MusicStream::run()
         if (mplay)
         {
             double timeLength;
+            QString fileType;
 
             if (isMusic)
                 timeLength = BASS_ChannelGetLength(stream,BASS_POS_MUSIC_ORDER) - 1;
             else
                 timeLength = BASS_ChannelBytes2Seconds(stream, BASS_ChannelGetLength(stream,BASS_POS_BYTE));
 
-            tagList.clear();
+            BASS_CHANNELINFO info;
+            BASS_ChannelGetInfo(stream, &info);
 
+            switch (info.ctype)
+            {
+                case BASS_CTYPE_STREAM_OGG:       fileType = "OGG";  break;
+                case BASS_CTYPE_STREAM_MP1:       fileType = "MP1";  break;
+                case BASS_CTYPE_STREAM_MP2:       fileType = "MP2";  break;
+                case BASS_CTYPE_STREAM_MP3:       fileType = "MP3";  break;
+                case BASS_CTYPE_STREAM_AIFF:      fileType = "AIFF"; break;
+                case BASS_CTYPE_STREAM_WAV_PCM:   fileType = "PCM WAVE";  break;
+                case BASS_CTYPE_STREAM_WAV_FLOAT: fileType = "PCM WAVE";  break;
+                case BASS_CTYPE_STREAM_WAV:       fileType = "WAVE";  break;
+                case 327682:                      fileType = "ADPCM WAVE";  break;
+                case 70144:                       fileType = "Opus"; break;
+                case 68352:                       fileType = "AAC";  break;
+                case 66304:                       fileType = "WMA";  break;
+                case BASS_CTYPE_STREAM_CA:        fileType = "CA";   break;
+                case BASS_CTYPE_STREAM_MF:        fileType = "MF";   break;
+                case BASS_CTYPE_MUSIC_MOD:        fileType = "MOD";  break;
+                case BASS_CTYPE_MUSIC_MTM:        fileType = "MTM";  break;
+                case BASS_CTYPE_MUSIC_S3M:        fileType = "S3M";  break;
+                case BASS_CTYPE_MUSIC_XM:         fileType = "XM";   break;
+                case BASS_CTYPE_MUSIC_IT:         fileType = "IT";   break;
+                case BASS_CTYPE_MUSIC_MO3:        fileType = "MO3";  break;
+                case 66048:                       fileType = "CDA";  break;
+                case 67328:                       fileType = "APE";  break;
+                case 67840:                       fileType = "FLAC";  break;
+                case 68353:                       fileType = "M4A";  break;
+                case 66816:                       fileType = "WavPack";  break;
+            }
+
+            if (!isMusic)
+                fileType += QString(fileType.isEmpty() ? "%1 kbps" : " | %1 kbps").arg(static_cast<int>(
+                                                      (BASS_StreamGetFilePosition(stream, BASS_FILEPOS_END)
+                                                       /(125*timeLength)+0.5)));
+
+            tagList.clear();
             if (isCDMode)
             {
                 tagList << "Reproduzindo um CD de Áudio";
             }
             else
             {
-                tagList << Global::cStrToQString(TAGS_Read(stream,"%IFV2(%TITL,%ICAP(%TITL),no title)"));
-                tagList << Global::cStrToQString(TAGS_Read(stream,"%IFV2(%ARTI,%ICAP(%ARTI),no artist)"));
-                tagList << Global::cStrToQString(TAGS_Read(stream,"%IFV1(%ALBM,%IUPC(%ALBM))"));
-                tagList << Global::cStrToQString(TAGS_Read(stream,"%YEAR"));
-                tagList << Global::cStrToQString(TAGS_Read(stream,"%CMNT"));
-
-                if (!isMusic)
-                    tagList << QString("%1 kbps").arg(static_cast<int>(
-                                                          (BASS_StreamGetFilePosition(stream, BASS_FILEPOS_END)
-                                                           /(125*timeLength)+0.5)));
+                tagList << Global::cStrToQString(TAGS_Read(stream, "%IFV2(%TITL,%ICAP(%TITL),no title)"));
+                tagList << Global::cStrToQString(TAGS_Read(stream, "%IFV2(%ARTI,%ICAP(%ARTI),no artist)"));
+                tagList << Global::cStrToQString(TAGS_Read(stream, "%IFV1(%ALBM,%IUPC(%ALBM))"));
+                tagList << Global::cStrToQString(TAGS_Read(stream, "%GNRE"));
+                tagList << Global::cStrToQString(TAGS_Read(stream, "%YEAR"));
+                tagList << Global::cStrToQString(TAGS_Read(stream, "%CMNT"));
             }
 
             tagList.removeAll("");
             tagList.removeDuplicates();
+
+            if (tagList.isEmpty())
+                tagList << AppName;
 
             tagListCount = 0;
             updateTag();
@@ -512,6 +570,7 @@ void MusicStream::run()
                 emit stopTagTimer();
             emit startTagTimer(5000);
             emit setTotals(static_cast<QWORD>(timeLength));
+            emit updateValues(FileTypeLabel, fileType);
 
             if (Database::value("Config", "continuePlaying").toBool()
                               && Database::value("MusicMode", "soundPosition").toInt() > 0)
@@ -569,6 +628,7 @@ void MusicStream::run()
             emit pauseButtonEnabled(true);
             emit stopButtonEnabled(true);
             emit updateValues(CurrentTag, "Erro na reprodução!");
+            emit updateValues(FileTypeLabel, "Erro!");
 
             if (Database::value("Config", "errorNotification").toString() == "dialog")
                 emit showErrorDlg(Global::getErrorHtml(time + "Erro na reprodução!"));
@@ -609,6 +669,7 @@ void MusicStream::run()
     mpause = false;
     mstop = false;
     emit threadFinished();
+    emit updateValues(FileTypeLabel, "---");
 }
 
 //================================================================================================================
@@ -722,7 +783,7 @@ void MusicPlaylist::removeRow(const int &row)
 
 int MusicPlaylist::length()
 {
-    return model->rowCount();
+    return proxyModel->rowCount();
 }
 
 bool MusicPlaylist::isEmpty()
@@ -758,8 +819,8 @@ QString MusicPlaylist::getCurrentFile()
 
 QString MusicPlaylist::getRow(const int &arg)
 {
-    if (model->hasChildren())
-        return model->data(model->index(arg, 1)).toString();
+    if (proxyModel->hasChildren())
+        return proxyModel->data(proxyModel->index(arg, 1)).toString();
 
     return QString();
 }
@@ -788,6 +849,8 @@ void MusicPlaylist::textFilterChanged(QString arg)
 
     proxyModel->setFilterRegExp(QRegExp(arg, Qt::CaseInsensitive, QRegExp::FixedString));
     emit selectRowSignal(getCurrentIndex());
+    emit updateValues(MusicStream::CurrentSound, (length() == 0 ? -1 : getCurrentIndex()));
+    emit updateValues(MusicStream::PlaylistLength, 0);
 }
 
 //================================================================================================================

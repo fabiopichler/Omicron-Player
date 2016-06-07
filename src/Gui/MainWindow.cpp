@@ -7,7 +7,7 @@ MainWindow::MainWindow(QObject *parent, QSettings *_iniSettings) : parentMain(pa
 
     setObjectName("window");
     setWindowFlags(Qt::FramelessWindowHint);
-    setAttribute(Qt::WA_TranslucentBackground);
+    //setAttribute(Qt::WA_TranslucentBackground);
     setWindowIcon(QIcon(Global::getQrcPath("icon2.png")));
     setFixedWidth(500);
 

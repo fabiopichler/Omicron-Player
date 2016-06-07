@@ -18,7 +18,7 @@
 #include "../Gui/DialogBase.h"
 #include "../Tools/RadioPlaylistManager.h"
 #include "ErrorWindow.h"
-#include "Widget.h"
+#include "Widgets.h"
 #include "VolumeControl.h"
 
 #include <QPushButton>

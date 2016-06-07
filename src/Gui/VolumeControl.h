@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "Widget.h"
+#include "Widgets.h"
 
 #include <QPushButton>
 #include <QMenu>

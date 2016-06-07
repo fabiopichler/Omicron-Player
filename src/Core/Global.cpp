@@ -59,7 +59,7 @@ void Global::setupSupportedFiles()
     supportedFiles += {"mp1",  "MPEG-1 Audio Layer 1"};
     supportedFiles += {"ac3",  "Dolby Digital Audio"};
     supportedFiles += {"m4a",  "MPEG-4 Audio"};
-    supportedFiles += {"m4r",  "M4R Audio"};
+    supportedFiles += {"m4r",  "MPEG-4 Audio"};
     supportedFiles += {"aiff", "Audio Interchange File Format"};
     supportedFiles += {"aif",  "Audio Interchange File Format"};
     supportedFiles += {"flac", "Free Lossless Audio Codec"};

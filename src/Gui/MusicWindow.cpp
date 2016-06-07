@@ -65,8 +65,10 @@ MusicWindow::~MusicWindow()
 void MusicWindow::createMenuBar()
 {
     fileMenu = new QMenu("Arquivo");
+#ifndef Q_OS_ANDROID
     openCDAction = fileMenu->addAction("Abrir CD de Áudio");
     fileMenu->addSeparator();
+#endif
     openMusicAction = fileMenu->addAction("Abrir Músicas");
     addMusicAction = fileMenu->addAction("Adicionar Músicas");
     fileMenu->addSeparator();
@@ -133,36 +135,44 @@ void MusicWindow::createWidgets()
 
     infoWidget = new Widget;
     infoWidget->setObjectName("radioInfoWidget");
+
+    tracksWidget = new Widget;
+    tracksWidget->setMinimumWidth(10);
+    tracksWidget->setFixedHeight(20);
+    tracksWidget->setContentsMargins(10, 0, 10, 0);
+    tracksWidget->setObjectName("tracksWidget");
 }
 
 void MusicWindow::createLabels()
 {
     timeLabel = new QLabel("--:--");
     totalTimeLabel = new QLabel("--:--");
-    currentSoundLabel = new QLabel(QString::asprintf("%02i",
+    currentTrackLabel = new QLabel(QString::asprintf("%03i",
                                   (playlist->isEmpty() ? 0 : Database::value("MusicMode", "index", 0).toInt() + 1)));
-    totalSoundLabel = new QLabel(QString::asprintf("%03i", playlist->length()));
+    totalTracksLabel = new QLabel(QString::asprintf("%03i", playlist->length()));
     currentTagLabel = new QLabel;
-    separatorLabel = new QLabel("/");
+    separatorLabel = new QLabel(" / ");
+    fileTypeLabel = new QLabel("---");
 
     timeLabel->setTextFormat(Qt::PlainText);
     totalTimeLabel->setTextFormat(Qt::PlainText);
-    currentSoundLabel->setTextFormat(Qt::PlainText);
-    totalSoundLabel->setTextFormat(Qt::PlainText);
+    currentTrackLabel->setTextFormat(Qt::PlainText);
+    totalTracksLabel->setTextFormat(Qt::PlainText);
     currentTagLabel->setTextFormat(Qt::PlainText);
     separatorLabel->setTextFormat(Qt::PlainText);
+    fileTypeLabel->setTextFormat(Qt::PlainText);
 
-    currentSoundLabel->setToolTip("Faixa atual");
-    totalSoundLabel->setToolTip("Total de faixas");
+    currentTrackLabel->setToolTip("Faixa atual");
+    totalTracksLabel->setToolTip("Total de faixas");
 
     currentTagLabel->setFixedHeight(20);
     currentTagLabel->setObjectName("radioTitleLabel");
     timeLabel->setObjectName("radioTitleLabel");
     totalTimeLabel->setObjectName("radioTitleLabel");
 
-    currentSoundLabel->setStyleSheet("font-weight: bold");
-    separatorLabel->setStyleSheet("font-weight: bold");
-    totalSoundLabel->setStyleSheet("font-weight: bold");
+    currentTrackLabel->setStyleSheet("font-weight: bold; border: none; background: none;");
+    separatorLabel->setStyleSheet("font-weight: bold; border: none; background: none;");
+    totalTracksLabel->setStyleSheet("font-weight: bold; border: none; background: none;");
 
     int hour = QTime::currentTime().hour();
 
@@ -219,16 +229,20 @@ void MusicWindow::createButtons()
 void MusicWindow::createLayouts()
 {
     QHBoxLayout *labelLayout = new QHBoxLayout;
-    labelLayout->addWidget(currentSoundLabel);
+    labelLayout->addWidget(currentTrackLabel);
     labelLayout->addWidget(separatorLabel);
-    labelLayout->addWidget(totalSoundLabel);
-    labelLayout->setAlignment(Qt::AlignRight);
+    labelLayout->addWidget(totalTracksLabel);
+    labelLayout->setAlignment(Qt::AlignCenter);
     labelLayout->setSpacing(0);
+    labelLayout->setMargin(0);
+
+    tracksWidget->setLayout(labelLayout);
 
     QHBoxLayout *topLayout = new QHBoxLayout;
-    topLayout->addWidget(changeFavoriteButton);
+    topLayout->addWidget(tracksWidget);
+    topLayout->addWidget(fileTypeLabel);
     topLayout->addStretch(1);
-    topLayout->addLayout(labelLayout);
+    topLayout->addWidget(changeFavoriteButton);
     topLayout->addWidget(repeatButton);
     topLayout->addWidget(randomButton);
     topLayout->addWidget(playlistButton);
@@ -320,7 +334,9 @@ void MusicWindow::createEvents()
     connect(addMusicAction, SIGNAL(triggered()), this, SLOT(addMusic()));
     connect(openDirAction, SIGNAL(triggered()), this, SLOT(openDirectory()));
     connect(addDirAction, SIGNAL(triggered()), this, SLOT(addDirectory()));
+#ifndef Q_OS_ANDROID
     connect(openCDAction, SIGNAL(triggered()), this, SLOT(openCD()));
+#endif
     connect(openPlaylistAction, SIGNAL(triggered()), this, SLOT(initPlaylist()));
     connect(clearPlaylistAction, SIGNAL(triggered()), this, SLOT(clearPlaylist()));
     connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -645,6 +661,7 @@ void MusicWindow::addDirectory(bool isOpenMode)
 
 void MusicWindow::openCD()
 {
+#ifndef Q_OS_ANDROID
     ComboBox *actionCombo = new ComboBox;
     int a = 0;
     static int curdrive = 0;
@@ -717,6 +734,7 @@ void MusicWindow::openCD()
     }
 
     delete displayMsg;
+#endif
 }
 
 void MusicWindow::changeFavorite()
@@ -877,10 +895,13 @@ void MusicWindow::update(MusicStream::Event index, QVariant value)
             currentTagLabel->setText(value.toString());
             break;
         case MusicStream::CurrentSound:
-            currentSoundLabel->setText(QString::asprintf("%02i", value.toInt()+1));
+            currentTrackLabel->setText(QString::asprintf("%03i", value.toInt()+1));
             break;
         case MusicStream::PlaylistLength:
-            totalSoundLabel->setText(QString::asprintf("%03i", playlist->length()));
+            totalTracksLabel->setText(QString::asprintf("%03i", playlist->length()));
+            break;
+        case MusicStream::FileTypeLabel:
+            fileTypeLabel->setText(value.toString());
             break;
     }
 }

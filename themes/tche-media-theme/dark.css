@@ -46,6 +46,10 @@ QWidget#radioInfoWidget {
     border-top: 1px solid #c9c9c9;
     border-bottom: 1px solid #c9c9c9;
 }
+QWidget#tracksWidget {
+	background: #f9f9f9;
+	border: 1px solid #aaa;
+}
 
 /* QMenuBar
 --------------------------------------------------------- */

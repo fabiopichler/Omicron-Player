@@ -1,4 +1,4 @@
-#include "Widget.h"
+#include "Widgets.h"
 #include <QStyleOption>
 #include <QPainter>
 #include <QListView>

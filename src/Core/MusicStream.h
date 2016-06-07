@@ -24,9 +24,12 @@
 #include <QtCore>
 #include <bass.h>
 #include <bass_fx.h>
-#include <basscd.h>
 #include <tags.h>
 #include <qfiledialog.h>
+
+#ifndef Q_OS_ANDROID
+    #include <basscd.h>
+#endif
 
 class MusicPlaylist;
 
@@ -39,7 +42,8 @@ public:
     {
         CurrentTag,
         CurrentSound,
-        PlaylistLength
+        PlaylistLength,
+        FileTypeLabel
     };
 
     MusicStream(QWidget *);

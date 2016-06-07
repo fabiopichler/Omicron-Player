@@ -13,7 +13,7 @@
 #pragma once
 
 #include "../Core/Global.h"
-#include "Widget.h"
+#include "Widgets.h"
 
 #include <QHBoxLayout>
 #include <QLabel>

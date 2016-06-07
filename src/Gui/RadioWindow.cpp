@@ -108,7 +108,7 @@ void RadioWindow::createWidgets()
 
     bufferProgressBar = new QProgressBar;
     bufferProgressBar->setOrientation(Qt::Horizontal);
-    bufferProgressBar->setFixedHeight(18);
+    bufferProgressBar->setFixedHeight(20);
     bufferProgressBar->setTextVisible(false);
     bufferProgressBar->setRange(0,100);
     bufferProgressBar->setFixedWidth(103);
