@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Tchê Media Player
+  FPM Player
 
   Copyright (c) 2016, Fábio Pichler
   All rights reserved.
@@ -42,7 +42,7 @@ private:
     void createBoxLayout();
     void createEvents();
     void loadPlaylist();
-    bool eventFilter(QObject * obj, QEvent *event);
+    bool eventFilter(QObject * obj, QEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
     void ok();
@@ -86,7 +86,7 @@ public slots:
     void clear();
 
 private:
-    void keyPressEvent(QKeyEvent *);
+    void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
 
     QStandardItemModel* model;
     QWidget *parent;

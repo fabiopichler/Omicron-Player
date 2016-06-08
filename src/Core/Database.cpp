@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Tchê Media Player
+  FPM Player
 
   Copyright (c) 2016, Fábio Pichler
   All rights reserved.
@@ -354,12 +354,15 @@ void Database::defaultConfig()
                "('theme', 'app:tche-media-theme'), "
                "('style', 'default'), "
                "('device', '-1'), "
+               "('autoDlRadioList', 'true'), "
                "('autoPlay', 'false'), "
+               "('errorNotification', 'dialog'), "
+
+
                "('music_notifiSysTray', 'false'), "
                "('radio_notifiSysTray', 'true'), "
                "('continuePlaying', 'false'), "
                "('continuePlayingTab', 'false'), "
-               "('errorNotification', 'dialog'), "
                "('recordPath', ''), "
                "('recordSubDir', 'true'), "
                "('radioMode', '0'), "
@@ -438,16 +441,5 @@ void Database::defaultConfig()
 
 void Database::upgrade()
 {
-    if (!exist("Version", "updates_check"))
-        add("Version", "updates_check", "1");
-
-    if (!exist("Version", "updates_lastCheck"))
-        add("Version", "updates_lastCheck", "0000-00-00");
-
-    if (!exist("Current", "volume"))
-        add("Current", "volume", "100");
-
-    if (!exist("MusicConfig", "fadeIn"))
-        add("MusicConfig", "fadeIn", "0");
 }
 

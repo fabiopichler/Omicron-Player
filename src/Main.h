@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Tchê Media Player
+  FPM Player
 
   Copyright (c) 2016, Fábio Pichler
   All rights reserved.
@@ -23,11 +23,8 @@
 #include <bass.h>
 #include <QDir>
 #include <QFile>
-#include <QDesktopWidget>
 #include <QSettings>
-#include <QMainWindow>
 #include <QFontDatabase>
-#include <QMouseEvent>
 #include <QSystemTrayIcon>
 
 class Main : public QObject

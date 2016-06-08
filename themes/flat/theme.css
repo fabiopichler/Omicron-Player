@@ -640,3 +640,10 @@ QListView#ComboBox::item:selected {
     background: #36b;
     color: #fff;
 }
+
+/* QSpinBox
+--------------------------------------------------------- */
+QSpinBox {
+    background: #fff;
+}
+

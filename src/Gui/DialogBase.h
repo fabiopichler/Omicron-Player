@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Tchê Media Player
+  FPM Player
 
   Copyright (c) 2016, Fábio Pichler
   All rights reserved.
@@ -38,7 +38,7 @@ public slots:
     virtual void close();
 
 private:
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;
 
 private:
     Titlebar *titleBar;

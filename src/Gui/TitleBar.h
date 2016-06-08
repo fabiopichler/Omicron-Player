@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Tchê Media Player
+  FPM Player
 
   Copyright (c) 2016, Fábio Pichler
   All rights reserved.
@@ -30,8 +30,8 @@ public:
     ~Titlebar();
 
 private:
-    void mousePressEvent(QMouseEvent *);
-    void mouseMoveEvent(QMouseEvent *);
+    void mousePressEvent(QMouseEvent *) Q_DECL_OVERRIDE;
+    void mouseMoveEvent(QMouseEvent *) Q_DECL_OVERRIDE;
 
 private slots:
     void quitApp();

@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Tchê Media Player
+  FPM Player
 
   Copyright (c) 2016, Fábio Pichler
   All rights reserved.
@@ -564,7 +564,7 @@ void MusicStream::run()
                 tagList << Global::cStrToQString(TAGS_Read(stream, "%IFV1(%ALBM,%IUPC(%ALBM))"));
                 tagList << Global::cStrToQString(TAGS_Read(stream, "%GNRE"));
                 tagList << Global::cStrToQString(TAGS_Read(stream, "%YEAR"));
-                tagList << Global::cStrToQString(TAGS_Read(stream, "%CMNT"));
+                tagList << Global::cStrToQString(TAGS_Read(stream, "%CMNT")).replace(QRegExp("\n|\r\n"), " ").trimmed();
             }
 
             tagList.removeAll("");

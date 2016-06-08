@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Tchê Media Player
+  FPM Player
 
   Copyright (c) 2016, Fábio Pichler
   All rights reserved.
@@ -72,7 +72,7 @@ private:
     static void CALLBACK statusProc(const void *buffer, DWORD length, void *user);
     bool buffering(int &);
     void showTimedout();
-    void run();
+    void run() Q_DECL_OVERRIDE;
 
 signals:
     void updateValues(RadioStream::Event, QVariant);
@@ -140,7 +140,7 @@ public slots:
     void textFilterChanged(QString);
 
 private:
-    void keyPressEvent(QKeyEvent *);
+    void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
 
 signals:
     void updateValues(RadioStream::Event, QVariant);

@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Tchê Media Player
+  FPM Player
 
   Copyright (c) 2016, Fábio Pichler
   All rights reserved.
@@ -73,7 +73,7 @@ private slots:
 private:
     void createEvents();
     void updateTrackList();
-    void run();
+    void run() Q_DECL_OVERRIDE;
 
 signals:
     void updateValues(MusicStream::Event, QVariant value = QVariant());
@@ -139,7 +139,7 @@ public slots:
 
 private:
     bool random();
-    void keyPressEvent(QKeyEvent *);
+    void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
 
 signals:
     void selectRowSignal(int);

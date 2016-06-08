@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Tchê Media Player
+  FPM Player
 
   Copyright (c) 2016, Fábio Pichler
   All rights reserved.
@@ -670,9 +670,24 @@ UpdatePage::UpdatePage(QWidget *parent) : Widget(parent)
     QGroupBox *configGroup = new QGroupBox("Verificação");
     configGroup->setLayout(configLayout);
 
+    //--------------------------------------------
+    QCheckBox *radioListCheckBox = new QCheckBox("Atualizar base de estações de rádio, automaticamente.");
+
+    radioListCheckBox->setChecked(Database::value("Config", "autoDlRadioList").toBool());
+
+    connect(radioListCheckBox, &QCheckBox::clicked, [=](bool arg) {
+        Database::setValue("Config", "autoDlRadioList", arg);
+    });
+
+    QLabel *radioListLabel = new QLabel("<strong>Nota:</strong> Para que a base de rádios, possa ser atualizada,<br>"
+                                   "é preciso que a verificação de atualizações, esteja ativada.");
+
+    //--------------------------------------------
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(infoLabel);
     mainLayout->addWidget(configGroup);
+    mainLayout->addWidget(radioListCheckBox);
+    mainLayout->addWidget(radioListLabel);
     mainLayout->addStretch(100);
     setLayout(mainLayout);
 }
@@ -695,11 +710,11 @@ FadeConfigBox::FadeConfigBox(const QString &name, const QString &title, QWidget 
                                              : QGroupBox(title, parent), configName(name)
 {
     QLabel *infoLabel = new QLabel("<strong>Obs:</strong> Para desativar as transições, deixe com<br> valores 0 (zero)."
-                                   " O tempo máximo é 15 seg.");
+                                   " O tempo máximo é 30 seg.");
     QLabel *fadeInLabel = new QLabel("Tempo para o <strong>Fade in</strong> (em segundos)");
     QSpinBox *fadeInSpinBox = new QSpinBox;
 
-    fadeInSpinBox->setRange(0, 15);
+    fadeInSpinBox->setRange(0, 30);
     fadeInSpinBox->setValue(Database::value(configName, "fadeIn", 0).toInt());
 
     QHBoxLayout *fadeInLayout = new QHBoxLayout;
@@ -710,7 +725,7 @@ FadeConfigBox::FadeConfigBox(const QString &name, const QString &title, QWidget 
     QLabel *fadeOutLabel = new QLabel("Tempo para o <strong>Fade out</strong> (em segundos)");
     QSpinBox *fadeOutSpinBox = new QSpinBox;
 
-    fadeOutSpinBox->setRange(0, 15);
+    fadeOutSpinBox->setRange(0, 30);
     fadeOutSpinBox->setValue(Database::value(configName, "fadeOut", 0).toInt());
 
     QHBoxLayout *fadeOutLayout = new QHBoxLayout;

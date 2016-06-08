@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Tchê Media Player
+  FPM Player
 
   Copyright (c) 2016, Fábio Pichler
   All rights reserved.
@@ -36,7 +36,7 @@ private slots:
 
 private:
     void mute(bool, bool event = true);
-    bool eventFilter(QObject * obj, QEvent *event);
+    bool eventFilter(QObject * obj, QEvent *event) Q_DECL_OVERRIDE;
 
 signals:
     void volumeChanged(int volume);

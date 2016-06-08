@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Tchê Media Player
+  FPM Player
 
   Copyright (c) 2016, Fábio Pichler
   All rights reserved.
@@ -39,7 +39,7 @@ private:
 
 private slots:
     void ok();
-    void close();
+    void close() Q_DECL_OVERRIDE;
     void defaultEqualizer();
     void indexChanged();
     void equalizerChanged(int,int);

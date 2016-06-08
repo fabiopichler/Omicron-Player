@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Tchê Media Player
+  FPM Player
 
   Copyright (c) 2016, Fábio Pichler
   All rights reserved.
@@ -149,7 +149,8 @@ void UpdateApp::finishedChecking(QNetworkReply *reply)
             QDate listInstalled(QDate::fromString(iniSettings->value("Radiolist/Date").toString(), "yyyy-MM-dd"));
             QDate dateChecked(QDate::fromString(newPlaylistDate, "yyyy-MM-dd"));
 
-            if (!blockRequest && !radiolistUrl.isEmpty() && listInstalled < dateChecked)
+            if (!blockRequest && Database::value("Config", "autoDlRadioList").toBool()
+                                                 && !radiolistUrl.isEmpty() && listInstalled < dateChecked)
                 downloadPlaylist(radiolistUrl);
 
             if (version == CurrentVersion && alert)
