@@ -17,6 +17,7 @@
 #include "../Gui/Widgets.h"
 
 #include <QWidget>
+#include <QGroupBox>
 
 //================================================================================================================
 // GeneralPage
@@ -202,5 +203,18 @@ public slots:
     void changeUpdade(int);
 
 private:
+};
+
+//================================================================================================================
+// FadeConfigBox
+//================================================================================================================
+
+class FadeConfigBox : public QGroupBox
+{
+public:
+    FadeConfigBox(const QString &, const QString &, QWidget *);
+
+private:
+    const QString configName;
 };
 

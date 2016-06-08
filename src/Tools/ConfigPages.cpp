@@ -217,6 +217,7 @@ MusicPage::MusicPage(QWidget *parent) : Widget(parent)
     mainLayout->addWidget(continuePlayingChBox);
     mainLayout->addWidget(allowAnyFileChBox);
     mainLayout->addWidget(continuePlayTabChBox);
+    mainLayout->addWidget(new FadeConfigBox("MusicConfig", "Transição das Faixas", this));
     mainLayout->addStretch(100);
     setLayout(mainLayout);
 }
@@ -302,16 +303,11 @@ WebRadioPage::WebRadioPage(QWidget *parent) : Widget(parent)
     QGroupBox *configGroup = new QGroupBox("Conexão à Internet");
     configGroup->setLayout(configLayout);
 
-    QVBoxLayout *configLayout2 = new QVBoxLayout;
-    configLayout2->addLayout(modeLayout);
-
-    QGroupBox *configGroup2 = new QGroupBox("Lista de Reprodução");
-    configGroup2->setLayout(configLayout2);
-
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(notificationsChBox);
+    mainLayout->addLayout(modeLayout);
     mainLayout->addWidget(configGroup);
-    mainLayout->addWidget(configGroup2);
+    mainLayout->addWidget(new FadeConfigBox("RadioConfig", "Transição de Rádios", this));
     mainLayout->addStretch(100);
     setLayout(mainLayout);
 }
@@ -689,4 +685,55 @@ void UpdatePage::changeUpdade(int index)
         Database::setValue("Version", "updates_check", 2);
     else
         Database::setValue("Version", "updates_check", 1);
+}
+
+//================================================================================================================
+// FadeConfigBox
+//================================================================================================================
+
+FadeConfigBox::FadeConfigBox(const QString &name, const QString &title, QWidget *parent)
+                                             : QGroupBox(title, parent), configName(name)
+{
+    QLabel *infoLabel = new QLabel("<strong>Obs:</strong> Para desativar as transições, deixe com<br> valores 0 (zero)."
+                                   " O tempo máximo é 15 seg.");
+    QLabel *fadeInLabel = new QLabel("Tempo para o <strong>Fade in</strong> (em segundos)");
+    QSpinBox *fadeInSpinBox = new QSpinBox;
+
+    fadeInSpinBox->setRange(0, 15);
+    fadeInSpinBox->setValue(Database::value(configName, "fadeIn", 0).toInt());
+
+    QHBoxLayout *fadeInLayout = new QHBoxLayout;
+    fadeInLayout->addWidget(fadeInLabel);
+    fadeInLayout->addWidget(fadeInSpinBox);
+
+    //--------------------------------------------
+    QLabel *fadeOutLabel = new QLabel("Tempo para o <strong>Fade out</strong> (em segundos)");
+    QSpinBox *fadeOutSpinBox = new QSpinBox;
+
+    fadeOutSpinBox->setRange(0, 15);
+    fadeOutSpinBox->setValue(Database::value(configName, "fadeOut", 0).toInt());
+
+    QHBoxLayout *fadeOutLayout = new QHBoxLayout;
+    fadeOutLayout->addWidget(fadeOutLabel);
+    fadeOutLayout->addWidget(fadeOutSpinBox);
+
+    //--------------------------------------------
+    QPushButton *saveButton = new QPushButton("Salvar");
+
+    connect(saveButton, &QCheckBox::clicked, [=]() {
+        Database::setValue(configName, "fadeIn", fadeInSpinBox->value());
+        Database::setValue(configName, "fadeOut", fadeOutSpinBox->value());
+        QMessageBox::information(this, "Info", "Salvo con sucesso.");
+    });
+
+    //--------------------------------------------
+    QVBoxLayout *vLayout = new QVBoxLayout;
+    vLayout->addLayout(fadeInLayout);
+    vLayout->addLayout(fadeOutLayout);
+    vLayout->addWidget(infoLabel);
+
+    QHBoxLayout *mainLayout = new QHBoxLayout;
+    mainLayout->addLayout(vLayout);
+    mainLayout->addWidget(saveButton, 0, Qt::AlignRight);
+    setLayout(mainLayout);
 }

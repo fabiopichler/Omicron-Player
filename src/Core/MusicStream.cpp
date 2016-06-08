@@ -23,10 +23,12 @@ MusicStream::MusicStream(QWidget *parent) : StreamBase()
     isMusic = false;
     isCDMode = false;
     newSound = false;
+    stopFadeOut = false;
     repeat = Database::value("MusicMode", "repeat", 0).toInt();
     random = Database::value("MusicMode", "random", false).toBool();
     playlistMode = -2;
     tagListCount = 0;
+    fade = nullptr;
 
     playlist = new MusicPlaylist(parent, playlistMode, repeat, random, mstop);
     timerTag = new QTimer(this);
@@ -66,7 +68,9 @@ MusicStream::~MusicStream()
     if (Database::value("Config", "continuePlaying").toBool() && isRunning())
         Database::setValue("MusicMode", "soundPosition", static_cast<int>(getPosition()));
 
+    stopFadeOut = true;
     stop();
+
     delete timerTag;
 
 #ifndef Q_OS_ANDROID
@@ -403,6 +407,11 @@ void MusicStream::updateCDMode()
 #endif
 }
 
+void MusicStream::createFade()
+{
+    fade = new Fade("MusicConfig", stopFadeOut);
+}
+
 //================================================================================================================
 // private
 //================================================================================================================
@@ -420,6 +429,7 @@ void MusicStream::createEvents()
 #endif
 
     connect(playlist, SIGNAL(playNewMusic(QVariant)), this, SLOT(playNewMusic(QVariant)));
+    connect(this, SIGNAL(newFade()), this, SLOT(createFade()), Qt::QueuedConnection);
 }
 
 void MusicStream::updateTrackList()
@@ -480,15 +490,15 @@ void MusicStream::run()
         if (isCDMode)
         {
 #ifndef Q_OS_ANDROID
-            if ((stream = BASS_CD_StreamCreate(currentDrive, playlist->getCurrentIndex(), 0)))
+            if ((stream = BASS_CD_StreamCreate(currentDrive, playlist->getCurrentIndex(), BASS_STREAM_AUTOFREE)))
                 mplay = true;
 #endif
         }
-        else if ((stream = BASS_StreamCreateFile(0, currentFile.toLocal8Bit().constData(), 0, 0, 0)))
+        else if ((stream = BASS_StreamCreateFile(0, currentFile.toLocal8Bit().constData(), 0, 0, BASS_STREAM_AUTOFREE)))
         {
             mplay = true;
         }
-        else if ((stream = BASS_MusicLoad(FALSE, currentFile.toLocal8Bit().constData(), 0, 0, 0, 0)))
+        else if ((stream = BASS_MusicLoad(FALSE, currentFile.toLocal8Bit().constData(), 0, 0, BASS_STREAM_AUTOFREE, 0)))
         {
             isMusic = true;
             mplay = true;
@@ -500,9 +510,9 @@ void MusicStream::run()
             QString fileType;
 
             if (isMusic)
-                timeLength = BASS_ChannelGetLength(stream,BASS_POS_MUSIC_ORDER) - 1;
+                timeLength = BASS_ChannelGetLength(stream, BASS_POS_MUSIC_ORDER) - 1;
             else
-                timeLength = BASS_ChannelBytes2Seconds(stream, BASS_ChannelGetLength(stream,BASS_POS_BYTE));
+                timeLength = BASS_ChannelBytes2Seconds(stream, BASS_ChannelGetLength(stream, BASS_POS_BYTE));
 
             BASS_CHANNELINFO info;
             BASS_ChannelGetInfo(stream, &info);
@@ -542,6 +552,7 @@ void MusicStream::run()
                                                        /(125*timeLength)+0.5)));
 
             tagList.clear();
+
             if (isCDMode)
             {
                 tagList << "Reproduzindo um CD de Áudio";
@@ -568,9 +579,12 @@ void MusicStream::run()
 
             if (timerTag->isActive())
                 emit stopTagTimer();
+
             emit startTagTimer(5000);
             emit setTotals(static_cast<QWORD>(timeLength));
             emit updateValues(FileTypeLabel, fileType);
+
+            int fadeOut = Database::value("MusicConfig", "fadeOut", 0).toInt();
 
             if (Database::value("Config", "continuePlaying").toBool()
                               && Database::value("MusicMode", "soundPosition").toInt() > 0)
@@ -590,8 +604,12 @@ void MusicStream::run()
                 emit playButtonEnabled(false);
                 emit pauseButtonEnabled(true);
                 emit stopButtonEnabled(true);
+                emit newFade();
 
-                BASS_ChannelPlay(stream, 0);
+                while (!fade)
+                    msleep(10);
+
+                fade->in(stream, getVolume());
             }
 
             if (mplay && !mstop && Database::value("Config", "music_notifiSysTray").toBool())
@@ -600,6 +618,7 @@ void MusicStream::run()
             while ((act = BASS_ChannelIsActive(stream)) && mplay && mstop == false)
             {
                 QWORD position = 0;
+
                 if (isMusic)
                 {
                     QWORD pos=BASS_ChannelGetPosition(stream, BASS_POS_MUSIC_ORDER);
@@ -608,15 +627,19 @@ void MusicStream::run()
                 }
                 else
                 {
-                    position = static_cast<QWORD>(BASS_ChannelBytes2Seconds(stream, BASS_ChannelGetPosition(stream, BASS_POS_BYTE)));
+                    double pos = BASS_ChannelBytes2Seconds(stream, BASS_ChannelGetPosition(stream, BASS_POS_BYTE));
+                    position = static_cast<QWORD>(pos);
+
+                    if (static_cast<int>(timeLength - pos) <= fadeOut)
+                        mplay = false;
                 }
 
                 emit updateValues(position, (act == 1 ? BASS_ChannelGetLevel(stream) : 0));
                 msleep(20);
             }
 
-            BASS_MusicFree(stream);
-            BASS_StreamFree(stream);
+            fade->out(stream);
+            fade = nullptr;
             stream = 0;
             emit stopTagTimer();
         }

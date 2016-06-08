@@ -23,6 +23,7 @@ class StreamBase : public QThread
 
 public:
     StreamBase();
+    const int &getVolume() const;
 
 public slots:
     void updateFX(int, int);

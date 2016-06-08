@@ -24,6 +24,8 @@ RadioStream::RadioStream(QWidget *parent) : StreamBase()
     isQuickLink = false;
     iswma = false;
     mrecord = false;
+    stopFadeOut = false;
+    fade = nullptr;
     recordFile = nullptr;
     recordTime = 0;
     selectedUrl = 0;
@@ -44,7 +46,9 @@ RadioStream::RadioStream(QWidget *parent) : StreamBase()
 
 RadioStream::~RadioStream()
 {
+    stopFadeOut = true;
     stop(true);
+
     delete statusTimer;
     delete metaTimer;
 }
@@ -318,6 +322,15 @@ void RadioStream::updateStatus()
 }
 
 //================================================================================================================
+// private slots
+//================================================================================================================
+
+void RadioStream::createFade()
+{
+    fade = new Fade("RadioConfig", stopFadeOut);
+}
+
+//================================================================================================================
 // private
 //================================================================================================================
 
@@ -333,6 +346,8 @@ void RadioStream::createEvents()
     connect(this, SIGNAL(startMetaTimer(int)), metaTimer, SLOT(start(int)));
     connect(this, SIGNAL(stopMetaTimer()), metaTimer, SLOT(stop()));
     connect(metaTimer, &QTimer::timeout, [=]() { doMeta(); });
+
+    connect(this, SIGNAL(newFade()), this, SLOT(createFade()), Qt::QueuedConnection);
 }
 
 bool RadioStream::startRecord()
@@ -617,14 +632,19 @@ void RadioStream::run()
             updateStatus();
             doMeta();
 
-            emit startMetaTimer(1000);
-            emit startStatusTimer(5000);
-
             if (Database::value("Config", "radio_notifiSysTray").toBool())
                 emit showNotification((isQuickLink ? "Link Rápido" : playlist->getCurrentTitle()));
 
             setupDSP_EQ();
-            BASS_ChannelPlay(stream, 0);
+
+            emit startMetaTimer(1000);
+            emit startStatusTimer(5000);
+            emit newFade();
+
+            while (!fade)
+                msleep(10);
+
+            fade->in(stream, getVolume());
 
             while ((act = BASS_ChannelIsActive(stream)) && mplay && mstop == false)
             {
@@ -637,7 +657,8 @@ void RadioStream::run()
                 msleep(20);
             }
 
-            BASS_StreamFree(stream);
+            fade->out(stream);
+            fade =  nullptr;
             stream = 0;
             isQuickLink = false;
             emit stopMetaTimer();

@@ -16,6 +16,7 @@
 #include "Database.h"
 #include "StreamBase.h"
 #include "NetPlaylist.h"
+#include "Fade.h"
 #include "../Tools/Equalizer.h"
 
 #include <QMessageBox>
@@ -62,6 +63,9 @@ public slots:
     void playNewRadio(int, int selected = 0);
     void updateStatus();
 
+private slots:
+    void createFade();
+
 private:
     void createEvents();
     bool startRecord();
@@ -84,6 +88,7 @@ signals:
     void showNotification(QString);
     void showError(QString);
     void showErrorDlg(QString);
+    void newFade();
 
 public:
     bool mrecord, isQuickLink;
@@ -92,7 +97,8 @@ public:
 
 private:
     QWidget *parent;
-    bool newRadio, mnext;
+    Fade *fade;
+    bool newRadio, mnext, stopFadeOut;
     QString bitrate, status;
     QTimer *statusTimer, *metaTimer;
     QStringList statusList;

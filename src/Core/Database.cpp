@@ -368,6 +368,16 @@ void Database::defaultConfig()
                "('net_proxy', '0'), "
                "('allowAnyFile', 'false')");
 
+    query.exec("CREATE TABLE IF NOT EXISTS MusicConfig (id TEXT PRIMARY KEY, value TEXT)");
+    query.exec("INSERT INTO MusicConfig VALUES "
+               "('fadeIn', '2'), "
+               "('fadeOut', '2')");
+
+    query.exec("CREATE TABLE IF NOT EXISTS RadioConfig (id TEXT PRIMARY KEY, value TEXT)");
+    query.exec("INSERT INTO RadioConfig VALUES "
+               "('fadeIn', '2'), "
+               "('fadeOut', '3')");
+
     query.exec("CREATE TABLE IF NOT EXISTS Current (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO Current VALUES "
                "('mode', 'Music'), "
@@ -436,5 +446,8 @@ void Database::upgrade()
 
     if (!exist("Current", "volume"))
         add("Current", "volume", "100");
+
+    if (!exist("MusicConfig", "fadeIn"))
+        add("MusicConfig", "fadeIn", "0");
 }
 

@@ -108,7 +108,8 @@ SOURCES += src/Main.cpp \
     src/Core/Theme.cpp \
     src/Gui/MainWindow.cpp \
     src/Gui/VolumeControl.cpp \
-    src/Gui/Widgets.cpp
+    src/Gui/Widgets.cpp \
+    src/Core/Fade.cpp
 
 HEADERS += src/Main.h \
     src/Version.h \
@@ -135,7 +136,8 @@ HEADERS += src/Main.h \
     src/Core/Theme.h \
     src/Gui/MainWindow.h \
     src/Gui/VolumeControl.h \
-    src/Gui/Widgets.h
+    src/Gui/Widgets.h \
+    src/Core/Fade.h
 
 win32:RC_FILE = rc/Win.rc
 

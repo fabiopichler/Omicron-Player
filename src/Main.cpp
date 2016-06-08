@@ -437,6 +437,7 @@ bool Main::setupBass()
     BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, Database::value("Config", "net_timeout", 20000).toInt());
     BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
     BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY, (proxy == "0" ? NULL : proxy.toLocal8Bit().data()));
+    BASS_SetConfig(BASS_CONFIG_CD_AUTOSPEED, TRUE);
 
     return true;
 }

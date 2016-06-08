@@ -15,6 +15,7 @@
 #include "Global.h"
 #include "Database.h"
 #include "StreamBase.h"
+#include "Fade.h"
 #include "../Tools/MusicPlaylistManager.h"
 #include "../Tools/Equalizer.h"
 
@@ -67,6 +68,7 @@ public slots:
 private slots:
     void updateTag();
     void updateCDMode();
+    void createFade();
 
 private:
     void createEvents();
@@ -91,6 +93,7 @@ signals:
     void showNotification(QString);
     void showError(QString);
     void showErrorDlg(QString);
+    void newFade();
 
 public:
     bool isMusic, isCDMode;
@@ -101,9 +104,10 @@ public:
 private:
     QWidget *parent;
     QTimer *timerTag, *cdTimer;
+    Fade *fade;
     QStringList tagList;
     short tagListCount;
-    bool newSound, random;
+    bool newSound, random, stopFadeOut;
     int repeat;
     static int currentDrive;
 };
