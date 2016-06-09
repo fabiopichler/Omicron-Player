@@ -1,12 +1,12 @@
 [Desktop Entry]
-Name=Tchê Media Player
+Name=FPM Player
 Comment=Um simples reprodutor de mídias
-GenericName=Tchê Media Player
+GenericName=FPM Player
 Type=Application
-Icon=/opt/Tche-Media-Player/Tche-Media-Player.png
-Path=/opt/Tche-Media-Player
-Exec=/opt/Tche-Media-Player/Tche-Media-Player %U
-TryExec=/opt/Tche-Media-Player/Tche-Media-Player
+Icon=/opt/FPM-Player/FPM-Player.png
+Path=/opt/FPM-Player
+Exec=/opt/FPM-Player/FPM-Player %U
+TryExec=/opt/FPM-Player/FPM-Player
 Categories=Qt;KDE;AudioVideo;Audio;Player;
 MimeType=audio/x-xm;audio/x-wavpack;audio/x-wav;audio/x-vorbis+ogg;audio/x-s3m;audio/x-mod;audio/x-mo3;audio/x-it;audio/x-ape;audio/x-aiff;audio/ogg;audio/mpeg;audio/mp4;audio/mp2;audio/flac;audio/ac3;audio/aac;
 Terminal=false

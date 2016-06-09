@@ -48,14 +48,14 @@ bool Theme::load()
 
     if (!QFile::exists(themePath + "theme.ini"))
     {
-        if (Database::value("Config", "theme").toString() == "app:tche-media-theme")
+        if (Database::value("Config", "theme").toString() == "app:fpm-player")
         {
             QMessageBox::critical(nullptr, "Erro", "Não foi possível carregar o Tema Padrão. Reinstale o programa para "
                                                    "resolver este problema.");
             return false;
         }
 
-        Database::setValue("Config", "theme", "app:tche-media-theme");
+        Database::setValue("Config", "theme", "app:fpm-player");
         Database::setValue("Config", "style", "default");
         return load();
     }

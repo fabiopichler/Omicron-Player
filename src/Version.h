@@ -19,7 +19,7 @@
 #define COMPANY_NAME "Fábio Pichler"
 
 ;// Nome original do arquivo
-#define ORIGINAL_FILENAME "Tche-Media-Player"
+#define ORIGINAL_FILENAME "FPM-Player"
 
 ;// Versão do produto
 #define PRODUCT_VERSION 1,1,0,0

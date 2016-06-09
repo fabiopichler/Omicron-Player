@@ -10,8 +10,7 @@
 
 *******************************************************************************/
 
-QWidget, QMenuBar, QMenu, QLabel, QPushButton, QToolTip
-{
+* {
     font-family: "Verdana";
     font-size: 12px;
 } 

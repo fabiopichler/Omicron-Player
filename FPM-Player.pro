@@ -26,13 +26,13 @@ MOBILITY =
 CONFIG(debug, debug|release) {
 
     BUILDDIR = Debug
-    TARGET = "Tche-Media-Player-Debug"
+    TARGET = "FPM-Player-Debug"
     unix:MAKEFILE = Makefile.debug
 
 } else {
 
     BUILDDIR = Release
-    TARGET = "Tche-Media-Player"
+    TARGET = "FPM-Player"
     unix:MAKEFILE = Makefile.release
     RESOURCES += qrc/Files.qrc
 

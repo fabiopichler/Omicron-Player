@@ -166,13 +166,13 @@ void MusicWindow::createLabels()
     totalTracksLabel->setToolTip("Total de faixas");
 
     currentTagLabel->setFixedHeight(20);
+
     currentTagLabel->setObjectName("radioTitleLabel");
     timeLabel->setObjectName("radioTitleLabel");
     totalTimeLabel->setObjectName("radioTitleLabel");
-
-    currentTrackLabel->setStyleSheet("font-weight: bold; border: none; background: none;");
-    separatorLabel->setStyleSheet("font-weight: bold; border: none; background: none;");
-    totalTracksLabel->setStyleSheet("font-weight: bold; border: none; background: none;");
+    currentTrackLabel->setObjectName("trackLabel");
+    separatorLabel->setObjectName("trackLabel");
+    totalTracksLabel->setObjectName("trackLabel");
 
     int hour = QTime::currentTime().hour();
 

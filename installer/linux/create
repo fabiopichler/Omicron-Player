@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #*******************************************************************************
-#  Tchê Media Player Installer
+#  FPM Player Installer
 #
 #  Copyright (c) 2016, Fábio Pichler
 #  All rights reserved.
@@ -12,7 +12,7 @@
 #
 #*******************************************************************************
 
-DIR_NAME="TcheMediaPlayer-1.0-setup-Linux-x64"
+DIR_NAME="FPM-Player-1.1-setup-Linux-x64"
 
 mkdir output/${DIR_NAME}
 
@@ -27,4 +27,4 @@ chmod +x "${DIR_NAME}/7zr"
 chmod +x "${DIR_NAME}/install"
 chmod +x "${DIR_NAME}/uninstall"
 
-./7zr a "${DIR_NAME}/data.bin" "../Tche-Media-Player"
+./7zr a "${DIR_NAME}/data.bin" "../FPM-Player"

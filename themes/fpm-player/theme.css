@@ -166,6 +166,11 @@ QLabel#plSelectedLabel {
     background: transparent;
     padding: 0 6px;
 }
+QLabel#trackLabel {
+    font-weight: bold;
+    border: none;
+    background: none;
+}
 QLabel[recording="true"] {
     color: #c22;
 }

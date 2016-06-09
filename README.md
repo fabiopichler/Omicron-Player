@@ -1,11 +1,11 @@
-# Tchê Media Player
-O Tchê Media Player é um software para a reprodução de mídias, como CDs de música, arquivos de áudio (MP3, WMA, OGG, etc.) e Web Rádios.
+# FPM Player
+O FPM Player é um software para a reprodução de mídias, como CDs de música, arquivos de áudio (MP3, WMA, OGG, etc.) e Web Rádios.
 
 O principal objetivo, não é fazê-lo cheio de recursos, recursos que nunca serão usados e que só deixam o programa poluído e pesado, assim como acontece com outros reprodutores de músicas, existentes por aí.
 
-A ideia do Tchê Media Player, é que seja um programa mais simples, objetivo, e que reproduza inúmeros formatos de arquivos de áudio, Web Rádios, CDs de música e etc.
+A ideia do FPM Player, é que seja um programa mais simples, objetivo, e que reproduza inúmeros formatos de arquivos de áudio, Web Rádios, CDs de música e etc.
 
-O Tchê Media Player é um software de código aberto (open source) e está licenciado sobre a BSD 3-Clause License.
+O FPM Player é um software de código aberto (open source) e está licenciado sobre a BSD 3-Clause License.
 
 Futuramente, o player contará com novas funcionalidades úteis.
 
@@ -47,4 +47,4 @@ Veja uma galeria com imagens do programa: http://imgur.com/a/inrbQ
 
 
 ### Créditos
-Créditos a [Fábio Pichler](http://fabiopichler.net), por criar e disponibilizar o Tchê Media Player para Windows e Linux.
+Créditos a [Fábio Pichler](http://fabiopichler.net), por criar e disponibilizar o FPM Player para Windows e Linux.

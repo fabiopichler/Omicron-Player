@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #*******************************************************************************
-#  Tchê Media Player Installer
+#  FPM Player Installer
 #
 #  Copyright (c) 2016, Fábio Pichler
 #  All rights reserved.
@@ -13,7 +13,7 @@
 #*******************************************************************************
 
 echo
-echo "Tchê Media Player 1.0 (Instalação)"
+echo "FPM Player 1.1 (Instalação)"
 echo "Copyright (c) 2016 Fábio Pichler, Todos os direitos Reservados"
 echo
 
@@ -29,7 +29,7 @@ echo "Iniciando o programa de instalação..."
 echo
 
 INSTALL_PATH="/opt/"
-INSTALL_DIR="Tche-Media-Player/"
+INSTALL_DIR="FPM-Player/"
 CURRENT_PATH=`echo $0|sed 's/install//'`
 count=0
 
@@ -45,11 +45,11 @@ then
     echo
     echo "Instalando arquivos necessários..."
 
-    chmod +x "${INSTALL_PATH}${INSTALL_DIR}Tche-Media-Player"
+    chmod +x "${INSTALL_PATH}${INSTALL_DIR}FPM-Player"
     chmod +x "${INSTALL_PATH}${INSTALL_DIR}uninstall"
     chmod +x "${INSTALL_PATH}${INSTALL_DIR}7zr"
 
-    if mv -f "${INSTALL_PATH}${INSTALL_DIR}Tche-Media-Player.desktop" "/usr/share/applications/" $1 > /dev/null 2> /dev/null
+    if mv -f "${INSTALL_PATH}${INSTALL_DIR}FPM-Player.desktop" "/usr/share/applications/" $1 > /dev/null 2> /dev/null
     then
         let count++
         echo "Arquivos instalados... Ok"
@@ -64,12 +64,12 @@ echo
 
 if [ $count -eq 2 ]
 then
-    echo "O Tchê Media Player foi instalado com sucesso"
+    echo "O FPM Player foi instalado com sucesso"
     echo
     echo "Caso queira desinstalá-lo, execute este comando como administrador (root):"
-    echo "/opt/Tche-Media-Player/uninstall"
+    echo "/opt/FPM-Player/uninstall"
 else
-    echo "ERRO! Não foi possível instalar o Tchê Media Player"
+    echo "ERRO! Não foi possível instalar o FPM Player"
 fi
 
 echo

@@ -44,7 +44,7 @@ const QString AppName = APP_NAME,
               FileRadiolistDate = FILE_RADIOLIST_DATE,
               PathAudioPlugins = "plugins/audio/",
               AppConfigDir = "FPM-Player",
-              AppNameId = "Tche-Media-Player",
+              AppNameId = "FPM-Player",
               PlaylistExt = "tmpp", // Tchê Media Player Playlist
               RadioPlaylistExt = "tmpr", // Tchê Media Player Radio list
 
@@ -77,7 +77,7 @@ const QString AppName = APP_NAME,
               bassopus = "",
 #endif // Q_OS_WIN
 
-              CheckUpdate = "http://software.fabiopichler.net/updates/tche-media-player/check.php",
+              CheckUpdate = "http://software.fabiopichler.net/updates/fpm-player/check.php",
               OfficialSite = OFFICIAL_WEBSITE,
               DownloadUpdate = "http://fabiopichler.net/download/tche-media-player/";
 

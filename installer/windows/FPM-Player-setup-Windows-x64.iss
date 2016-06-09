@@ -3,17 +3,17 @@
 
 #include "..\..\src\Version.h"
 
-#define MyAppName "Tchê Media Player"
+#define MyAppName "FPM Player"
 #define MyAppVersion PRODUCT_VERSION_STR
 #define MyAppPublisher "Fábio Pichler"
 #define MyAppURL OFFICIAL_WEBSITE
-#define MyAppExeName "Tche-Media-Player.exe"
+#define MyAppExeName "FPM-Player.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{6F8D38FF-C925-4DA8-A640-F98E943FDF46}
+AppId={{EC1969F1-99B6-4BF6-9E4B-3383B50C8FE7}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -21,12 +21,12 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\Tche Media Player
+DefaultDirName={pf}\FPM Player
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 LicenseFile=LICENSE.txt
 OutputDir=output
-OutputBaseFilename=TcheMediaPlayer-{#PRODUCT_VERSION_STR}-setup-Windows-x64
+OutputBaseFilename=FPM-Player-{#PRODUCT_VERSION_STR}-setup-Windows-x64
 Compression=lzma2
 SolidCompression=yes
 
@@ -43,7 +43,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "files-x64\Tche-Media-Player.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "files-x64\FPM-Player.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "files-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 

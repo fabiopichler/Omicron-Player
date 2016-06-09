@@ -351,7 +351,7 @@ void Database::defaultConfig()
 
     query.exec("CREATE TABLE IF NOT EXISTS Config (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO Config VALUES "
-               "('theme', 'app:tche-media-theme'), "
+               "('theme', 'app:fpm-player'), "
                "('style', 'default'), "
                "('device', '-1'), "
                "('autoDlRadioList', 'true'), "
