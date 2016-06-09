@@ -594,6 +594,7 @@ void RadioStream::run()
             if (mstop)
                 break;
 
+            fade = nullptr;
             bool ok;
             int _bitrate = bitrate.toInt(&ok);
             BASS_CHANNELINFO info;
@@ -658,7 +659,7 @@ void RadioStream::run()
             }
 
             fade->out(stream);
-            fade =  nullptr;
+            fade = nullptr;
             stream = 0;
             isQuickLink = false;
             emit stopMetaTimer();

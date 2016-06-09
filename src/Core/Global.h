@@ -45,8 +45,8 @@ const QString AppName = APP_NAME,
               PathAudioPlugins = "plugins/audio/",
               AppConfigDir = "FPM-Player",
               AppNameId = "FPM-Player",
-              PlaylistExt = "tmpp", // Tchê Media Player Playlist
-              RadioPlaylistExt = "tmpr", // Tchê Media Player Radio list
+              PlaylistExt = "fpmp",
+              RadioPlaylistExt = "fprp",
 
 #ifdef Q_OS_WIN
               FileNameFilter = "*.mp3 *.wma *.ogg *.wav *.aac *.mp2 *.mp1 *.ac3 *.m4a *.m4r *.aiff *.aif *.flac *.ape *.wv *.opus *.mo3 *.xm *.mod *.s3m *.it *.mtm *.umx",
@@ -79,7 +79,7 @@ const QString AppName = APP_NAME,
 
               CheckUpdate = "http://software.fabiopichler.net/updates/fpm-player/check.php",
               OfficialSite = OFFICIAL_WEBSITE,
-              DownloadUpdate = "http://fabiopichler.net/download/tche-media-player/";
+              DownloadUpdate = "http://fabiopichler.net/download/fpm-player/";
 
 class Global
 {

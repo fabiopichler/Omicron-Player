@@ -5,6 +5,6 @@
         <file>tray-icons/icon-1.png</file>
         <file>fonts/verdana.ttf</file>
         <file>fonts/verdanab.ttf</file>
-        <file>RadioList.tmpr</file>
+        <file>RadioList.fprp</file>
     </qresource>
 </RCC>

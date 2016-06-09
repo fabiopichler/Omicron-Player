@@ -31,10 +31,10 @@
 #define FILE_VERSION "1.1"
 
 ;// Website oficial
-#define OFFICIAL_WEBSITE "http://fabiopichler.net/tche-media-player/"
+#define OFFICIAL_WEBSITE "http://fabiopichler.net/fpm-player/"
 
 ;// Nome do arquivo da lista de rádios
-#define FILE_RADIOLIST "RadioList_2016-05-16.tmpr"
+#define FILE_RADIOLIST "RadioList_2016-05-16.fprp"
 
 ;// Data de lançamento da lista de rádios
 #define FILE_RADIOLIST_DATE "2016-05-16"
