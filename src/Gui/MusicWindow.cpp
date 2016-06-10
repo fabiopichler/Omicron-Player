@@ -119,6 +119,7 @@ void MusicWindow::createWidgets()
     searchLineEdit = new QLineEdit;
     searchLineEdit->setObjectName("searchLineEdit");
     searchLineEdit->setClearButtonEnabled(true);
+    searchLineEdit->setPlaceholderText("Pesquisa rápida");
 
     leftChProgressBar = new QProgressBar;
     leftChProgressBar->setOrientation(Qt::Horizontal);
@@ -138,7 +139,7 @@ void MusicWindow::createWidgets()
 
     tracksWidget = new Widget;
     tracksWidget->setMinimumWidth(10);
-    tracksWidget->setFixedHeight(20);
+    tracksWidget->setFixedHeight(22);
     tracksWidget->setContentsMargins(10, 0, 10, 0);
     tracksWidget->setObjectName("tracksWidget");
 }

@@ -21,7 +21,7 @@ class Fade : public QThread
     Q_OBJECT
 
 public:
-    Fade(const QString &, const bool &);
+    Fade(const QString &);
     ~Fade();
 
     void in(const HSTREAM &, const int &);
@@ -35,5 +35,4 @@ private:
     QMutex mutex;
     HSTREAM oldStream;
     long waitTimeout;
-    const bool &mstop;
 };

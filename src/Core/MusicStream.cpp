@@ -23,7 +23,6 @@ MusicStream::MusicStream(QWidget *parent) : StreamBase()
     isMusic = false;
     isCDMode = false;
     newSound = false;
-    stopFadeOut = false;
     repeat = Database::value("MusicMode", "repeat", 0).toInt();
     random = Database::value("MusicMode", "random", false).toBool();
     playlistMode = -2;
@@ -68,7 +67,6 @@ MusicStream::~MusicStream()
     if (Database::value("Config", "continuePlaying").toBool() && isRunning())
         Database::setValue("MusicMode", "soundPosition", static_cast<int>(getPosition()));
 
-    stopFadeOut = true;
     stop();
 
     delete timerTag;
@@ -409,7 +407,7 @@ void MusicStream::updateCDMode()
 
 void MusicStream::createFade()
 {
-    fade = new Fade("MusicConfig", stopFadeOut);
+    fade = new Fade("MusicConfig");
 }
 
 //================================================================================================================
@@ -517,35 +515,7 @@ void MusicStream::run()
 
             BASS_CHANNELINFO info;
             BASS_ChannelGetInfo(stream, &info);
-
-            switch (info.ctype)
-            {
-                case BASS_CTYPE_STREAM_OGG:       fileType = "OGG";         break;
-                case BASS_CTYPE_STREAM_MP1:       fileType = "MP1";         break;
-                case BASS_CTYPE_STREAM_MP2:       fileType = "MP2";         break;
-                case BASS_CTYPE_STREAM_MP3:       fileType = "MP3";         break;
-                case BASS_CTYPE_STREAM_AIFF:      fileType = "AIFF";        break;
-                case BASS_CTYPE_STREAM_WAV_PCM:   fileType = "PCM WAVE";    break;
-                case BASS_CTYPE_STREAM_WAV_FLOAT: fileType = "PCM WAVE";    break;
-                case BASS_CTYPE_STREAM_WAV:       fileType = "WAVE";        break;
-                case 327682:                      fileType = "ADPCM WAVE";  break;
-                case 70144:                       fileType = "Opus";        break;
-                case 68352:                       fileType = "AAC";         break;
-                case 66304:                       fileType = "WMA";         break;
-                case BASS_CTYPE_STREAM_CA:        fileType = "CA";          break;
-                case BASS_CTYPE_STREAM_MF:        fileType = "MF";          break;
-                case BASS_CTYPE_MUSIC_MOD:        fileType = "MOD";         break;
-                case BASS_CTYPE_MUSIC_MTM:        fileType = "MTM";         break;
-                case BASS_CTYPE_MUSIC_S3M:        fileType = "S3M";         break;
-                case BASS_CTYPE_MUSIC_XM:         fileType = "XM";          break;
-                case BASS_CTYPE_MUSIC_IT:         fileType = "IT";          break;
-                case BASS_CTYPE_MUSIC_MO3:        fileType = "MO3";         break;
-                case 66048:                       fileType = "CDA";         break;
-                case 67328:                       fileType = "APE";         break;
-                case 67840:                       fileType = "FLAC";        break;
-                case 68353:                       fileType = "M4A";         break;
-                case 66816:                       fileType = "WavPack";     break;
-            }
+            fileType = getFileType(info.ctype);
 
             if (!isMusic)
                 fileType += QString(fileType.isEmpty() ? "%1 kbps" : " | %1 kbps").arg(static_cast<int>(
@@ -608,7 +578,7 @@ void MusicStream::run()
                 emit newFade();
 
                 while (!fade)
-                    msleep(10);
+                    msleep(1);
 
                 fade->in(stream, getVolume());
             }

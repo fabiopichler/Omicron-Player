@@ -11,7 +11,7 @@
 *******************************************************************************/
 
 #include "RadioStream.h"
-#include "iostream"
+#include <iostream>
 #include <QElapsedTimer>
 
 RadioStream::RadioStream(QWidget *parent) : StreamBase()
@@ -24,8 +24,7 @@ RadioStream::RadioStream(QWidget *parent) : StreamBase()
     isQuickLink = false;
     iswma = false;
     mrecord = false;
-    stopFadeOut = false;
-    fade = nullptr;
+    connection = nullptr;
     recordFile = nullptr;
     recordTime = 0;
     selectedUrl = 0;
@@ -46,7 +45,6 @@ RadioStream::RadioStream(QWidget *parent) : StreamBase()
 
 RadioStream::~RadioStream()
 {
-    stopFadeOut = true;
     stop(true);
 
     delete statusTimer;
@@ -325,9 +323,32 @@ void RadioStream::updateStatus()
 // private slots
 //================================================================================================================
 
-void RadioStream::createFade()
+void RadioStream::newConnectionSlot()
 {
-    fade = new Fade("RadioConfig", stopFadeOut);
+    connection = new NetworkStream;
+
+    connect(connection, SIGNAL(statusProcSignal(const void *, DWORD)),
+                                this, SLOT(statusProc(const void *, DWORD)), Qt::QueuedConnection);
+}
+
+void RadioStream::statusProc(const void *buffer, DWORD length)
+{
+    if (buffer && !length)
+    {
+        status = Global::cStrToQString(static_cast<const char *>(buffer));
+        emit updateValues(StatusLabel, status);
+    }
+    else if (mrecord)
+    {
+        if (!recordFile && buffer && length > 0 && startRecord())
+            return;
+
+        if (buffer && length > 0)
+            recordFile->write(static_cast<const char *>(buffer), length);
+
+        else if (recordFile)
+            stopRecord();
+    }
 }
 
 //================================================================================================================
@@ -337,7 +358,7 @@ void RadioStream::createFade()
 void RadioStream::createEvents()
 {
     connect(playlist, SIGNAL(playNewRadio(int)), this, SLOT(playNewRadio(int)));
-    connect(&netPlaylist, &NetPlaylist::updateStatus, [=](QVariant arg) { emit updateValues(StatusLabel, arg); });
+    //connect(&netPlaylist, &NetPlaylist::updateStatus, [=](QVariant arg) { emit updateValues(StatusLabel, arg); });
 
     connect(this, SIGNAL(startStatusTimer(int)), statusTimer, SLOT(start(int)));
     connect(this, SIGNAL(stopStatusTimer()), statusTimer, SLOT(stop()));
@@ -347,7 +368,7 @@ void RadioStream::createEvents()
     connect(this, SIGNAL(stopMetaTimer()), metaTimer, SLOT(stop()));
     connect(metaTimer, &QTimer::timeout, [=]() { doMeta(); });
 
-    connect(this, SIGNAL(newFade()), this, SLOT(createFade()), Qt::QueuedConnection);
+    connect(this, SIGNAL(newConnection()), this, SLOT(newConnectionSlot()), Qt::QueuedConnection);
 }
 
 bool RadioStream::startRecord()
@@ -378,28 +399,6 @@ bool RadioStream::startRecord()
     emit recordButtonEnabled(false);
     emit updateValues(Recording, true);
     return false;
-}
-
-void CALLBACK RadioStream::statusProc(const void *buffer, DWORD length, void *user)
-{
-    RadioStream *instance = static_cast<RadioStream *>(user);
-
-    if (buffer && !length)
-    {
-        instance->status = Global::cStrToQString(static_cast<const char *>(buffer));
-        emit instance->updateValues(StatusLabel, instance->status);
-    }
-    else if (instance->mrecord)
-    {
-        if (!instance->recordFile && buffer && length > 0 && instance->startRecord())
-            return;
-
-        if (buffer && length > 0)
-            instance->recordFile->write(static_cast<const char *>(buffer), length);
-
-        else if (instance->recordFile)
-            instance->stopRecord();
-    }
 }
 
 bool RadioStream::buffering(int &_progress)
@@ -487,23 +486,6 @@ bool RadioStream::buffering(int &_progress)
     return false;
 }
 
-void RadioStream::showTimedout()
-{
-    QString errDlg = "<div style=\"font-weight:bold;margin-bottom:7px;\">["
-                   + QTime::currentTime().toString("HH:mm") + "] Erro ao reproduzir a Web Rádio!</div>"
-                   "<div><strong>Código do erro:</strong> 40</div><div style=\"margin-bottom:7px;\">"
-                   "<strong>Mensagem:</strong> Connection timedout</div>";
-
-    QString time = "[" + QTime::currentTime().toString("HH:mm") + "] ";
-
-    if (Database::value("Config", "errorNotification").toString() == "dialog")
-        emit showErrorDlg(errDlg);
-    else if (Database::value("Config", "errorNotification").toString() == "systray")
-        emit showError(time + "Erro ao reproduzir a Web Rádio!\nCode: 40, Connection timedout");
-
-    stdCout(time + "Error when playing back the file.\nCode: 40, Connection timedout");
-}
-
 void RadioStream::run()
 {
     mstop = false;
@@ -511,10 +493,15 @@ void RadioStream::run()
 
     do
     {
+        QString currentUrl;
         DWORD act = 0;
         int errorCode = 0;
+        bool _stop = false,
+             timedout = false;
+
+        connection = nullptr;
         isQuickLink = false;
-        QString currentUrl;
+        mplay = true;
 
         if (quickLink.isEmpty())
         {
@@ -530,50 +517,49 @@ void RadioStream::run()
         if (currentUrl.isEmpty())
             break;
 
-        mplay = true;
         int timeout = Database::value("Config", "net_timeout", 20000).toInt();
         QElapsedTimer timer;
         timer.start();
 
         emit updateValues(StatusLabel, "Conectando...");
         emit updateValues(ShowLoaderMovie, true);
+        emit newConnection();
 
-        for (int i = 0; i < 2; i++)
+        while (!connection)
+            msleep(3);
+
+        connection->create(currentUrl);
+
+        while (connection->loading(_stop ? _stop : mstop, mplay))
         {
-            stream = BASS_StreamCreateURL(currentUrl.toLocal8Bit().constData(), 0,
-                                        BASS_STREAM_BLOCK|BASS_STREAM_STATUS|BASS_STREAM_AUTOFREE,
-                                        statusProc, static_cast<void *>(this));
-
-            errorCode = BASS_ErrorGetCode();
-
-            if (i == 0 && errorCode == 41)
-                netPlaylist.getUrl(currentUrl, mstop, mplay, timeout, timer);
-
-            if (mstop || errorCode != 41 || currentUrl.isEmpty())
-                break;
+            msleep(10);
 
             if (timer.hasExpired(timeout))
             {
-                showTimedout();
-                mstop = true;
-                break;
+                timedout = true;
+                _stop = true;
             }
         }
 
-        if (mstop)
-            break;
-
-        iswma = !!BASS_ChannelGetTags(stream, 8/*BASS_TAG_WMA*/);
-
-        if (iswma)
+        if (_stop)
         {
-            mrecord = false;
-            emit recordButtonEnabled(false);
+            disconnect(connection, SIGNAL(statusProcSignal(const void *, DWORD)),
+                                             this, SLOT(statusProc(const void *, DWORD)));
+
+            connection = nullptr;
         }
 
-        if (errorCode == 0)
+        if ((errorCode = (timedout ? 40 : connection->code())) == 0)
         {
-            while (mplay && mstop == false)
+            stream = connection->getStream();
+
+            if ((iswma = !!BASS_ChannelGetTags(stream, 8/*BASS_TAG_WMA*/)))
+            {
+                mrecord = false;
+                emit recordButtonEnabled(false);
+            }
+
+            while (mplay && !mstop)
             {
                 int progress;
 
@@ -582,46 +568,35 @@ void RadioStream::run()
 
                 if (timer.hasExpired(timeout) && progress < 6)
                 {
-                    showTimedout();
-                    mstop = true;
+                    errorCode = 40;
+                    _stop = true;
                     break;
                 }
 
-                msleep(50);
+                msleep(30);
             }
 
             emit updateValues(ShowLoaderMovie, false);
-            if (mstop)
+
+            if (mstop || _stop)
                 break;
 
-            fade = nullptr;
             bool ok;
             int _bitrate = bitrate.toInt(&ok);
-            BASS_CHANNELINFO info;
-            BASS_ChannelGetInfo(stream, &info);
 
             if ((!ok || _bitrate < 8) && !iswma)
                 bitrate = QString("%1").arg(BASS_StreamGetFilePosition(stream, BASS_FILEPOS_END) * 8
                                             / BASS_GetConfig(BASS_CONFIG_NET_BUFFER));
 
-            switch (info.ctype)
-            {
-                case BASS_CTYPE_STREAM_OGG:       fileType = "OGG";  break;
-                case BASS_CTYPE_STREAM_MP1:       fileType = "MP1";  break;
-                case BASS_CTYPE_STREAM_MP2:       fileType = "MP2";  break;
-                case BASS_CTYPE_STREAM_MP3:       fileType = "MP3";  break;
-                case BASS_CTYPE_STREAM_AIFF:      fileType = "AIFF"; break;
-                case BASS_CTYPE_STREAM_WAV_PCM:   fileType = "WAV";  break;
-                case BASS_CTYPE_STREAM_WAV_FLOAT: fileType = "WAV";  break;
-                case BASS_CTYPE_STREAM_WAV:       fileType = "WAV";  break;
-                case 70144:                       fileType = "OPUS"; break;
-                case 68352:                       fileType = "AAC";  break;
-                case 66304:                       fileType = "WMA";  break;
-            }
+            BASS_CHANNELINFO info;
+            BASS_ChannelGetInfo(stream, &info);
+            fileType = getFileType(info.ctype);
 
             statusList.clear();
             statusList << bitrate + " kbps";
             statusList << fileType;
+            statusList << (info.chans == 1 ? "Mono" : (info.chans == 2 ? "Stereo" : (info.chans > 2 ? "Surround" : "")));
+            statusList << QString("%1 Hz").arg(info.freq);
             statusList << status;
 
             statusList.removeAll("");
@@ -630,22 +605,19 @@ void RadioStream::run()
             bitrate.clear();
 
             statusListCount = 0;
-            updateStatus();
-            doMeta();
+            reconnect = 0;
 
             if (Database::value("Config", "radio_notifiSysTray").toBool())
                 emit showNotification((isQuickLink ? "Link Rápido" : playlist->getCurrentTitle()));
 
-            setupDSP_EQ();
-
             emit startMetaTimer(1000);
             emit startStatusTimer(5000);
-            emit newFade();
 
-            while (!fade)
-                msleep(10);
+            updateStatus();
+            doMeta();
+            setupDSP_EQ();
 
-            fade->in(stream, getVolume());
+            connection->fadeIn(getVolume());
 
             while ((act = BASS_ChannelIsActive(stream)) && mplay && mstop == false)
             {
@@ -658,10 +630,11 @@ void RadioStream::run()
                 msleep(20);
             }
 
-            fade->out(stream);
-            fade = nullptr;
+            connection->fadeOut();
+            connection = nullptr;
             stream = 0;
             isQuickLink = false;
+
             emit stopMetaTimer();
             emit stopStatusTimer();
             emit threadFinished(false, !quickLink.isEmpty());
@@ -672,17 +645,17 @@ void RadioStream::run()
 
         if (!mstop)
         {
-            if (BASS_ErrorGetCode() != 0)
+            if (errorCode != 0)
             {
                 msleep(1000);
                 QString time = "[" + QTime::currentTime().toString("HH:mm") + "] ";
 
                 if (Database::value("Config", "errorNotification").toString() == "dialog")
-                    emit showErrorDlg(Global::getErrorHtml(time + "Erro ao reproduzir a Web Rádio!"));
+                    emit showErrorDlg(Global::getErrorHtml(time + "Erro ao reproduzir a Web Rádio!", "", errorCode));
                 else if (Database::value("Config", "errorNotification").toString() == "systray")
-                    emit showError(Global::getErrorText(time + "Erro ao reproduzir a Web Rádio!"));
+                    emit showError(Global::getErrorText(time + "Erro ao reproduzir a Web Rádio!", "", errorCode));
 
-                stdCout(Global::getErrorText(time + "Error when playing back the file."));
+                stdCout(Global::getErrorText(time + "Error when playing back the file.", "", errorCode));
             }
 
             if (mprev)
@@ -716,7 +689,144 @@ void RadioStream::run()
     mrecord = false;
     mstop = false;
     reconnect = 0;
+
     emit threadFinished(true, false);
+}
+
+//================================================================================================================
+// class NetworkStream
+//================================================================================================================
+
+NetworkStream::NetworkStream()
+{
+    stream = 0;
+    waitTimeout = 0;
+
+    mstop = false;
+    complete = false;
+    isFadeOut = false;
+
+    connect(&netPlaylist, &NetPlaylist::updateStatus, [=](QVariant arg) {
+        static const char *c = arg.toString().toLocal8Bit().data();
+        emit statusProcSignal(c, 0);
+    });
+}
+
+NetworkStream::~NetworkStream()
+{
+    //qDebug("NetworkStream::~NetworkStream()");
+}
+
+void NetworkStream::create(const QString &url)
+{
+    streamUrl = url;
+    start();
+}
+
+bool NetworkStream::loading(const bool &stop, const bool &play)
+{
+    if (stop || !play)
+    {
+        mstop = true;
+        return false;
+    }
+    else if (complete)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+int NetworkStream::code() const
+{
+    return errorCode;
+}
+
+const HSTREAM &NetworkStream::getStream() const
+{
+    return stream;
+}
+
+void NetworkStream::fadeIn(const int &volume)
+{
+    int time = Database::value("RadioConfig", "fadeIn", 0).toInt();
+
+    if (time > 0)
+    {
+        BASS_ChannelSetAttribute(stream, BASS_ATTRIB_VOL, 0.0f);
+        BASS_ChannelPlay(stream, 0);
+        BASS_ChannelSlideAttribute(stream, BASS_ATTRIB_VOL, (static_cast<float>(volume) / 100.0f), (time * 1000));
+    }
+    else
+    {
+        BASS_ChannelPlay(stream, 0);
+    }
+}
+
+void NetworkStream::fadeOut()
+{
+    int time = Database::value("RadioConfig", "fadeOut", 0).toInt();
+
+    if (time > 0)
+    {
+        connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
+        waitTimeout = time * 1000;
+        isFadeOut = true;
+        start();
+    }
+    else
+    {
+        BASS_StreamFree(stream);
+        deleteLater();
+    }
+}
+
+//================================================================================================================
+// private
+//================================================================================================================
+
+void NetworkStream::run()
+{
+    if (isFadeOut)
+    {
+        BASS_ChannelSlideAttribute(stream, BASS_ATTRIB_VOL, 0, waitTimeout);
+
+        while (BASS_ChannelIsSliding(stream, 0))
+            msleep(1);
+
+        BASS_StreamFree(stream);
+    }
+    else
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            stream = BASS_StreamCreateURL(streamUrl.toLocal8Bit().constData(), 0,
+                                        BASS_STREAM_BLOCK|BASS_STREAM_STATUS|BASS_STREAM_AUTOFREE,
+                                        statusProc, static_cast<void *>(this));
+
+            errorCode = BASS_ErrorGetCode();
+
+            if (i == 0 && errorCode == 41)
+                netPlaylist.getUrl(streamUrl, mstop, true);
+
+            if (mstop || errorCode != 41 || streamUrl.isEmpty())
+                break;
+        }
+
+        if (mstop)
+        {
+            BASS_StreamFree(stream);
+            connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
+        }
+
+        complete = true;
+    }
+}
+
+void CALLBACK NetworkStream::statusProc(const void *buffer, DWORD length, void *user)
+{
+    emit static_cast<NetworkStream *>(user)->statusProcSignal(buffer, length);
 }
 
 //================================================================================================================

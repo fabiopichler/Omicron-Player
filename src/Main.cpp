@@ -252,7 +252,7 @@ void Main::startMusicMode()
     delete window;
     window = new MainWindow(this, iniSettings);
     window->initWindow(new MusicWindow(this, window));
-    window->setWindowTitle("Músicas » "+AppName+" "+CurrentVersion);
+    window->setWindowTitle("Músicas » "+AppName);
     trayIcon->setToolTip(AppName+" » Modo Músicas");
     updateTrayIconMenu();
 }
@@ -262,7 +262,7 @@ void Main::startRadioMode()
     delete window;
     window = new MainWindow(this, iniSettings);
     window->initWindow(new RadioWindow(this, window));
-    window->setWindowTitle("Rádio » "+AppName+" "+CurrentVersion);
+    window->setWindowTitle("Rádio » "+AppName);
     trayIcon->setToolTip(AppName+" » Modo Web Rádio");
     updateTrayIconMenu();
 }
@@ -293,8 +293,9 @@ void Main::about()
     QPushButton btOk("Ok");
     QVBoxLayout layout;
 
-    QLabel lb("<h2 align=\"center\">"+AppName+" "+CurrentVersion+"</h2>"
-              "<div align=\"center\"><strong>Copyright © 2016, Fábio Pichler, Todos os direitos reservados.</strong><br><br>"
+    QLabel lb("<h1 align=\"center\">"+AppName+"</h1>"
+              "<h3 align=\"center\">Versão: "+CurrentVersion+" ("+CurrentReleaseDate+")</h3>"
+              "<div align=\"center\"><strong>Copyright © 2015-2016, Fábio Pichler, Todos os direitos reservados.</strong><br><br>"
               "Visite: <a href=\"http://fabiopichler.net\">http://fabiopichler.net</a><br></div>"
               "<div>Este é um programa livre, gratuito e de código aberto,<br>"
               "está licenciado sobre a <a href=\"http://fabiopichler.net/bsd-3-license/\">BSD 3-Clause License</a><br><br>"

@@ -107,7 +107,7 @@ private:
     Fade *fade;
     QStringList tagList;
     short tagListCount;
-    bool newSound, random, stopFadeOut;
+    bool newSound, random;
     int repeat;
     static int currentDrive;
 };

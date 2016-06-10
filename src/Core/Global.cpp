@@ -100,23 +100,29 @@ QString Global::getThemePath(const QString &arg)
     return themePath + arg;
 }
 
-QString Global::getErrorHtml(const QString &arg, const QString &arg2)
+QString Global::getErrorHtml(const QString &arg, const QString &arg2, int code)
 {
+    if (code == -2)
+        code = BASS_ErrorGetCode();
+
     QString text((arg.isEmpty() ? ""
               : "<div style=\"font-weight:bold;margin-bottom:7px;\">" + arg + "</div>")
-                    + "<div><strong>Código do erro:</strong> "+QString::number(BASS_ErrorGetCode())
+                    + "<div><strong>Código do erro:</strong> "+QString::number(code)
                     + "</div><div style=\"margin-bottom:7px;\"><strong>Mensagem:</strong> ");
 
-    text += getErrorText();
+    text += getErrorText("", "", code);
 
     return text + "</div>" + (arg2.isEmpty() ? "" : "<div>" + arg2 + "</div>");
 }
 
-QString Global::getErrorText(const QString &arg, const QString &arg2)
+QString Global::getErrorText(const QString &arg, const QString &arg2, int code)
 {
-    QString text(arg.isEmpty() ? "" : arg+"\nCode: "+QString::number(BASS_ErrorGetCode())+", ");
+    if (code == -2)
+        code = BASS_ErrorGetCode();
 
-    switch(BASS_ErrorGetCode())
+    QString text(arg.isEmpty() ? "" : arg+"\nCode: "+QString::number(code)+", ");
+
+    switch(code)
     {
         case 0:  text += "All is OK"; break;
         case 1:  text += "Memory error"; break;

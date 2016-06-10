@@ -40,6 +40,7 @@ enum
 
 const QString AppName = APP_NAME,
               CurrentVersion = PRODUCT_VERSION_STR,
+              CurrentReleaseDate = CURRENT_RELEASE_DATE,
               FileRadiolist = FILE_RADIOLIST,
               FileRadiolistDate = FILE_RADIOLIST_DATE,
               PathAudioPlugins = "plugins/audio/",
@@ -92,8 +93,8 @@ public:
     static QString getQrcPath(const QString &arg = QString());
     static QString getRadiolistPath();
     static QString getThemePath(const QString &arg = QString());
-    static QString getErrorHtml(const QString &arg = QString(), const QString &arg2 = QString());
-    static QString getErrorText(const QString &arg = QString(), const QString &arg2 = QString());
+    static QString getErrorHtml(const QString &arg = QString(), const QString &arg2 = QString(), int = -2);
+    static QString getErrorText(const QString &arg = QString(), const QString &arg2 = QString(), int = -2);
 
     static QString regExp(const QString &, const QString &);
     static QString cStrToQString(const char *);

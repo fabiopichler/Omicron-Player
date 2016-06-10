@@ -84,3 +84,37 @@ void StreamBase::setupDSP_EQ()
 
     setVolume(volume);
 }
+
+QString StreamBase::getFileType(const DWORD &ctype)
+{
+    switch (ctype)
+    {
+        case BASS_CTYPE_STREAM_OGG:       return "OGG";
+        case BASS_CTYPE_STREAM_MP1:       return "MP1";
+        case BASS_CTYPE_STREAM_MP2:       return "MP2";
+        case BASS_CTYPE_STREAM_MP3:       return "MP3";
+        case BASS_CTYPE_STREAM_AIFF:      return "AIFF";
+        case BASS_CTYPE_STREAM_WAV_PCM:   return "PCM WAVE";
+        case BASS_CTYPE_STREAM_WAV_FLOAT: return "PCM WAVE";
+        case BASS_CTYPE_STREAM_WAV:       return "WAVE";
+        case 327682:                      return "ADPCM WAVE";
+        case 70144:                       return "Opus";
+        case 68352:                       return "AAC";
+        case 66304:                       return "WMA";
+        case BASS_CTYPE_STREAM_CA:        return "CA";
+        case BASS_CTYPE_STREAM_MF:        return "MF";
+        case BASS_CTYPE_MUSIC_MOD:        return "MOD";
+        case BASS_CTYPE_MUSIC_MTM:        return "MTM";
+        case BASS_CTYPE_MUSIC_S3M:        return "S3M";
+        case BASS_CTYPE_MUSIC_XM:         return "XM";
+        case BASS_CTYPE_MUSIC_IT:         return "IT";
+        case BASS_CTYPE_MUSIC_MO3:        return "MO3";
+        case 66048:                       return "CDA";
+        case 67328:                       return "APE";
+        case 67840:                       return "FLAC";
+        case 68353:                       return "M4A";
+        case 66816:                       return "WavPack";
+    }
+
+    return QString();
+}

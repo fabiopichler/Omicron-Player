@@ -13,7 +13,7 @@
 #include "Fade.h"
 #include "Database.h"
 
-Fade::Fade(const QString &name, const bool &stop) : configName(name), mstop(stop)
+Fade::Fade(const QString &name) : configName(name)
 {
     oldStream = 0;
     waitTimeout = 0;
@@ -48,7 +48,7 @@ void Fade::out(const HSTREAM &old)
 
     int time = Database::value(configName, "fadeOut", 0).toInt();
 
-    if (time > 0 && !mstop)
+    if (time > 0)
     {
         waitTimeout = time * 1000;
         oldStream = old;
@@ -78,11 +78,11 @@ void Fade::run()
     oldStream = 0;
     mutex.unlock();
 
-    if (waitTimeout > 0 && !mstop)
+    if (waitTimeout > 0)
     {
         BASS_ChannelSlideAttribute(stream, BASS_ATTRIB_VOL, 0, waitTimeout);
 
-        while (!mstop && BASS_ChannelIsSliding(stream, 0))
+        while (BASS_ChannelIsSliding(stream, 0))
             msleep(1);
     }
 

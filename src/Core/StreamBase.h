@@ -31,6 +31,7 @@ public slots:
 
 protected:
     void setupDSP_EQ();
+    QString getFileType(const DWORD &);
 
     HSTREAM stream;
     DWORD fxEQ, volfx;

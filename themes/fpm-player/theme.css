@@ -45,6 +45,7 @@ QWidget#radioInfoWidget {
     border-bottom: 1px solid #eee;
 }
 QWidget#tracksWidget {
+	margin-top: 1px;
 	border: 1px solid rgb(160,165,185);
     background: #fff;
 }
@@ -191,7 +192,7 @@ QLineEdit:focus {
 }
 QLineEdit#searchLineEdit {
     background: #fff url("{theme_path}images/Search-Find.png") no-repeat left;
-    padding-left: 18px;
+    padding-left: 20px;
     height: 20px;
 }
 QLineEdit#radioInfoEdit {

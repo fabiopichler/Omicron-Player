@@ -21,17 +21,20 @@
 ;// Nome original do arquivo
 #define ORIGINAL_FILENAME "FPM-Player"
 
+;// Website oficial
+#define OFFICIAL_WEBSITE "http://fabiopichler.net/fpm-player/"
+
 ;// Versão do produto
 #define PRODUCT_VERSION 1,1,0,0
 
 ;// Versão do Produto em string
-#define PRODUCT_VERSION_STR "1.1"
+#define PRODUCT_VERSION_STR "1.1.0"
 
 ;// Versão do arquivo
-#define FILE_VERSION "1.1"
+#define FILE_VERSION "1.1.0"
 
-;// Website oficial
-#define OFFICIAL_WEBSITE "http://fabiopichler.net/fpm-player/"
+;// Data de lançamento atual
+#define CURRENT_RELEASE_DATE "13/06/2016"
 
 ;// Nome do arquivo da lista de rádios
 #define FILE_RADIOLIST "RadioList_2016-05-16.fprp"

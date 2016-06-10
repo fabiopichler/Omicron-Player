@@ -26,7 +26,7 @@ class NetPlaylist : public QObject
 public:
     NetPlaylist();
     ~NetPlaylist();
-    void getUrl(QString &, const bool &, const bool &, const int &, QElapsedTimer &);
+    void getUrl(QString &, const bool &, const bool &);
 
 private:
     QString xspf(const QString &);

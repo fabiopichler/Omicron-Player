@@ -92,6 +92,7 @@ void RadioWindow::createWidgets()
     searchLineEdit = new QLineEdit;
     searchLineEdit->setObjectName("searchLineEdit");
     searchLineEdit->setClearButtonEnabled(true);
+    searchLineEdit->setPlaceholderText("Pesquisa rápida");
 
     leftChProgressBar = new QProgressBar;
     leftChProgressBar->setOrientation(Qt::Horizontal);

@@ -16,7 +16,6 @@
 #include "Database.h"
 #include "StreamBase.h"
 #include "NetPlaylist.h"
-#include "Fade.h"
 #include "../Tools/Equalizer.h"
 
 #include <QMessageBox>
@@ -30,6 +29,7 @@
 #include <QStandardItemModel>
 
 class RadioPlaylist;
+class NetworkStream;
 
 class RadioStream : public StreamBase
 {
@@ -64,14 +64,13 @@ public slots:
     void updateStatus();
 
 private slots:
-    void createFade();
+    void newConnectionSlot();
+    void statusProc(const void *buffer, DWORD length);
 
 private:
     void createEvents();
     bool startRecord();
-    static void CALLBACK statusProc(const void *buffer, DWORD length, void *user);
     bool buffering(int &);
-    void showTimedout();
     void run() Q_DECL_OVERRIDE;
 
 signals:
@@ -88,7 +87,7 @@ signals:
     void showNotification(QString);
     void showError(QString);
     void showErrorDlg(QString);
-    void newFade();
+    void newConnection();
 
 public:
     bool mrecord, isQuickLink;
@@ -97,19 +96,59 @@ public:
 
 private:
     QWidget *parent;
-    Fade *fade;
-    bool newRadio, mnext, stopFadeOut;
+    NetworkStream *connection;
+    bool newRadio, mnext;
     QString bitrate, status;
     QTimer *statusTimer, *metaTimer;
     QStringList statusList;
     short statusListCount;
-    NetPlaylist netPlaylist;
     bool iswma;
     QString fileType, recordFileName, quickLink;
     QFile *recordFile;
     int selectedUrl, reconnect;
     double recordTime;
 };
+
+//================================================================================================================
+// class NetworkStream
+//================================================================================================================
+
+class NetworkStream : public QThread
+{
+    Q_OBJECT
+
+public:
+    NetworkStream();
+    ~NetworkStream();
+
+    void create(const QString &);
+    bool loading(const bool &, const bool &);
+    int code() const;
+    const HSTREAM &getStream() const;
+
+    void fadeIn(const int &);
+    void fadeOut();
+
+private:
+    void run() Q_DECL_OVERRIDE;
+    static void CALLBACK statusProc(const void *buffer, DWORD length, void *user);
+
+signals:
+    void statusProcSignal(const void *buffer, DWORD length);
+
+private:
+    HSTREAM stream;
+    QMutex mutex;
+    long waitTimeout;
+    int errorCode;
+    bool mstop, complete, isFadeOut;
+    QString streamUrl;
+    NetPlaylist netPlaylist;
+};
+
+//================================================================================================================
+// class RadioPlaylist
+//================================================================================================================
 
 class RadioPlaylist : public QTreeView
 {

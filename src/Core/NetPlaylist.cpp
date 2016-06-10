@@ -25,7 +25,7 @@ NetPlaylist::~NetPlaylist()
     delete manager;
 }
 
-void NetPlaylist::getUrl(QString &link, const bool &stop, const bool &play, const int &timeout, QElapsedTimer &timer)
+void NetPlaylist::getUrl(QString &link, const bool &stop, const bool &play)
 {
     if (link.contains(".xspf"))
         type = "xspf";
@@ -37,7 +37,8 @@ void NetPlaylist::getUrl(QString &link, const bool &stop, const bool &play, cons
         type = "asx";
 
     emit startCheck(link);
-    while (!finished && !stop && play && !timer.hasExpired(timeout))
+    while (!finished && !stop && play)
+        QThread::msleep(10);
 
     link = url;
     url.clear();
