@@ -33,6 +33,7 @@ MainWindow::~MainWindow()
 {
     Database::setValue("Current", "mode", centralWidget->mode);
     iniSettings->setValue("Window/Position", pos());
+    delete centralWidget;
 }
 
 void MainWindow::initWindow(Widget *widget)

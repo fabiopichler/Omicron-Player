@@ -541,7 +541,7 @@ void RadioStream::run()
             }
         }
 
-        if (_stop)
+        if (_stop || !mplay)
         {
             disconnect(connection, SIGNAL(statusProcSignal(const void *, DWORD)),
                                              this, SLOT(statusProc(const void *, DWORD)));
@@ -549,7 +549,7 @@ void RadioStream::run()
             connection = nullptr;
         }
 
-        if ((errorCode = (timedout ? 40 : connection->code())) == 0)
+        if (connection && (errorCode = (timedout ? 40 : connection->code())) == 0)
         {
             stream = connection->getStream();
 

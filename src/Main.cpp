@@ -230,7 +230,7 @@ bool Main::init(const int &argc)
 
     if (Database::value("Config", "recordPath").toString().isEmpty())
         Database::setValue("Config", "recordPath",
-                           QStandardPaths::writableLocation(QStandardPaths::MusicLocation)+"/Recordings - "+AppName+"/");
+                           QStandardPaths::writableLocation(QStandardPaths::MusicLocation)+"/"+AppName+" Recordings/");
 
     if (!setupBass())
         return false;

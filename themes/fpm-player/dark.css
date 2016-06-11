@@ -235,8 +235,8 @@ QProgressBar:horizontal {
 QProgressBar::chunk:vertical,
 QProgressBar::chunk:horizontal {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                stop: 0 #666, 
-                                stop: 0.5 #666,
+                                stop: 0 #616161, 
+                                stop: 0.5 #616161,
                                 stop: 0.51 #4a4a4a,
                                 stop: 0.54 #4a4a4a,
                                 stop: 1.0 #4a4a4a);

@@ -270,8 +270,8 @@ WebRadioPage::WebRadioPage(QWidget *parent) : Widget(parent)
 
     modeCombo = new ComboBox;
     modeCombo->addItem("Parar a reprodução");
-    modeCombo->addItem("Tentar reproduzir a mesma rádio");
-    modeCombo->addItem("Reproduzir a próxima da lista");
+    modeCombo->addItem("Tentar reproduzir, novamente");
+    modeCombo->addItem("Reproduzir a próxima estação da lista");
 
     QHBoxLayout *modeLayout = new QHBoxLayout;
     modeLayout->addWidget(modeLabel);
@@ -564,9 +564,12 @@ RecordingsPage::RecordingsPage(QWidget *parent) : Widget(parent)
 
     connect(recButton, SIGNAL(clicked()), this, SLOT(searchDir()));
     connect(defaultLabel, &QLabel::linkActivated, [=]() {
-        QString path = QStandardPaths::writableLocation(QStandardPaths::MusicLocation)+"/Recordings - "+AppName+"/";
+        QString path = QStandardPaths::writableLocation(QStandardPaths::MusicLocation)+"/"+AppName+" Recordings/";
         Database::setValue("Config", "recordPath", path);
         pathEdit->setText(path);
+
+        if (!QDir().exists(path))
+            QDir().mkdir(path);
     });
     connect(recChBox, &QCheckBox::clicked, [=](bool arg) {
         Database::setValue("Config", "recordSubDir", arg);

@@ -522,6 +522,11 @@ void MusicStream::run()
                                                       (BASS_StreamGetFilePosition(stream, BASS_FILEPOS_END)
                                                        /(125*timeLength)+0.5)));
 
+            fileType += QString(" | ") + (info.chans == 1 ? "Mono"
+                                                          : (info.chans == 2 ? "Stereo"
+                                                                             : (info.chans > 2 ? "Surround"
+                                                                                               : "")));
+
             tagList.clear();
 
             if (isCDMode)
@@ -554,6 +559,10 @@ void MusicStream::run()
             emit startTagTimer(5000);
             emit setTotals(static_cast<QWORD>(timeLength));
             emit updateValues(FileTypeLabel, fileType);
+            emit newFade();
+
+            while (!fade)
+                msleep(1);
 
             int fadeOut = Database::value("MusicConfig", "fadeOut", 0).toInt();
 
@@ -575,10 +584,6 @@ void MusicStream::run()
                 emit playButtonEnabled(false);
                 emit pauseButtonEnabled(true);
                 emit stopButtonEnabled(true);
-                emit newFade();
-
-                while (!fade)
-                    msleep(1);
 
                 fade->in(stream, getVolume());
             }

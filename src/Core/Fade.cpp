@@ -44,8 +44,6 @@ void Fade::in(const HSTREAM &stream, const int &volume)
 
 void Fade::out(const HSTREAM &old)
 {
-    QMutexLocker locker(&mutex);
-
     int time = Database::value(configName, "fadeOut", 0).toInt();
 
     if (time > 0)
@@ -73,10 +71,8 @@ void Fade::streamFree(const HSTREAM &stream)
 
 void Fade::run()
 {
-    mutex.lock();
     const HSTREAM stream = oldStream;
     oldStream = 0;
-    mutex.unlock();
 
     if (waitTimeout > 0)
     {
