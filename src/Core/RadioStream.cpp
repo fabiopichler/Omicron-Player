@@ -496,8 +496,7 @@ void RadioStream::run()
         QString currentUrl;
         DWORD act = 0;
         int errorCode = 0;
-        bool _stop = false,
-             timedout = false;
+        bool isTimedout = false;
 
         connection = nullptr;
         isQuickLink = false;
@@ -526,38 +525,50 @@ void RadioStream::run()
         emit newConnection();
 
         while (!connection)
-            msleep(3);
+            msleep(1);
 
         connection->create(currentUrl);
 
-        while (connection->loading(_stop ? _stop : mstop, mplay))
+        while (connection->connecting(isTimedout ? isTimedout : mstop, mplay))
         {
             msleep(10);
 
             if (timer.hasExpired(timeout))
-            {
-                timedout = true;
-                _stop = true;
-            }
+                isTimedout = true;
         }
 
-        if (_stop || !mplay)
+        errorCode = (isTimedout ? 40 : connection->code());
+
+        if (isTimedout || mstop || !mplay)
         {
             disconnect(connection, SIGNAL(statusProcSignal(const void *, DWORD)),
-                                             this, SLOT(statusProc(const void *, DWORD)));
+                                        this, SLOT(statusProc(const void *, DWORD)));
 
             connection = nullptr;
+
+            if (!isTimedout)
+                errorCode = 0;
         }
 
-        if (connection && (errorCode = (timedout ? 40 : connection->code())) == 0)
+        if (connection && errorCode == 0)
         {
+            BASS_CHANNELINFO info;
+            bool ok;
+            int _bitrate = bitrate.toInt(&ok);
             stream = connection->getStream();
 
-            if ((iswma = !!BASS_ChannelGetTags(stream, 8/*BASS_TAG_WMA*/)))
+            BASS_ChannelGetInfo(stream, &info);
+            fileType = getFileType(info.ctype);
+
+            if ((iswma = (info.ctype == 66304)))
             {
                 mrecord = false;
                 emit recordButtonEnabled(false);
             }
+
+            if ((!ok || _bitrate < 8) && !iswma)
+                bitrate = QString("%1").arg(BASS_StreamGetFilePosition(stream, BASS_FILEPOS_END) * 8
+                                            / BASS_GetConfig(BASS_CONFIG_NET_BUFFER));
 
             while (mplay && !mstop)
             {
@@ -569,7 +580,7 @@ void RadioStream::run()
                 if (timer.hasExpired(timeout) && progress < 6)
                 {
                     errorCode = 40;
-                    _stop = true;
+                    isTimedout = true;
                     break;
                 }
 
@@ -578,19 +589,12 @@ void RadioStream::run()
 
             emit updateValues(ShowLoaderMovie, false);
 
-            if (mstop || _stop)
+            if (mstop || isTimedout)
+            {
+                connection->deleteLater();
+                connection = nullptr;
                 break;
-
-            bool ok;
-            int _bitrate = bitrate.toInt(&ok);
-
-            if ((!ok || _bitrate < 8) && !iswma)
-                bitrate = QString("%1").arg(BASS_StreamGetFilePosition(stream, BASS_FILEPOS_END) * 8
-                                            / BASS_GetConfig(BASS_CONFIG_NET_BUFFER));
-
-            BASS_CHANNELINFO info;
-            BASS_ChannelGetInfo(stream, &info);
-            fileType = getFileType(info.ctype);
+            }
 
             statusList.clear();
             statusList << bitrate + " kbps";
@@ -640,14 +644,16 @@ void RadioStream::run()
             emit threadFinished(false, !quickLink.isEmpty());
         }
 
-        if (!quickLink.isEmpty())
-            continue;
-
         if (!mstop)
         {
+            if (!quickLink.isEmpty())
+                continue;
+
             if (errorCode != 0)
             {
+                emit updateValues(StatusLabel, "Erro...");
                 msleep(1000);
+
                 QString time = "[" + QTime::currentTime().toString("HH:mm") + "] ";
 
                 if (Database::value("Config", "errorNotification").toString() == "dialog")
@@ -701,19 +707,23 @@ NetworkStream::NetworkStream()
 {
     stream = 0;
     waitTimeout = 0;
+    errorCode = 0;
 
     mstop = false;
     complete = false;
     isFadeOut = false;
 
-    connect(&netPlaylist, &NetPlaylist::updateStatus, [=](QVariant arg) {
-        static const char *c = arg.toString().toLocal8Bit().data();
-        emit statusProcSignal(c, 0);
+    connect(&netPlaylist, &NetPlaylist::updateStatus, [=](QVariant status) {
+        static char buffer[150];
+
+        memcpy(buffer, status.toString().toLocal8Bit().constData(), sizeof(buffer));
+        emit statusProcSignal(buffer, 0);
     });
 }
 
 NetworkStream::~NetworkStream()
 {
+    BASS_StreamFree(stream);
     //qDebug("NetworkStream::~NetworkStream()");
 }
 
@@ -723,7 +733,7 @@ void NetworkStream::create(const QString &url)
     start();
 }
 
-bool NetworkStream::loading(const bool &stop, const bool &play)
+bool NetworkStream::connecting(const bool &stop, const bool &play)
 {
     if (stop || !play)
     {
@@ -738,8 +748,16 @@ bool NetworkStream::loading(const bool &stop, const bool &play)
     return true;
 }
 
-int NetworkStream::code() const
+int NetworkStream::code()
 {
+    if (mstop || errorCode != 0)
+    {
+        if (isRunning())
+            connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
+        else
+            deleteLater();
+    }
+
     return errorCode;
 }
 
@@ -814,19 +832,24 @@ void NetworkStream::run()
                 break;
         }
 
-        if (mstop)
-        {
-            BASS_StreamFree(stream);
-            connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
-        }
-
         complete = true;
     }
 }
 
 void CALLBACK NetworkStream::statusProc(const void *buffer, DWORD length, void *user)
 {
-    emit static_cast<NetworkStream *>(user)->statusProcSignal(buffer, length);
+    static char _buffer[150];
+    NetworkStream *net = static_cast<NetworkStream *>(user);
+
+    if (buffer && length == 0)
+    {
+        memcpy(_buffer, buffer, sizeof(_buffer));
+        emit net->statusProcSignal(_buffer, 0);
+    }
+    else
+    {
+        emit net->statusProcSignal(buffer, length);
+    }
 }
 
 //================================================================================================================

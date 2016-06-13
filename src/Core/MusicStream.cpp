@@ -478,6 +478,7 @@ void MusicStream::run()
     do
     {
         emit updateValues(FileTypeLabel, "Carregando...");
+
         QString currentFile = playlist->getCurrentFile();
         if (currentFile.isEmpty())
             break;
@@ -506,14 +507,16 @@ void MusicStream::run()
         {
             double timeLength;
             QString fileType;
+            BASS_CHANNELINFO info;
+
             fade = nullptr;
+            tagListCount = 0;
 
             if (isMusic)
                 timeLength = BASS_ChannelGetLength(stream, BASS_POS_MUSIC_ORDER) - 1;
             else
                 timeLength = BASS_ChannelBytes2Seconds(stream, BASS_ChannelGetLength(stream, BASS_POS_BYTE));
 
-            BASS_CHANNELINFO info;
             BASS_ChannelGetInfo(stream, &info);
             fileType = getFileType(info.ctype);
 
@@ -549,7 +552,6 @@ void MusicStream::run()
             if (tagList.isEmpty())
                 tagList << AppName;
 
-            tagListCount = 0;
             updateTag();
             setupDSP_EQ();
 
@@ -597,8 +599,8 @@ void MusicStream::run()
 
                 if (isMusic)
                 {
-                    QWORD pos=BASS_ChannelGetPosition(stream, BASS_POS_MUSIC_ORDER);
-                    if (pos!=(QWORD)-1)
+                    QWORD pos = BASS_ChannelGetPosition(stream, BASS_POS_MUSIC_ORDER);
+                    if (pos != (QWORD)-1)
                         position = pos;
                 }
                 else
@@ -606,7 +608,7 @@ void MusicStream::run()
                     double pos = BASS_ChannelBytes2Seconds(stream, BASS_ChannelGetPosition(stream, BASS_POS_BYTE));
                     position = static_cast<QWORD>(pos);
 
-                    if (static_cast<int>(timeLength - pos) <= fadeOut)
+                    if (static_cast<int>(timeLength - pos) < fadeOut)
                         mplay = false;
                 }
 
@@ -647,6 +649,7 @@ void MusicStream::run()
                 break;
             }
         }
+
         if (!mstop)
         {
             if (mprev)

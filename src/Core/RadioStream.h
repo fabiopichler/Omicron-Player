@@ -122,8 +122,8 @@ public:
     ~NetworkStream();
 
     void create(const QString &);
-    bool loading(const bool &, const bool &);
-    int code() const;
+    bool connecting(const bool &, const bool &);
+    int code();
     const HSTREAM &getStream() const;
 
     void fadeIn(const int &);
