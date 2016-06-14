@@ -41,7 +41,7 @@ MusicWindow::MusicWindow(QObject *parentMain, QWidget *parent) : DropArea(parent
     if (!playlist->isEmpty()
             && ((initialized && musicStream->playlistMode == 1)
                 || Database::value("Config", "autoPlay").toBool()
-                    || (Database::value("Config", "continuePlaying").toBool()
+                    || (Database::value("MusicConfig", "continuePlaying").toBool()
                         && Database::value("MusicMode", "soundPosition").toInt() > 0)))
     {
         musicStream->play();

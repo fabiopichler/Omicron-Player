@@ -698,7 +698,7 @@ void RadioWindow::threadFinished(bool stop, bool isQuickLink)
 
 void RadioWindow::displayRecordings()
 {
-    if (!QDesktopServices::openUrl(QUrl::fromLocalFile(Database::value("Config", "recordPath").toString())))
+    if (!QDesktopServices::openUrl(QUrl::fromLocalFile(Database::value("RadioConfig", "recordPath").toString())))
         Warning(this, "Não foi possível localizar a pasta com as gravações.");
 }
 

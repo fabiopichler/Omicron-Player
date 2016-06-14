@@ -228,8 +228,8 @@ bool Main::init(const int &argc)
     for (int i = 0; i < 16; i++)
         Global::equalizerValues << Database::value("CurrentEqualizer", QString::number(i)).toInt();
 
-    if (Database::value("Config", "recordPath").toString().isEmpty())
-        Database::setValue("Config", "recordPath",
+    if (Database::value("RadioConfig", "recordPath").toString().isEmpty())
+        Database::setValue("RadioConfig", "recordPath",
                            QStandardPaths::writableLocation(QStandardPaths::MusicLocation)+"/"+AppName+" Recordings/");
 
     if (!setupBass())
@@ -430,12 +430,12 @@ bool Main::setupBass()
         QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+basswma));
 #endif // Q_OS_WIN
 
-    QString proxy = Database::value("Config", "net_proxy", "0").toString();
+    QString proxy = Database::value("RadioConfig", "net_proxy", "0").toString();
 
     BASS_SetConfig(BASS_CONFIG_NET_PLAYLIST, 1);
     BASS_SetConfig(BASS_CONFIG_NET_PREBUF, 0);
-    BASS_SetConfig(BASS_CONFIG_NET_READTIMEOUT, Database::value("Config", "net_readtimeout", 20000).toInt());
-    BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, Database::value("Config", "net_timeout", 20000).toInt());
+    BASS_SetConfig(BASS_CONFIG_NET_READTIMEOUT, Database::value("RadioConfig", "net_readtimeout", 20000).toInt());
+    BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, Database::value("RadioConfig", "net_timeout", 20000).toInt());
     BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
     BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY, (proxy == "0" ? NULL : proxy.toLocal8Bit().data()));
     BASS_SetConfig(BASS_CONFIG_CD_AUTOSPEED, TRUE);

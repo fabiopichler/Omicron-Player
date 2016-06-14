@@ -35,7 +35,7 @@ RadioStream::RadioStream(QWidget *parent) : StreamBase()
     metaTimer = new QTimer(this);
 
     playlistMode = Database::value("RadioMode", "playlistMode").toInt();
-    QString recordPath = Database::value("Config", "recordPath").toString();
+    QString recordPath = Database::value("RadioConfig", "recordPath").toString();
 
     if (!QDir().exists(recordPath))
         QDir().mkdir(recordPath);
@@ -371,9 +371,9 @@ void RadioStream::createEvents()
 
 bool RadioStream::startRecord()
 {
-    QString newRecordPath = Database::value("Config", "recordPath").toString();
+    QString newRecordPath = Database::value("RadioConfig", "recordPath").toString();
 
-    if (Database::value("Config", "recordSubDir").toBool())
+    if (Database::value("RadioConfig", "recordSubDir").toBool())
     {
         newRecordPath += "/" + (isQuickLink ? "Quick Link"
                                             : playlist->getCurrentTitle().replace(QRegExp("[/:*?\"<>|]"), "-")
@@ -514,7 +514,7 @@ void RadioStream::run()
         if (currentUrl.isEmpty())
             break;
 
-        int timeout = Database::value("Config", "net_timeout", 20000).toInt();
+        int timeout = Database::value("RadioConfig", "net_timeout", 20000).toInt();
         QElapsedTimer timer;
         timer.start();
 
@@ -565,10 +565,6 @@ void RadioStream::run()
                 emit recordButtonEnabled(false);
             }
 
-            if ((!ok || _bitrate < 8) && !iswma)
-                bitrate = QString("%1").arg(BASS_StreamGetFilePosition(stream, BASS_FILEPOS_END) * 8
-                                            / BASS_GetConfig(BASS_CONFIG_NET_BUFFER));
-
             while (mplay && !mstop)
             {
                 int progress;
@@ -595,6 +591,10 @@ void RadioStream::run()
                 break;
             }
 
+            if ((!ok || _bitrate < 8) && !iswma)
+                bitrate = QString("%1").arg(BASS_StreamGetFilePosition(stream, BASS_FILEPOS_END) * 8
+                                            / BASS_GetConfig(BASS_CONFIG_NET_BUFFER));
+
             statusList.clear();
             statusList << bitrate + " kbps";
             statusList << fileType;
@@ -610,7 +610,7 @@ void RadioStream::run()
             statusListCount = 0;
             reconnect = 0;
 
-            if (Database::value("Config", "radio_notifiSysTray").toBool())
+            if (Database::value("RadioConfig", "notifiSysTray").toBool())
                 emit showNotification((isQuickLink ? "Link Rápido" : playlist->getCurrentTitle()));
 
             emit startMetaTimer(1000);
@@ -674,14 +674,14 @@ void RadioStream::run()
             {
                 newRadio = false;
             }
-            else if (mnext || Database::value("Config", "radioMode").toInt() == 2)
+            else if (mnext || Database::value("RadioConfig", "reconnectionMode").toInt() == 2)
             {
                 playlist->next();
                 emit updateValues(RadioName, playlist->getCurrentIndex());
                 mnext = false;
                 selectedUrl = 0;
             }
-            else if (Database::value("Config", "radioMode").toInt() == 0 || (++reconnect > 2))
+            else if (Database::value("RadioConfig", "reconnectionMode").toInt() == 0 || (++reconnect > 2))
             {
                 mstop = true;
                 break;

@@ -343,45 +343,43 @@ void Database::defaultConfig()
 
     QSqlQuery query(*db);
 
-    query.exec("CREATE TABLE IF NOT EXISTS Version (id TEXT PRIMARY KEY, value TEXT)");
+    query.exec("CREATE TABLE Version (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO Version VALUES "
                "('current', '0'), "
                "('updates_check', '1'), "
                "('updates_lastCheck', '0000-00-00')");
 
-    query.exec("CREATE TABLE IF NOT EXISTS Config (id TEXT PRIMARY KEY, value TEXT)");
+    query.exec("CREATE TABLE Config (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO Config VALUES "
                "('theme', 'app:fpm-player'), "
                "('style', 'default'), "
                "('device', '-1'), "
                "('autoDlRadioList', 'true'), "
                "('autoPlay', 'false'), "
-               "('errorNotification', 'dialog'), "
+               "('errorNotification', 'systray')");
 
-
-               "('music_notifiSysTray', 'false'), "
-               "('radio_notifiSysTray', 'true'), "
-               "('continuePlaying', 'false'), "
-               "('continuePlayingTab', 'false'), "
-               "('recordPath', ''), "
-               "('recordSubDir', 'true'), "
-               "('radioMode', '0'), "
-               "('net_readtimeout', '20000'), "
-               "('net_timeout', '20000'), "
-               "('net_proxy', '0'), "
-               "('allowAnyFile', 'false')");
-
-    query.exec("CREATE TABLE IF NOT EXISTS MusicConfig (id TEXT PRIMARY KEY, value TEXT)");
+    query.exec("CREATE TABLE MusicConfig (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO MusicConfig VALUES "
                "('fadeIn', '2'), "
-               "('fadeOut', '2')");
+               "('fadeOut', '2'), "
+               "('notifiSysTray', 'false'), "
+               "('continuePlaying', 'false'), "
+               "('continuePlayingTab', 'false'), "
+               "('allowAnyFile', 'false')");
 
-    query.exec("CREATE TABLE IF NOT EXISTS RadioConfig (id TEXT PRIMARY KEY, value TEXT)");
+    query.exec("CREATE TABLE RadioConfig (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO RadioConfig VALUES "
                "('fadeIn', '2'), "
-               "('fadeOut', '3')");
+               "('fadeOut', '3'), "
+               "('notifiSysTray', 'true'), "
+               "('recordPath', ''), "
+               "('recordSubDir', 'true'), "
+               "('reconnectionMode', '1'), "
+               "('net_readtimeout', '20000'), "
+               "('net_timeout', '20000'), "
+               "('net_proxy', '0')");
 
-    query.exec("CREATE TABLE IF NOT EXISTS Current (id TEXT PRIMARY KEY, value TEXT)");
+    query.exec("CREATE TABLE Current (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO Current VALUES "
                "('mode', 'Music'), "
                "('fileDialog', ''), "
@@ -390,7 +388,7 @@ void Database::defaultConfig()
                "('volume', '100'), "
                "('EqualizerPreset', '0')");
 
-    query.exec("CREATE TABLE IF NOT EXISTS MusicMode (id TEXT PRIMARY KEY, value TEXT)");
+    query.exec("CREATE TABLE MusicMode (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO MusicMode VALUES "
                "('playlist', ''), "
                "('playlistMode', '0'), "
@@ -401,7 +399,7 @@ void Database::defaultConfig()
                "('repeat', '0'), "
                "('random', '0')");
 
-    query.exec("CREATE TABLE IF NOT EXISTS RadioMode (id TEXT PRIMARY KEY, value TEXT)");
+    query.exec("CREATE TABLE RadioMode (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO RadioMode VALUES "
                "('playlist', ''), "
                "('playlistMode', '0'), "
@@ -410,16 +408,16 @@ void Database::defaultConfig()
                "('indexFavorites', '0'), "
                "('quick-link', '')");
 
-    query.exec("CREATE TABLE IF NOT EXISTS MusicFavorites (path TEXT PRIMARY KEY)");
+    query.exec("CREATE TABLE MusicFavorites (path TEXT PRIMARY KEY)");
 
-    query.exec("CREATE TABLE IF NOT EXISTS RadioFavorites (title TEXT PRIMARY KEY, genre TEXT, contry TEXT, "
+    query.exec("CREATE TABLE RadioFavorites (title TEXT PRIMARY KEY, genre TEXT, contry TEXT, "
                "url1 TEXT, url2 TEXT, url3 TEXT, url4 TEXT, url5 TEXT)");
 
-    query.exec("CREATE TABLE IF NOT EXISTS EqualizerPreset (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, "
+    query.exec("CREATE TABLE EqualizerPreset (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, "
                "eq0 INTEGER, eq1 INTEGER, eq2 INTEGER, eq3 INTEGER, eq4 INTEGER, eq5 INTEGER, eq6 INTEGER, eq7 INTEGER, "
                "eq8 INTEGER, eq9 INTEGER, eq10 INTEGER, eq11 INTEGER, eq12 INTEGER, eq13 INTEGER, eq14 INTEGER, eq15 INTEGER)");
 
-    query.exec("CREATE TABLE IF NOT EXISTS CurrentEqualizer (id INTEGER PRIMARY KEY, value INTEGER)");
+    query.exec("CREATE TABLE CurrentEqualizer (id INTEGER PRIMARY KEY, value INTEGER)");
     query.exec("INSERT INTO CurrentEqualizer VALUES "
                "(0, 0), "
                "(1, 0), "

@@ -64,7 +64,7 @@ MusicStream::~MusicStream()
         setupCDMode(false);
     }
 
-    if (Database::value("Config", "continuePlaying").toBool() && isRunning())
+    if (Database::value("MusicConfig", "continuePlaying").toBool() && isRunning())
         Database::setValue("MusicMode", "soundPosition", static_cast<int>(getPosition()));
 
     stop();
@@ -133,7 +133,7 @@ void MusicStream::loadPlaylist(const int &mode, const bool &disableCdMode, const
     playlistMode = mode;
     playlist->clear();
 
-    if (_stop && !Database::value("Config", "continuePlayingTab").toBool())
+    if (_stop && !Database::value("MusicConfig", "continuePlayingTab").toBool())
         stop();
 
     if (!load)
@@ -568,7 +568,7 @@ void MusicStream::run()
 
             int fadeOut = Database::value("MusicConfig", "fadeOut", 0).toInt();
 
-            if (Database::value("Config", "continuePlaying").toBool()
+            if (Database::value("MusicConfig", "continuePlaying").toBool()
                               && Database::value("MusicMode", "soundPosition").toInt() > 0)
             {
                 setPosition(Database::value("MusicMode", "soundPosition").toInt());
@@ -590,7 +590,7 @@ void MusicStream::run()
                 fade->in(stream, getVolume());
             }
 
-            if (mplay && !mstop && Database::value("Config", "music_notifiSysTray").toBool())
+            if (mplay && !mstop && Database::value("MusicConfig", "notifiSysTray").toBool())
                 emit showNotification((isCDMode ? "CD: " : "") + playlist->getCurrentTitle());
 
             while ((act = BASS_ChannelIsActive(stream)) && mplay && mstop == false)

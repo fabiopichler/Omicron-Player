@@ -60,7 +60,7 @@ void DropArea::dropEvent(QDropEvent *event)
         {
             list[0].remove(prefix);
         }
-        else if (Database::value("Config", "allowAnyFile", false).toBool())
+        else if (Database::value("MusicConfig", "allowAnyFile", false).toBool())
         {
             for (int i = list.length()-1; i > -1; i--)
                 list[i].remove(prefix);

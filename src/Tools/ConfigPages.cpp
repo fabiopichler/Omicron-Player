@@ -175,19 +175,19 @@ MusicPage::MusicPage(QWidget *parent) : Widget(parent)
     setObjectName("configPagesWidget");
 
     QCheckBox *notificationsChBox = new QCheckBox("Exibir notificações de reproduãço na bandeja do sistema");
-    notificationsChBox->setChecked(Database::value("Config", "music_notifiSysTray").toBool());
+    notificationsChBox->setChecked(Database::value("MusicConfig", "notifiSysTray").toBool());
 
     connect(notificationsChBox, &QCheckBox::clicked, [=](bool arg) {
-        Database::setValue("Config", "music_notifiSysTray", arg);
+        Database::setValue("MusicConfig", "notifiSysTray", arg);
     });
 
     //---------------------------------------------------
 
     QCheckBox *continuePlayingChBox = new QCheckBox("Ao iniciar, continuar reproduzindo de onde parou");
-    continuePlayingChBox->setChecked(Database::value("Config", "continuePlaying").toBool());
+    continuePlayingChBox->setChecked(Database::value("MusicConfig", "continuePlaying").toBool());
 
     connect(continuePlayingChBox, &QCheckBox::clicked, [=](bool arg) {
-        Database::setValue("Config", "continuePlaying", arg);
+        Database::setValue("MusicConfig", "continuePlaying", arg);
         if (Database::value("MusicMode", "soundPosition").toInt() != 0)
             Database::setValue("MusicMode", "soundPosition", 0);
     });
@@ -195,19 +195,19 @@ MusicPage::MusicPage(QWidget *parent) : Widget(parent)
     //----------------------------------------------------
 
     QCheckBox *allowAnyFileChBox = new QCheckBox("Abrir arquivos desconhecidos com \"Arrastar e Soltar\"");
-    allowAnyFileChBox->setChecked(Database::value("Config", "allowAnyFile").toBool());
+    allowAnyFileChBox->setChecked(Database::value("MusicConfig", "allowAnyFile").toBool());
 
     connect(allowAnyFileChBox, &QCheckBox::clicked, [=](bool arg) {
-        Database::setValue("Config", "allowAnyFile", arg);
+        Database::setValue("MusicConfig", "allowAnyFile", arg);
     });
 
     //----------------------------------------------------
 
     QCheckBox *continuePlayTabChBox = new QCheckBox("Continuar reproduzindo ao trocar de aba");
-    continuePlayTabChBox->setChecked(Database::value("Config", "continuePlayingTab").toBool());
+    continuePlayTabChBox->setChecked(Database::value("MusicConfig", "continuePlayingTab").toBool());
 
     connect(continuePlayTabChBox, &QCheckBox::clicked, [=](bool arg) {
-        Database::setValue("Config", "continuePlayingTab", arg);
+        Database::setValue("MusicConfig", "continuePlayingTab", arg);
     });
 
     //------------------------------------------------------
@@ -230,10 +230,10 @@ WebRadioPage::WebRadioPage(QWidget *parent) : Widget(parent)
     setObjectName("configPagesWidget");
 
     QCheckBox *notificationsChBox = new QCheckBox("Exibir notificações de reproduãço na bandeja do sistema");
-    notificationsChBox->setChecked(Database::value("Config", "radio_notifiSysTray").toBool());
+    notificationsChBox->setChecked(Database::value("RadioConfig", "notifiSysTray").toBool());
 
     connect(notificationsChBox, &QCheckBox::clicked, [=](bool arg) {
-        Database::setValue("Config", "radio_notifiSysTray", arg);
+        Database::setValue("RadioConfig", "notifiSysTray", arg);
     });
 
     //-----------------------------------------------
@@ -278,8 +278,8 @@ WebRadioPage::WebRadioPage(QWidget *parent) : Widget(parent)
     modeLayout->addWidget(modeCombo);
 
     int list[6] = {5000, 10000, 20000, 30000, 45000, 60000};
-    int rt = Database::value("Config", "net_readtimeout", 20000).toInt();
-    int t = Database::value("Config", "net_timeout", 20000).toInt();
+    int rt = Database::value("RadioConfig", "net_readtimeout", 20000).toInt();
+    int t = Database::value("RadioConfig", "net_timeout", 20000).toInt();
 
     for (int i = 0; i < 6; i++)
     {
@@ -290,7 +290,7 @@ WebRadioPage::WebRadioPage(QWidget *parent) : Widget(parent)
             timeoutCombo->setCurrentIndex(i);
     }
 
-    modeCombo->setCurrentIndex(Database::value("Config", "radioMode").toInt());
+    modeCombo->setCurrentIndex(Database::value("RadioConfig", "reconnectionMode").toInt());
 
     connect(readtimeoutCombo, SIGNAL(activated(int)), this, SLOT(readtimeoutChanged()));
     connect(timeoutCombo, SIGNAL(activated(int)), this, SLOT(timeoutChanged()));
@@ -315,18 +315,18 @@ WebRadioPage::WebRadioPage(QWidget *parent) : Widget(parent)
 void WebRadioPage::readtimeoutChanged()
 {
     BASS_SetConfig(BASS_CONFIG_NET_READTIMEOUT, readtimeoutCombo->currentData().toInt());
-    Database::setValue("Config", "net_readtimeout", readtimeoutCombo->currentData());
+    Database::setValue("RadioConfig", "net_readtimeout", readtimeoutCombo->currentData());
 }
 
 void WebRadioPage::timeoutChanged()
 {
     BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, timeoutCombo->currentData().toInt());
-    Database::setValue("Config", "net_timeout", timeoutCombo->currentData());
+    Database::setValue("RadioConfig", "net_timeout", timeoutCombo->currentData());
 }
 
 void WebRadioPage::modeChanged()
 {
-    Database::setValue("Config", "radioMode", modeCombo->currentIndex());
+    Database::setValue("RadioConfig", "reconnectionMode", modeCombo->currentIndex());
 }
 
 //================================================================================================================
@@ -553,26 +553,26 @@ RecordingsPage::RecordingsPage(QWidget *parent) : Widget(parent)
     recButton = new QPushButton("...");
 
     recButton->setStyleSheet("min-width: 1px;");
-    pathEdit->setText(Database::value("Config", "recordPath").toString());
+    pathEdit->setText(Database::value("RadioConfig", "recordPath").toString());
 
     QHBoxLayout *recLayout = new QHBoxLayout;
     recLayout->addWidget(pathEdit);
     recLayout->addWidget(recButton);
 
     QCheckBox *recChBox = new QCheckBox("Criar sub-pastas para cada rádio, separadamente");
-    recChBox->setChecked(Database::value("Config", "recordSubDir", false).toBool());
+    recChBox->setChecked(Database::value("RadioConfig", "recordSubDir", false).toBool());
 
     connect(recButton, SIGNAL(clicked()), this, SLOT(searchDir()));
     connect(defaultLabel, &QLabel::linkActivated, [=]() {
         QString path = QStandardPaths::writableLocation(QStandardPaths::MusicLocation)+"/"+AppName+" Recordings/";
-        Database::setValue("Config", "recordPath", path);
+        Database::setValue("RadioConfig", "recordPath", path);
         pathEdit->setText(path);
 
         if (!QDir().exists(path))
             QDir().mkdir(path);
     });
     connect(recChBox, &QCheckBox::clicked, [=](bool arg) {
-        Database::setValue("Config", "recordSubDir", arg);
+        Database::setValue("RadioConfig", "recordSubDir", arg);
     });
 
     QVBoxLayout *configLayout = new QVBoxLayout;
@@ -592,12 +592,12 @@ RecordingsPage::RecordingsPage(QWidget *parent) : Widget(parent)
 
 void RecordingsPage::searchDir()
 {
-    QString path = QFileDialog::getExistingDirectory(this, "Open Directory", Database::value("Config", "recordPath").toString(),
+    QString path = QFileDialog::getExistingDirectory(this, "Open Directory", Database::value("RadioConfig", "recordPath").toString(),
                                                     QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
     if (!path.isEmpty())
     {
-        Database::setValue("Config", "recordPath", path);
+        Database::setValue("RadioConfig", "recordPath", path);
         pathEdit->setText(path);
     }
 }
@@ -611,8 +611,8 @@ NetworkPage::NetworkPage(QWidget *parent) : Widget(parent)
 
     QLineEdit *proxyEdit = new QLineEdit;
 
-    if (Database::value("Config", "net_proxy").toString() != "0")
-        proxyEdit->setText(Database::value("Config", "net_proxy").toString());
+    if (Database::value("RadioConfig", "net_proxy").toString() != "0")
+        proxyEdit->setText(Database::value("RadioConfig", "net_proxy").toString());
 
     QPushButton *proxyButton = new QPushButton("Salvar");
 
@@ -622,7 +622,7 @@ NetworkPage::NetworkPage(QWidget *parent) : Widget(parent)
 
     connect(proxyButton, &QPushButton::clicked, [=]() {
         QString text = proxyEdit->text();
-        Database::setValue("Config", "net_proxy", (text.isEmpty() ? "0" : text));
+        Database::setValue("RadioConfig", "net_proxy", (text.isEmpty() ? "0" : text));
         BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY, (text.isEmpty() ? NULL : text.toLocal8Bit().data()));
     });
 
