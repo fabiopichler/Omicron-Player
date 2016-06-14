@@ -123,7 +123,7 @@ public:
 
     void create(const QString &);
     bool connecting(const bool &, const bool &);
-    int code();
+    int completed();
     const HSTREAM &getStream() const;
 
     void fadeIn(const int &);

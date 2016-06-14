@@ -327,8 +327,7 @@ void RadioStream::newConnectionSlot()
 {
     connection = new NetworkStream;
 
-    connect(connection, SIGNAL(statusProcSignal(const void *, DWORD)),
-                                this, SLOT(statusProc(const void *, DWORD)), Qt::QueuedConnection);
+    connect(connection, &NetworkStream::statusProcSignal, this, &RadioStream::statusProc, Qt::QueuedConnection);
 }
 
 void RadioStream::statusProc(const void *buffer, DWORD length)
@@ -358,7 +357,6 @@ void RadioStream::statusProc(const void *buffer, DWORD length)
 void RadioStream::createEvents()
 {
     connect(playlist, SIGNAL(playNewRadio(int)), this, SLOT(playNewRadio(int)));
-    //connect(&netPlaylist, &NetPlaylist::updateStatus, [=](QVariant arg) { emit updateValues(StatusLabel, arg); });
 
     connect(this, SIGNAL(startStatusTimer(int)), statusTimer, SLOT(start(int)));
     connect(this, SIGNAL(stopStatusTimer()), statusTimer, SLOT(stop()));
@@ -537,16 +535,17 @@ void RadioStream::run()
                 isTimedout = true;
         }
 
-        errorCode = (isTimedout ? 40 : connection->code());
+        errorCode = connection->completed();
 
         if (isTimedout || mstop || !mplay)
         {
-            disconnect(connection, SIGNAL(statusProcSignal(const void *, DWORD)),
-                                        this, SLOT(statusProc(const void *, DWORD)));
+            disconnect(connection, &NetworkStream::statusProcSignal, this, &RadioStream::statusProc);
 
             connection = nullptr;
 
-            if (!isTimedout)
+            if (isTimedout)
+                errorCode = 40;
+            else
                 errorCode = 0;
         }
 
@@ -748,7 +747,7 @@ bool NetworkStream::connecting(const bool &stop, const bool &play)
     return true;
 }
 
-int NetworkStream::code()
+int NetworkStream::completed()
 {
     if (mstop || errorCode != 0)
     {
