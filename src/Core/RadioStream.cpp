@@ -553,7 +553,7 @@ void RadioStream::run()
         {
             BASS_CHANNELINFO info;
             bool ok;
-            int _bitrate = bitrate.toInt(&ok);
+            int _bitrate;
             stream = connection->getStream();
 
             BASS_ChannelGetInfo(stream, &info);
@@ -590,6 +590,8 @@ void RadioStream::run()
                 connection = nullptr;
                 break;
             }
+
+            _bitrate = bitrate.toInt(&ok);
 
             if ((!ok || _bitrate < 8) && !iswma)
                 bitrate = QString("%1").arg(BASS_StreamGetFilePosition(stream, BASS_FILEPOS_END) * 8

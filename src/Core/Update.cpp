@@ -36,14 +36,15 @@ UpdateApp::UpdateApp(QObject *parent, QSettings *iniSettings) : QObject(parent)
 
     if (checkUpdate == 0)
         return;
-
-    if (checkUpdate == 2)
-        checkUpdate = 6;
+    else if (checkUpdate == 2)
+        checkUpdate = 7;
+    else if (checkUpdate != 1)
+        checkUpdate = 1;
 
     QDate lastCheck(QDate::fromString(Database::value("Version", "updates_lastCheck").toString(), "yyyy-MM-dd"));
     lastCheck = lastCheck.addDays(checkUpdate);
 
-    if (lastCheck < currentDate)
+    if (lastCheck <= currentDate)
         startTimer->start(1000);
 }
 
