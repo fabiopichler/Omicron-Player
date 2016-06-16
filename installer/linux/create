@@ -12,7 +12,7 @@
 #
 #*******************************************************************************
 
-DIR_NAME="FPM-Player-1.1-setup-Linux-x64"
+DIR_NAME="FPM-Player-1.1.0-setup-Linux-x64"
 
 mkdir output/${DIR_NAME}
 

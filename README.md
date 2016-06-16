@@ -9,27 +9,27 @@ O FPM Player é um software de código aberto (open source) e está licenciado s
 
 Futuramente, o player contará com novas funcionalidades úteis.
 
-Website oficial: http://fabiopichler.net/tche-media-player/
+Website oficial: http://fabiopichler.net/fpm-player/
 
 
 ### Projeto para Estudos
-Este projeto, tem a única finalidade de estudos, portanto, não aceito ajuda, de nenhum tipo, seja Pull Request ou o que for.
+Este projeto, apesar de ser relativamente sério, tem uma finalidade de estudos, portanto, não aceito ajuda, de nenhum tipo, seja Pull Request ou o que for.
 
-E aceito, sem problemas, que me reportem bugs em [Issues](https://github.com/fabiopichler/Tche-Media-Player/issues) (ou sei lá como) ou deem sugestões.
+E aceito, sem problemas, que me reportem bugs em [Issues](https://github.com/fabiopichler/FPM-Player/issues) (ou de qualquer outro jeito) ou deem sugestões.
 
 Em outras palavras, não aceito que me enviem códigos, ou seja, que não façam por mim. Porém, caso queira implementar suas próprias funcionalidades, terá que fazer sua própria versão do programa, respeitando a licença BSD e licença das bibliotecas usadas.
 
 
 ### Baixar
-Acesse: http://fabiopichler.net/download/tche-media-player/
+Acesse: http://fabiopichler.net/download/fpm-player/
 
-Ou: https://github.com/fabiopichler/Tche-Media-Player/releases
+Ou: https://github.com/fabiopichler/FPM-Player/releases
 
 
 ### Web Rádios
 A versão atual, possui, aproximadamente, 80 Web Rádios (brasileiras), pré configuradas.
 
-![Rádios](https://i.imgur.com/GqMjWI6.png)
+![Rádios](https://i.imgur.com/eAwB4Zi.png)
 
 
 ### Músicas
@@ -37,13 +37,13 @@ Atualmente, é possível reproduzir os seguintes formatos de arquivos: mp3, wma,
 
 Em sistemas Linux, não é possível reproduzir WMA.
 
-![Músicas](https://i.imgur.com/cwCFeH1.png)
+![Músicas](https://i.imgur.com/KdihMbE.png)
 
 
 ### Outras imagens
 Veja uma galeria com imagens do programa: http://imgur.com/a/inrbQ
 
-![Configurações](http://i.imgur.com/lGh81Eb.png)
+![Configurações](http://i.imgur.com/5eE25r0.png)
 
 
 ### Créditos

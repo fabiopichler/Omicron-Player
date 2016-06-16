@@ -77,7 +77,7 @@ int main(int argc, char **argv)
         if (app->isRunning() && argc > 2 && (strcmp(argv[1], "--open-file") == 0 || strcmp(argv[1], "--add-file") == 0))
         {
             int code;
-            char *msg = (char *) malloc(strlen(argv[1]) + strlen(argv[2]) + 2);
+            char *msg = (char *) malloc(strlen(argv[1]) + strlen(argv[2]) + 10);
 
             sprintf(msg, "%s:%s", argv[1], argv[2]);
 
