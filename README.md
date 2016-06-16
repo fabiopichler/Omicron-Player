@@ -41,9 +41,9 @@ Em sistemas Linux, não é possível reproduzir WMA.
 
 
 ### Outras imagens
-Veja uma galeria com imagens do programa: http://imgur.com/a/inrbQ
+Veja uma galeria com imagens do programa: http://software.fabiopichler.net/images/fpm-player/
 
-![Configurações](http://i.imgur.com/5eE25r0.png)
+![Configurações](https://i.imgur.com/5eE25r0.png)
 
 
 ### Créditos
