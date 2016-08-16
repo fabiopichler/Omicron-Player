@@ -12,6 +12,7 @@
 
 #include "Global.h"
 #include <QDir>
+#include <QDirIterator>
 #include <bass.h>
 
 int Global::argc;

@@ -66,6 +66,7 @@ bool Database::add(const QString &table, const QString &id, const QVariant &valu
 
     QSqlQuery query(*db);
 
+    query.exec(QString("CREATE TABLE IF NOT EXISTS %1 (id TEXT PRIMARY KEY, value TEXT)").arg(table));
     query.prepare(QString("INSERT INTO %1 (id, value) VALUES (:id, :value)").arg(table));
 
     query.bindValue(":id", id);
@@ -351,7 +352,7 @@ void Database::defaultConfig()
 
     query.exec("CREATE TABLE Config (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO Config VALUES "
-               "('theme', 'app:fpm-player'), "
+               "('theme', 'app:fpm-player-dark'), "
                "('style', 'default'), "
                "('device', '-1'), "
                "('autoDlRadioList', 'true'), "
@@ -408,6 +409,18 @@ void Database::defaultConfig()
                "('indexFavorites', '0'), "
                "('quick-link', '')");
 
+    query.exec("CREATE TABLE RecorderMode (id TEXT PRIMARY KEY, value TEXT)");
+    query.exec("INSERT INTO RecorderMode VALUES "
+               "('device', '-1'), "
+               "('encoder', '0'), "
+#ifdef Q_OS_WIN
+               "('aac', '8'), "
+#else
+               "('aac', '4'), "
+#endif
+               "('ogg', '6'), "
+               "('mp3', '8')");
+
     query.exec("CREATE TABLE MusicFavorites (path TEXT PRIMARY KEY)");
 
     query.exec("CREATE TABLE RadioFavorites (title TEXT PRIMARY KEY, genre TEXT, contry TEXT, "
@@ -439,5 +452,26 @@ void Database::defaultConfig()
 
 void Database::upgrade()
 {
+    setValue("Config", "theme", "app:fpm-player-dark");
+
+    // --- RecorderMode ---
+    if (!exist("RecorderMode", "device"))
+        add("RecorderMode", "device", "-1");
+
+    if (!exist("RecorderMode", "encoder"))
+        add("RecorderMode", "encoder", "0");
+
+    if (!exist("RecorderMode", "aac"))
+#ifdef Q_OS_WIN
+        add("RecorderMode", "aac", "8");
+#else
+        add("RecorderMode", "aac", "4");
+#endif
+
+    if (!exist("RecorderMode", "ogg"))
+        add("RecorderMode", "ogg", "6");
+
+    if (!exist("RecorderMode", "mp3"))
+        add("RecorderMode", "mp3", "8");
 }
 

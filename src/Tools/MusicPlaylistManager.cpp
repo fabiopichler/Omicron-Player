@@ -11,6 +11,7 @@
 *******************************************************************************/
 
 #include "MusicPlaylistManager.h"
+#include "../Core/Directory.h"
 
 MusicPlaylistManager::MusicPlaylistManager(QWidget *parent) : DialogBase(parent)
 {
@@ -303,20 +304,18 @@ void MusicPlaylistManager::addDirectory()
     if (!dirName.isEmpty())
     {
         Database::setValue("Current", "fileDialogDir", dirName);
-        QDirIterator dirIt(dirName, QDirIterator::Subdirectories);
-        QRegExp filter(QString(FileNameFilter).replace(" ", "|").remove("*."), Qt::CaseInsensitive);
 
-        while (dirIt.hasNext()) {
-            QFileInfo fileInfo(dirIt.next());
+        Directory *dir = new Directory(this);
 
-            if (fileInfo.isFile())
-            {
-                if (fileInfo.suffix().contains(filter))
-                    playlist->addRow(fileInfo.filePath());
-            }
-        }
+        dir->getAllFiles(dirName, [&](QFileInfo &fileInfo) {
+            playlist->addRow(fileInfo.filePath());
+        });
 
-        updatePlaylistStyle();
+        dir->executeLater([=]() {
+            updatePlaylistStyle();
+        });
+
+        dir->start();
     }
 }
 

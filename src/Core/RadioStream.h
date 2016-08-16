@@ -13,7 +13,6 @@
 #pragma once
 
 #include "Global.h"
-#include "Database.h"
 #include "StreamBase.h"
 #include "NetPlaylist.h"
 #include "../Tools/Equalizer.h"
@@ -74,8 +73,8 @@ private:
     void run() Q_DECL_OVERRIDE;
 
 signals:
-    void updateValues(RadioStream::Event, QVariant);
-    void updateValues(QWORD, DWORD, DWORD, DWORD);
+    void updateValue(RadioStream::Event, QVariant);
+    void updateInfo(QWORD, DWORD, DWORD, DWORD);
     void threadFinished(bool, bool);
     void playButtonEnabled(bool);
     void recordButtonEnabled(bool);
@@ -182,7 +181,7 @@ private:
     void keyPressEvent(QKeyEvent *) Q_DECL_OVERRIDE;
 
 signals:
-    void updateValues(RadioStream::Event, QVariant);
+    void updateValue(RadioStream::Event, QVariant);
     void selectRowSignal(int);
     void playNewRadio(int);
 

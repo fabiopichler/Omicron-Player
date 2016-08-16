@@ -37,7 +37,7 @@ class MusicWindow : public DropArea
     Q_OBJECT
 
 public:
-    MusicWindow(QObject *, QWidget *parent = 0);
+    MusicWindow(QObject *, QWidget *);
     ~MusicWindow();
 
 private:
@@ -81,11 +81,10 @@ private:
     Widget *infoWidget, *tracksWidget;
     MusicStream *musicStream;
     MusicPlaylist *playlist;
-    QMenu *fileMenu, *modeMenu, *toolsMenu, *settingsMenu, *aboutMenu;
     QMenuBar *menuBar;
     QAction *openMusicAction,*addMusicAction,*openDirAction,*addDirAction,*openCDAction,*openPlaylistAction,
-        *clearPlaylistAction,*exitAction,*radioModeAction,*playlistAction,*equalizerAction,*checkUpdateAction,
-        *websiteAction, *aboutAction, *configAction;
+        *clearPlaylistAction,*exitAction,*radioModeAction,*recorderModeAction,*serverModeAction,
+        *playlistAction,*equalizerAction,*checkUpdateAction,*websiteAction, *aboutAction, *configAction;
     QPushButton *playButton,*pauseButton,*stopButton,*prevButton,*nextButton,*repeatButton,*randomButton,
         *playlistButton,*playlistModeButton,*musicModeButton,*favoriteButton, *changeFavoriteButton;
     QLabel *timeLabel,*totalTimeLabel,*currentTrackLabel,*totalTracksLabel,*currentTagLabel,*separatorLabel,

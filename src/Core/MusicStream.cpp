@@ -225,11 +225,6 @@ void MusicStream::loadPlaylist(const int &mode, const bool &disableCdMode, const
     }
 }
 
-double MusicStream::getPosition()
-{
-    return BASS_ChannelBytes2Seconds(stream, BASS_ChannelGetPosition(stream, BASS_POS_BYTE));
-}
-
 //================================================================================================================
 // public slots
 //================================================================================================================
@@ -333,7 +328,7 @@ bool MusicStream::changeRandom()
 
 void MusicStream::playNewMusic(QVariant row)
 {
-    emit updateValues(CurrentSound, row);
+    emit updateValue(CurrentSound, row);
 
     if (isRunning())
     {
@@ -344,11 +339,6 @@ void MusicStream::playNewMusic(QVariant row)
     {
         play();
     }
-}
-
-void MusicStream::setPosition(int arg)
-{
-    BASS_ChannelSetPosition(stream, BASS_ChannelSeconds2Bytes(stream, arg), BASS_POS_BYTE);
 }
 
 //================================================================================================================
@@ -364,7 +354,7 @@ void MusicStream::updateTag()
         if (tagListCount >= len)
             tagListCount = 0;
 
-        emit updateValues(CurrentTag, tagList[tagListCount]);
+        emit updateValue(CurrentTag, tagList[tagListCount]);
         tagListCount++;
     }
 }
@@ -389,8 +379,8 @@ void MusicStream::updateCDMode()
         if (timerTag->isActive())
             emit stopTagTimer();
         emit updatePlaylistStyle();
-        emit updateValues(PlaylistLength);
-        emit updateValues(CurrentTag, "Sem CD de Áudio");
+        emit updateValue(PlaylistLength);
+        emit updateValue(CurrentTag, "Sem CD de Áudio");
     }
 
     if (BASS_ChannelIsActive(stream) == 0)
@@ -400,7 +390,7 @@ void MusicStream::updateCDMode()
     {
         if (timerTag->isActive())
             emit stopTagTimer();
-        emit updateValues(CurrentTag, "Sem CD de Áudio");
+        emit updateValue(CurrentTag, "Sem CD de Áudio");
     }
 #endif
 }
@@ -441,7 +431,7 @@ void MusicStream::updateTrackList()
 
     if (tc == -1)
     {
-        emit updateValues(CurrentTag, "Sem CD de Áudio");
+        emit updateValue(CurrentTag, "Sem CD de Áudio");
         return;
     }
 
@@ -464,8 +454,8 @@ void MusicStream::updateTrackList()
         playlist->addRow(text);
     }
 
-    emit updateValues(PlaylistLength);
-    emit updateValues(CurrentTag, "Modo CD de Áudio");
+    emit updateValue(PlaylistLength);
+    emit updateValue(CurrentTag, "Modo CD de Áudio");
 #endif
 }
 
@@ -477,7 +467,7 @@ void MusicStream::run()
 
     do
     {
-        emit updateValues(FileTypeLabel, "Carregando...");
+        emit updateValue(FileTypeLabel, "Carregando...");
 
         QString currentFile = playlist->getCurrentFile();
         if (currentFile.isEmpty())
@@ -560,7 +550,7 @@ void MusicStream::run()
 
             emit startTagTimer(5000);
             emit setTotals(static_cast<QWORD>(timeLength));
-            emit updateValues(FileTypeLabel, fileType);
+            emit updateValue(FileTypeLabel, fileType);
             emit newFade();
 
             while (!fade)
@@ -577,7 +567,7 @@ void MusicStream::run()
 
             if (mpause)
             {
-                emit updateValues(0, 0);
+                emit updateInfo(0, 0);
                 while (mpause && mplay && mstop == false)
                     msleep(50);
             }
@@ -612,7 +602,7 @@ void MusicStream::run()
                         mplay = false;
                 }
 
-                emit updateValues(position, (act == 1 ? BASS_ChannelGetLevel(stream) : 0));
+                emit updateInfo(position, (act == 1 ? BASS_ChannelGetLevel(stream) : 0));
                 msleep(20);
             }
 
@@ -628,8 +618,8 @@ void MusicStream::run()
             emit playButtonEnabled(false);
             emit pauseButtonEnabled(true);
             emit stopButtonEnabled(true);
-            emit updateValues(CurrentTag, "Erro na reprodução!");
-            emit updateValues(FileTypeLabel, "Erro!");
+            emit updateValue(CurrentTag, "Erro na reprodução!");
+            emit updateValue(FileTypeLabel, "Erro!");
 
             if (Database::value("Config", "errorNotification").toString() == "dialog")
                 emit showErrorDlg(Global::getErrorHtml(time + "Erro na reprodução!"));
@@ -671,7 +661,7 @@ void MusicStream::run()
     mpause = false;
     mstop = false;
     emit threadFinished();
-    emit updateValues(FileTypeLabel, "---");
+    emit updateValue(FileTypeLabel, "---");
 }
 
 //================================================================================================================
@@ -833,7 +823,7 @@ QString MusicPlaylist::getRow(const int &arg)
 
 void MusicPlaylist::selectRow(int arg)
 {
-    emit updateValues(MusicStream::CurrentSound, getCurrentIndex());
+    emit updateValue(MusicStream::CurrentSound, getCurrentIndex());
     selectionModel()->setCurrentIndex(proxyModel->index(arg,0), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }
 
@@ -851,8 +841,8 @@ void MusicPlaylist::textFilterChanged(QString arg)
 
     proxyModel->setFilterRegExp(QRegExp(arg, Qt::CaseInsensitive, QRegExp::FixedString));
     emit selectRowSignal(getCurrentIndex());
-    emit updateValues(MusicStream::CurrentSound, (length() == 0 ? -1 : getCurrentIndex()));
-    emit updateValues(MusicStream::PlaylistLength, 0);
+    emit updateValue(MusicStream::CurrentSound, (length() == 0 ? -1 : getCurrentIndex()));
+    emit updateValue(MusicStream::PlaylistLength, 0);
 }
 
 //================================================================================================================

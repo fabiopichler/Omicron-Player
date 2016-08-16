@@ -57,3 +57,5 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 [UninstallRun]
 Filename: "{app}\{#MyAppExeName}"; Parameters: "--uninstall-app"
 
+[InstallDelete]
+Type: filesandordirs; Name: "{pf}\FPM Player"

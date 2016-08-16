@@ -29,7 +29,7 @@ Ou: https://github.com/fabiopichler/FPM-Player/releases
 ### Web Rádios
 A versão atual, possui, aproximadamente, 80 Web Rádios (brasileiras), pré configuradas.
 
-![Rádios](https://i.imgur.com/eAwB4Zi.png)
+![Rádios](https://i.imgur.com/vHlit7W.png)
 
 
 ### Músicas
@@ -37,13 +37,13 @@ Atualmente, é possível reproduzir os seguintes formatos de arquivos: mp3, wma,
 
 Em sistemas Linux, não é possível reproduzir WMA.
 
-![Músicas](https://i.imgur.com/KdihMbE.png)
+![Músicas](https://i.imgur.com/ISiQRor.png)
 
 
 ### Outras imagens
 Veja uma galeria com imagens do programa: http://software.fabiopichler.net/images/fpm-player/
 
-![Configurações](https://i.imgur.com/5eE25r0.png)
+![Configurações](https://i.imgur.com/kKvJmZW.png)
 
 
 ### Créditos

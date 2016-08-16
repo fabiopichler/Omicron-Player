@@ -569,7 +569,7 @@ RecordingsPage::RecordingsPage(QWidget *parent) : Widget(parent)
         pathEdit->setText(path);
 
         if (!QDir().exists(path))
-            QDir().mkdir(path);
+            QDir().mkpath(path);
     });
     connect(recChBox, &QCheckBox::clicked, [=](bool arg) {
         Database::setValue("RadioConfig", "recordSubDir", arg);
@@ -712,7 +712,7 @@ void UpdatePage::changeUpdade(int index)
 FadeConfigBox::FadeConfigBox(const QString &name, const QString &title, QWidget *parent)
                                              : QGroupBox(title, parent), configName(name)
 {
-    QLabel *infoLabel = new QLabel("<strong>Obs:</strong> Para desativar as transições, deixe com<br> valores 0 (zero)."
+    QLabel *infoLabel = new QLabel("<strong>Nota:</strong> Para desativar as transições, deixe com<br> valores 0 (zero)."
                                    " O tempo máximo é 30 seg.");
     QLabel *fadeInLabel = new QLabel("Tempo para o <strong>Fade in</strong> (em segundos)");
     QSpinBox *fadeInSpinBox = new QSpinBox;

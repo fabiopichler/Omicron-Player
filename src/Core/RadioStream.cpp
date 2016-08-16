@@ -38,7 +38,7 @@ RadioStream::RadioStream(QWidget *parent) : StreamBase()
     QString recordPath = Database::value("RadioConfig", "recordPath").toString();
 
     if (!QDir().exists(recordPath))
-        QDir().mkdir(recordPath);
+        QDir().mkpath(recordPath);
 
     createEvents();
 }
@@ -179,7 +179,7 @@ void RadioStream::doMeta()
             }
         }
     }
-    emit updateValues(StreamTitleLabel, (text.isEmpty() ? "---" : text));
+    emit updateValue(StreamTitleLabel, (text.isEmpty() ? "---" : text));
 }
 
 //================================================================================================================
@@ -220,7 +220,7 @@ void RadioStream::prev()
     {
         selectedUrl = 0;
         playlist->prev();
-        emit updateValues(RadioName, playlist->getCurrentIndex());
+        emit updateValue(RadioName, playlist->getCurrentIndex());
     }
 }
 
@@ -235,7 +235,7 @@ void RadioStream::next()
     {
         selectedUrl = 0;
         playlist->next();
-        emit updateValues(RadioName, playlist->getCurrentIndex());
+        emit updateValue(RadioName, playlist->getCurrentIndex());
     }
 }
 
@@ -274,13 +274,13 @@ void RadioStream::stopRecord()
         mrecord = false;
         recordTime = 0;
         emit recordButtonEnabled(true);
-        emit updateValues(Recording, false);
+        emit updateValue(Recording, false);
 
         recordFile->flush();
         recordFile->close();
 
         QString path(QFileInfo(recordFile->fileName()).absolutePath());
-        recordFile->rename(path + "/Record_" + recordFileName + "." + fileType.toLower());
+        recordFile->rename(path + "/Record " + recordFileName + "." + fileType.toLower());
 
         delete recordFile;
         recordFile = nullptr;
@@ -292,7 +292,7 @@ void RadioStream::playNewRadio(int row, int selected)
 {
     selectedUrl = selected;
     playlist->setCurrentIndex(row);
-    emit updateValues(RadioName, row);
+    emit updateValue(RadioName, row);
 
     if (isRunning())
     {
@@ -314,7 +314,7 @@ void RadioStream::updateStatus()
         if (statusListCount >= len)
             statusListCount = 0;
 
-        emit updateValues(StatusLabel, statusList[statusListCount]);
+        emit updateValue(StatusLabel, statusList[statusListCount]);
         statusListCount++;
     }
 }
@@ -335,7 +335,7 @@ void RadioStream::statusProc(const void *buffer, DWORD length)
     if (buffer && !length)
     {
         status = Global::cStrToQString(static_cast<const char *>(buffer));
-        emit updateValues(StatusLabel, status);
+        emit updateValue(StatusLabel, status);
     }
     else if (mrecord)
     {
@@ -381,10 +381,10 @@ bool RadioStream::startRecord()
         newRecordPath.replace("//", "/");
 
         if (!QDir().exists(newRecordPath))
-            QDir().mkdir(newRecordPath);
+            QDir().mkpath(newRecordPath);
     }
 
-    recordFileName = QDateTime::currentDateTime().toString("yyyy-MM-dd_HH.mm.ss");
+    recordFileName = QDateTime::currentDateTime().toString("yyyy-MM-dd HH.mm.ss");
     recordFile = new QFile(newRecordPath + "Recording... (" + recordFileName + ")");
     recordTime = BASS_ChannelBytes2Seconds(stream, BASS_ChannelGetPosition(stream, BASS_POS_BYTE));
 
@@ -395,7 +395,7 @@ bool RadioStream::startRecord()
     }
 
     emit recordButtonEnabled(false);
-    emit updateValues(Recording, true);
+    emit updateValue(Recording, true);
     return false;
 }
 
@@ -476,11 +476,11 @@ bool RadioStream::buffering(int &_progress)
             }
         }
 
-        emit updateValues(NameLabel, (s.isEmpty() ? "---" : s));
+        emit updateValue(NameLabel, (s.isEmpty() ? "---" : s));
         return true;
     }
 
-    emit updateValues(BufferProgressBar, static_cast<int>(progress));
+    emit updateValue(BufferProgressBar, static_cast<int>(progress));
     return false;
 }
 
@@ -518,8 +518,8 @@ void RadioStream::run()
         QElapsedTimer timer;
         timer.start();
 
-        emit updateValues(StatusLabel, "Conectando...");
-        emit updateValues(ShowLoaderMovie, true);
+        emit updateValue(StatusLabel, "Conectando...");
+        emit updateValue(ShowLoaderMovie, true);
         emit newConnection();
 
         while (!connection)
@@ -582,7 +582,7 @@ void RadioStream::run()
                 msleep(30);
             }
 
-            emit updateValues(ShowLoaderMovie, false);
+            emit updateValue(ShowLoaderMovie, false);
 
             if (mstop || isTimedout)
             {
@@ -601,7 +601,6 @@ void RadioStream::run()
             statusList << bitrate + " kbps";
             statusList << fileType;
             statusList << (info.chans == 1 ? "Mono" : (info.chans == 2 ? "Stereo" : (info.chans > 2 ? "Surround" : "")));
-            statusList << QString("%1 Hz").arg(info.freq);
             statusList << status;
 
             statusList.removeAll("");
@@ -626,7 +625,7 @@ void RadioStream::run()
 
             while ((act = BASS_ChannelIsActive(stream)) && mplay && mstop == false)
             {
-                emit updateValues(static_cast<QWORD>(BASS_ChannelBytes2Seconds(stream, BASS_ChannelGetPosition(stream,BASS_POS_BYTE)) - recordTime),
+                emit updateInfo(static_cast<QWORD>(BASS_ChannelBytes2Seconds(stream, BASS_ChannelGetPosition(stream,BASS_POS_BYTE)) - recordTime),
                                   BASS_ChannelGetLevel(stream),
                                   (iswma ? BASS_StreamGetFilePosition(stream, 1000/*BASS_FILEPOS_WMA_BUFFER*/) :
                                            BASS_StreamGetFilePosition(stream, BASS_FILEPOS_BUFFER)
@@ -652,7 +651,7 @@ void RadioStream::run()
 
             if (errorCode != 0)
             {
-                emit updateValues(StatusLabel, "Erro...");
+                emit updateValue(StatusLabel, "Erro...");
                 msleep(1000);
 
                 QString time = "[" + QTime::currentTime().toString("HH:mm") + "] ";
@@ -668,7 +667,7 @@ void RadioStream::run()
             if (mprev)
             {
                 playlist->prev();
-                emit updateValues(RadioName, playlist->getCurrentIndex());
+                emit updateValue(RadioName, playlist->getCurrentIndex());
                 mprev = false;
                 selectedUrl = 0;
             }
@@ -679,7 +678,7 @@ void RadioStream::run()
             else if (mnext || Database::value("RadioConfig", "reconnectionMode").toInt() == 2)
             {
                 playlist->next();
-                emit updateValues(RadioName, playlist->getCurrentIndex());
+                emit updateValue(RadioName, playlist->getCurrentIndex());
                 mnext = false;
                 selectedUrl = 0;
             }
@@ -1054,7 +1053,7 @@ void RadioPlaylist::textFilterChanged(QString arg)
 
     proxyModel->setFilterRegExp(QRegExp(arg, Qt::CaseInsensitive, QRegExp::FixedString));
     emit selectRowSignal(getCurrentIndex());
-    emit updateValues(RadioStream::RadioName, getCurrentIndex());
+    emit updateValue(RadioStream::RadioName, getCurrentIndex());
 }
 
 //================================================================================================================

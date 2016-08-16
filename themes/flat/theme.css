@@ -22,6 +22,7 @@ QWidget {
 }
 QWidget#titleBar {
     background: #dedede;
+    min-height: 29px;
 }
 QWidget#window {
     background: rgba(0,0,0,0,0);
@@ -46,10 +47,14 @@ QWidget#radioInfoWidget {
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
 }
+QWidget#statusWidget,
 QWidget#tracksWidget {
 	margin-top: 1px;
 	background: #fff;
 	border: 1px solid #bbb;
+}
+QWidget#statusWidget {
+    margin-top: 0;
 }
 
 /* QMenuBar
@@ -238,10 +243,11 @@ QPushButton::menu-indicator {
 QPushButton#minimize,
 QPushButton#minimizeTray {
     background: #777;
-    padding: 0 4px 0 4px;
+    padding: 0 1px;
     border: none;
     border-radius: 0;
-    min-width: 10px;
+    min-width: 5px;
+	height: 18px;
 }
 QPushButton#minimize:hover,
 QPushButton#minimizeTray:hover {
@@ -249,10 +255,11 @@ QPushButton#minimizeTray:hover {
 }
 QPushButton#close {
     background: #d56161;
-    padding: 0 10px 0 10px;
+    padding: 0 7px;
     border: none;
     border-radius: 0;
-    min-width: 10px;
+    min-width: 5px;
+	height: 18px;
 }
 QPushButton#close:hover {
     background: #777;
@@ -573,7 +580,7 @@ QSlider#timeSlider::sub-page:horizontal {
 --------------------------------------------------------- */
 QComboBox {
     border: 1px solid transparent;
-    padding: 0 18px 0 3px;
+    padding: 0 3px;
     min-width: 6em;
     height: 20px;
     color: #346;
@@ -647,9 +654,63 @@ QListView#ComboBox::item:selected {
     color: #fff;
 }
 
+/* QCheckBox
+--------------------------------------------------------- */
+QCheckBox {
+    spacing: 5px;
+}
+QCheckBox::indicator {
+    width: 13px;
+    height: 13px;
+    border: 1px solid #bbb;
+}
+QCheckBox::indicator:unchecked {
+    background: #fff;
+}
+QCheckBox::indicator:unchecked:pressed,
+QCheckBox::indicator:checked:pressed {
+    background: #ddd;
+    border: 1px solid #888;
+}
+QCheckBox::indicator:checked {
+    background: #def;
+    border: 1px solid #bbd;
+    image: url("{theme_path}images/Check.png");
+}
+QCheckBox::indicator:unchecked:hover,
+QCheckBox::indicator:checked:hover {
+    background: #cec;
+}
+
 /* QSpinBox
 --------------------------------------------------------- */
 QSpinBox {
+    padding-right: 15px;
     background: #fff;
+    border: 1px solid #bbb;
+}
+QSpinBox::up-button {
+    subcontrol-origin: border;
+    subcontrol-position: top right;
+
+    image: url("{theme_path}images/Arrowhead-Up-2.png");
+    background: #36b;
+    border: 1px solid #bbb;
+    width: 16px;
+    height: 8px;
+}
+QSpinBox::down-button {
+    subcontrol-origin: border;
+    subcontrol-position: bottom right;
+
+    image: url("{theme_path}images/Arrowhead-Down-2.png");
+    background: #36b;
+    border: 1px solid #bbb;
+    width: 16px;
+    height: 8px;
+}
+QSpinBox::up-button:hover,
+QSpinBox::down-button:hover {
+    background: #777;
 }
 

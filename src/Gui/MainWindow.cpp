@@ -17,11 +17,17 @@ MainWindow::MainWindow(QObject *parent, QSettings *_iniSettings) : parentMain(pa
 {
     titleBar = new Titlebar(this);
 
+    mainLayout = new QVBoxLayout;
+    mainLayout->setMargin(0);
+    mainLayout->setSpacing(0);
+    mainLayout->addWidget(titleBar);
+
     setObjectName("window");
     setWindowFlags(Qt::FramelessWindowHint);
-    //setAttribute(Qt::WA_TranslucentBackground);
+    setAttribute(Qt::WA_TranslucentBackground);
     setWindowIcon(QIcon(Global::getQrcPath("icon2.png")));
     setFixedWidth(500);
+    setMaximumHeight(1);
 
     if (iniSettings->value("Window/Position").toPoint().isNull())
         move(30,30);
@@ -39,9 +45,6 @@ MainWindow::~MainWindow()
 void MainWindow::initWindow(Widget *widget)
 {
     centralWidget = widget;
-
-    mainLayout = new QVBoxLayout;
-    mainLayout->addWidget(titleBar);
     mainLayout->addWidget(widget, 1);
 
     setLayout(mainLayout);

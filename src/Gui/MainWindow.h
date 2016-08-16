@@ -14,6 +14,8 @@
 
 #include "MusicWindow.h"
 #include "RadioWindow.h"
+#include "RecorderWindow.h"
+#include "ServerWindow.h"
 #include "TitleBar.h"
 
 class MainWindow : public Widget

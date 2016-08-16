@@ -51,6 +51,7 @@ private:
     void createLayouts();
     void createEvents();
     void changePlaylist(int);
+    void changeEvent(QEvent *);
 
 private slots:
     void initEqualizer();
@@ -76,10 +77,10 @@ private:
     Widget *infoWidget;
     RadioStream *radioStream;
     RadioPlaylist *playlist;
-    QMenu *fileMenu, *modeMenu, *toolsMenu, *settingsMenu, *aboutMenu;
     QMenuBar *menuBar;
-    QAction *openLinkAction, *displayRecordingsAction, *exitAction, *musicModeAction, *playlistManagerAction,
-        *equalizerAction, *configAction, *checkUpdateAction, *websiteAction, *aboutAction;
+    QAction *openLinkAction, *displayRecordingsAction, *exitAction, *musicModeAction, *recorderModeAction,
+        *serverModeAction, *playlistManagerAction, *equalizerAction, *configAction, *checkUpdateAction,
+        *websiteAction, *aboutAction;
     QPushButton *playButton, *stopButton, *prevButton, *nextButton, *recordButton, *openLinkButton, *playlistButton,
         *changeFavoriteButton, *allPlaylistsButton, *customPlaylistButton, *favoriteButton;
     QLabel *timeLabel, *statusLabel, *nameLabel, *streamTitleLabel, *loaderLabel;

@@ -104,3 +104,11 @@ QComboBox:editable:focus {
 QListView#ComboBox::item:selected {
     background: #68217A;
 }
+
+/* QSpinBox
+--------------------------------------------------------- */
+QSpinBox::up-button,
+QSpinBox::down-button {
+    background: #68217A;
+}
+

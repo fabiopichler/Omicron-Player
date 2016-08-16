@@ -39,6 +39,8 @@ public:
 public slots:
     void startMusicMode();
     void startRadioMode();
+    void startRecorderMode();
+    void startServerMode();
     void setWindowTitle(QString);
     void showError(QString);
     void showNotification(QString);

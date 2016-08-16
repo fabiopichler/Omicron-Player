@@ -17,6 +17,14 @@
 
 #include <bass.h>
 
+struct EncoderList
+{
+    QString name;
+    QList<int> bitrate;
+    int index;
+    static int current;
+};
+
 class StreamBase : public QThread
 {
     Q_OBJECT
@@ -24,14 +32,16 @@ class StreamBase : public QThread
 public:
     StreamBase();
     const int &getVolume() const;
+    double getPosition() const;
+    static QString getFileType(const DWORD &);
 
 public slots:
     void updateFX(int, int);
     void setVolume(int);
+    void setPosition(int);
 
 protected:
     void setupDSP_EQ();
-    QString getFileType(const DWORD &);
 
     HSTREAM stream;
     DWORD fxEQ, volfx;

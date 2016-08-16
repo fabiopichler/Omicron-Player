@@ -50,23 +50,31 @@ RadioWindow::~RadioWindow()
 
 void RadioWindow::createMenuBar()
 {
-    fileMenu = new QMenu("Arquivo");
+    QMenu *fileMenu = new QMenu("Arquivo");
     openLinkAction = fileMenu->addAction("Abrir Link Rapidamente");
-    displayRecordingsAction = fileMenu->addAction("Exibir Gravações");
+    displayRecordingsAction = fileMenu->addAction("Exibir pasta com Gravações");
     fileMenu->addSeparator();
     exitAction = fileMenu->addAction("Sair");
     exitAction->setShortcut(QString("Ctrl+Q"));
 
-    modeMenu = new QMenu("Modo");
+    QMenu *modeMenu = new QMenu("Modo");
     musicModeAction = modeMenu->addAction("Modo Músicas");
+    QAction *currentAction = modeMenu->addAction("Modo Web Rádio");
+    recorderModeAction = modeMenu->addAction("Modo Gravador");
+    modeMenu->addSeparator();
+    serverModeAction = modeMenu->addAction("Modo Servidor");
 
-    toolsMenu = new QMenu("Ferramentas");
+    currentAction->setCheckable(true);
+    currentAction->setChecked(true);
+    currentAction->setDisabled(true);
+
+    QMenu *toolsMenu = new QMenu("Ferramentas");
     playlistManagerAction = toolsMenu->addAction("Gerenciador de Rádios");
     equalizerAction = toolsMenu->addAction("Equalizador");
     toolsMenu->addSeparator();
     configAction = toolsMenu->addAction("Configurações");
 
-    aboutMenu = new QMenu("Ajuda");
+    QMenu *aboutMenu = new QMenu("Ajuda");
     checkUpdateAction = aboutMenu->addAction("Verificar por Atualizações");
     websiteAction = aboutMenu->addAction("Visitar o Website Oficial");
     aboutMenu->addSeparator();
@@ -87,7 +95,7 @@ void RadioWindow::createWidgets()
     volumeControl->setVolume(volume);
     radioStream->setVolume(volume);
 
-    loaderMovie = new QMovie(Global::getThemePath("images/ajax-loader.gif"));
+    loaderMovie = new QMovie;
 
     searchLineEdit = new QLineEdit;
     searchLineEdit->setObjectName("searchLineEdit");
@@ -263,6 +271,8 @@ void RadioWindow::createEvents()
     connect(displayRecordingsAction, SIGNAL(triggered()), this, SLOT(displayRecordings()));
     connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(musicModeAction, SIGNAL(triggered()), parentMain, SLOT(startMusicMode()));
+    connect(recorderModeAction, SIGNAL(triggered()), parentMain, SLOT(startRecorderMode()));
+    connect(serverModeAction, SIGNAL(triggered()), parentMain, SLOT(startServerMode()));
     connect(playlistManagerAction, SIGNAL(triggered()), this, SLOT(initPlaylist()));
     connect(equalizerAction, SIGNAL(triggered()), this, SLOT(initEqualizer()));
     connect(configAction, SIGNAL(triggered()), parentMain, SLOT(initConfigDialog()));
@@ -293,13 +303,13 @@ void RadioWindow::createEvents()
     connect(radioStream, SIGNAL(playButtonEnabled(bool)), playButton, SLOT(setEnabled(bool)));
     connect(radioStream, SIGNAL(recordButtonEnabled(bool)), recordButton, SLOT(setEnabled(bool)));
     connect(radioStream, SIGNAL(stopButtonEnabled(bool)), stopButton, SLOT(setEnabled(bool)));
-    connect(radioStream, SIGNAL(updateValues(QWORD, DWORD, DWORD, DWORD)),
+    connect(radioStream, SIGNAL(updateInfo(QWORD, DWORD, DWORD, DWORD)),
             this, SLOT(update(QWORD, DWORD, DWORD, DWORD)));
-    connect(radioStream, SIGNAL(updateValues(RadioStream::Event, QVariant)),
+    connect(radioStream, SIGNAL(updateValue(RadioStream::Event, QVariant)),
             this, SLOT(update(RadioStream::Event, QVariant)));
     connect(radioStream, SIGNAL(threadFinished(bool,bool)), this, SLOT(threadFinished(bool,bool)));
 
-    connect(playlist, SIGNAL(updateValues(RadioStream::Event, QVariant)),
+    connect(playlist, SIGNAL(updateValue(RadioStream::Event, QVariant)),
             this, SLOT(update(RadioStream::Event, QVariant)));
     connect(playlist, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showContextMenu(const QPoint &)));
@@ -378,6 +388,21 @@ void RadioWindow::changePlaylist(int plMode)
 
     if (!playlist->isEmpty())
         playlist->selectRow(playlist->getCurrentIndex());
+}
+
+void RadioWindow::changeEvent(QEvent* e)
+{
+    if (e->type() == QEvent::StyleChange)
+    {
+        if (loaderMovie->state() == QMovie::Running)
+        {
+            loaderMovie->stop();
+            loaderMovie->setFileName(Global::getThemePath("images/ajax-loader.gif"));
+            loaderMovie->start();
+        }
+    }
+
+    QWidget::changeEvent(e);
 }
 
 //================================================================================================================
@@ -610,6 +635,8 @@ void RadioWindow::update(RadioStream::Event type, QVariant value)
     case RadioStream::ShowLoaderMovie:
         if (value.toBool())
         {
+            loaderMovie->stop();
+            loaderMovie->setFileName(Global::getThemePath("images/ajax-loader.gif"));
             streamTitleLabel->clear();
             streamTitleLabel->setMovie(loaderMovie);
             loaderMovie->start();

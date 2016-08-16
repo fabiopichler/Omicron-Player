@@ -19,8 +19,6 @@ Titlebar::Titlebar(QWidget *parent, const int &flag) : Widget(parent)
 
     titleIcon = new QLabel;
     titleIcon->setObjectName("windowIcon");
-    //titleIcon->setPixmap(QPixmap::fromImage(QImage(GlobalData::getQrcPath("icon.png"))
-    //                                        .scaled(24,24,Qt::IgnoreAspectRatio,Qt::SmoothTransformation)));
     titleIcon->setPixmap(QPixmap(Global::getQrcPath("icon.png")));
     titleIcon->setStyleSheet("border: none; background: transparent;");
     titleIcon->setContentsMargins(4,0,6,0);

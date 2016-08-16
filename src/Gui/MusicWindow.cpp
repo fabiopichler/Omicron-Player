@@ -11,6 +11,7 @@
 *******************************************************************************/
 
 #include "MusicWindow.h"
+#include "../Core/Directory.h"
 
 MusicWindow::MusicWindow(QObject *parentMain, QWidget *parent) : DropArea(parent)
 {
@@ -64,7 +65,7 @@ MusicWindow::~MusicWindow()
 
 void MusicWindow::createMenuBar()
 {
-    fileMenu = new QMenu("Arquivo");
+    QMenu *fileMenu = new QMenu("Arquivo");
 #ifndef Q_OS_ANDROID
     openCDAction = fileMenu->addAction("Abrir CD de Áudio");
     fileMenu->addSeparator();
@@ -81,16 +82,24 @@ void MusicWindow::createMenuBar()
     exitAction = fileMenu->addAction("Sair");
     exitAction->setShortcut(QString("Ctrl+Q"));
 
-    modeMenu = new QMenu("Modo");
+    QMenu *modeMenu = new QMenu("Modo");
+    QAction *currentAction = modeMenu->addAction("Modo Músicas");
     radioModeAction = modeMenu->addAction("Modo Web Rádio");
+    recorderModeAction = modeMenu->addAction("Modo Gravador");
+    modeMenu->addSeparator();
+    serverModeAction = modeMenu->addAction("Modo Servidor");
 
-    toolsMenu = new QMenu("Ferramentas");
+    currentAction->setCheckable(true);
+    currentAction->setChecked(true);
+    currentAction->setDisabled(true);
+
+    QMenu *toolsMenu = new QMenu("Ferramentas");
     playlistAction = toolsMenu->addAction("Gerenciador de Playlist");
     equalizerAction = toolsMenu->addAction("Equalizador");
     toolsMenu->addSeparator();
     configAction = toolsMenu->addAction("Configurações");
 
-    aboutMenu = new QMenu("Ajuda");
+    QMenu *aboutMenu = new QMenu("Ajuda");
     checkUpdateAction = aboutMenu->addAction("Verificar por Atualizações");
     websiteAction = aboutMenu->addAction("Visitar o Website Oficial");
     aboutMenu->addSeparator();
@@ -310,7 +319,7 @@ void MusicWindow::createLayouts()
 
 void MusicWindow::createEvents()
 {
-    connect(playlist, SIGNAL(updateValues(MusicStream::Event, QVariant)),
+    connect(playlist, SIGNAL(updateValue(MusicStream::Event, QVariant)),
             this, SLOT(update(MusicStream::Event, QVariant)));
     connect(playlist, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showContextMenu(const QPoint &)));
@@ -342,6 +351,8 @@ void MusicWindow::createEvents()
     connect(clearPlaylistAction, SIGNAL(triggered()), this, SLOT(clearPlaylist()));
     connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(radioModeAction, SIGNAL(triggered()), parentMain, SLOT(startRadioMode()));
+    connect(recorderModeAction, SIGNAL(triggered()), parentMain, SLOT(startRecorderMode()));
+    connect(serverModeAction, SIGNAL(triggered()), parentMain, SLOT(startServerMode()));
     connect(playlistAction, SIGNAL(triggered()), this, SLOT(initPlaylist()));
     connect(equalizerAction, SIGNAL(triggered()), this, SLOT(initEqualizer()));
     connect(configAction, SIGNAL(triggered()), parentMain, SLOT(initConfigDialog()));
@@ -377,8 +388,8 @@ void MusicWindow::createEvents()
     connect(musicStream, SIGNAL(initPlaylist(bool)), this, SLOT(initPlaylist(bool)));
     connect(musicStream, SIGNAL(playNewMusic(QStringList)), this, SLOT(playNewMusic(QStringList)));
     connect(musicStream, SIGNAL(setTotals(QWORD)), this, SLOT(totals(QWORD)));
-    connect(musicStream, SIGNAL(updateValues(MusicStream::Event, QVariant)), this, SLOT(update(MusicStream::Event, QVariant)));
-    connect(musicStream, SIGNAL(updateValues(QWORD, DWORD)), this, SLOT(update(QWORD, DWORD)));
+    connect(musicStream, SIGNAL(updateValue(MusicStream::Event, QVariant)), this, SLOT(update(MusicStream::Event, QVariant)));
+    connect(musicStream, SIGNAL(updateInfo(QWORD, DWORD)), this, SLOT(update(QWORD, DWORD)));
     connect(musicStream, SIGNAL(threadFinished()), this, SLOT(threadFinished()));
 
     connect(timeSlider, SIGNAL(sliderMoved(int)), musicStream, SLOT(setPosition(int)));
@@ -616,15 +627,13 @@ void MusicWindow::openDirectory()
 
 void MusicWindow::addDirectory(bool isOpenMode)
 {
+    static bool firstRun;
     QString dirName = QFileDialog::getExistingDirectory(this, "Adicionar diretório",
                                                         Database::value("Current", "fileDialogDir", QDir::homePath()).toString());
 
     if (!dirName.isEmpty())
     {
-        bool firstRun = true;
         Database::setValue("Current", "fileDialogDir", dirName);
-        QDirIterator dirIt(dirName, QDirIterator::Subdirectories);
-        QRegExp filter(QString(FileNameFilter).replace(" ", "|").remove("*."), Qt::CaseInsensitive);
 
         if (musicStream->isCDMode)
             musicStream->setupCDMode(false);
@@ -632,31 +641,29 @@ void MusicWindow::addDirectory(bool isOpenMode)
         if (musicStream->playlistMode != 1)
             loadPlaylist(1, true, true, false);
 
-        while (dirIt.hasNext())
-        {
-            QFileInfo fileInfo(dirIt.next());
+        firstRun = true;
+        Directory *dir = new Directory(this);
 
-            if (fileInfo.isFile())
+        dir->getAllFiles(dirName, [=](QFileInfo &fileInfo) {
+            if (firstRun && isOpenMode)
             {
-                if (fileInfo.suffix().contains(filter))
-                {
-                    if (firstRun && isOpenMode)
-                    {
-                        musicStream->stop();
-                        playlist->clear();
-                        playlist->setCurrentIndex(0);
-                        firstRun = false;
-                    }
-
-                    playlist->addRow(fileInfo.filePath());
-                }
+                musicStream->stop();
+                playlist->clear();
+                playlist->setCurrentIndex(0);
+                firstRun = false;
             }
-        }
 
-        updatePlaylistStyle();
+            playlist->addRow(fileInfo.filePath());
+        });
 
-        if (isOpenMode)
-            musicStream->play();
+        dir->executeLater([=]() {
+            updatePlaylistStyle();
+
+            if (isOpenMode)
+                musicStream->play();
+        });
+
+        dir->start();
     }
 }
 
@@ -811,6 +818,15 @@ void MusicWindow::showContextMenu(const QPoint &point)
 
 void MusicWindow::clearPlaylist()
 {
+    if (musicStream->playlistMode == 2)
+    {
+        if (QMessageBox::question(this, "Favoritos", "Apagar todos os favoritos?",
+                                  QMessageBox::Yes|QMessageBox::No) == QMessageBox::No)
+            return;
+
+        Database::removeRows("MusicFavorites");
+    }
+
     musicStream->stop();
 
     if (musicStream->playlistMode == 0)

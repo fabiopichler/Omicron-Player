@@ -15,9 +15,13 @@
 #include <QStyleOption>
 #include <QPainter>
 
-DialogBase::DialogBase(QWidget *parent) : QDialog(parent)
+DialogBase::DialogBase(QWidget *parent, bool actTitleBar) : QDialog(parent)
 {
-    titleBar = new Titlebar(this, DIALOG);
+    titleBar = nullptr;
+
+    if (actTitleBar)
+        titleBar = new Titlebar(this, DIALOG);
+    mainLayout = new QVBoxLayout;
 
     setObjectName("window");
     setWindowFlags(Qt::Dialog|Qt::FramelessWindowHint);
@@ -31,7 +35,8 @@ DialogBase::~DialogBase()
 
 void DialogBase::setWindowTitle(const QString &title)
 {
-    titleBar->label->setText(title);
+    if (titleBar)
+        titleBar->label->setText(title);
     QDialog::setWindowTitle(title);
 }
 
@@ -40,8 +45,8 @@ void DialogBase::setLayout(QLayout *layout)
     Widget *mainWidget = new Widget(this);
     mainWidget->setLayout(layout);
 
-    mainLayout = new QVBoxLayout;
-    mainLayout->addWidget(titleBar);
+    if (titleBar)
+        mainLayout->addWidget(titleBar);
     mainLayout->addWidget(mainWidget);
 
     QDialog::setLayout(mainLayout);

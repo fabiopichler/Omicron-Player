@@ -46,6 +46,7 @@ QWidget#radioInfoWidget {
     border-top: 1px solid #c9c9c9;
     border-bottom: 1px solid #c9c9c9;
 }
+QWidget#statusWidget,
 QWidget#tracksWidget {
 	background: #f9f9f9;
 	border: 1px solid #aaa;
@@ -318,3 +319,45 @@ QListView#ComboBox::item:selected {
 QSpinBox {
     background: #fff;
 }
+
+/* QCheckBox
+--------------------------------------------------------- */
+QCheckBox::indicator {
+    border: 1px solid #aaa;
+}
+QCheckBox::indicator:unchecked {
+    background: #fff;
+}
+QCheckBox::indicator:unchecked:pressed,
+QCheckBox::indicator:checked:pressed {
+    background: #ddd;
+    border: 1px solid #777;
+}
+QCheckBox::indicator:checked {
+    background: #eee;
+    border: 1px solid #aaa;
+    image: url("{theme_path}images/Check.png");
+}
+QCheckBox::indicator:unchecked:hover,
+QCheckBox::indicator:checked:hover {
+    background: #ccc;
+}
+
+/* QSpinBox
+--------------------------------------------------------- */
+QSpinBox {
+    border: 1px solid #aaa;
+}
+QSpinBox::up-button {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgb(250,250,250), stop: 1 rgb(205,205,205));
+    border: 1px solid #aaa;
+}
+QSpinBox::down-button {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgb(250,250,250), stop: 1 rgb(205,205,205));
+    border: 1px solid #aaa;
+}
+QSpinBox::up-button:hover,
+QSpinBox::down-button:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgb(220,220,220), stop: 1 rgb(250,250,250));
+}
+

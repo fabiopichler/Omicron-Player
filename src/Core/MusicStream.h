@@ -52,7 +52,6 @@ public:
     void setupCDMode(const bool &, const int &drive = -1);
     void loadPlaylist(const int &, const bool &disableCdMode = false, const bool &load = true,
                       const bool &_stop = true, QString listName = QString());
-    double getPosition();
 
 public slots:
     void play();
@@ -63,7 +62,6 @@ public slots:
     short changeRepeat();
     bool changeRandom();
     void playNewMusic(QVariant);
-    void setPosition(int);
 
 private slots:
     void updateTag();
@@ -76,8 +74,8 @@ private:
     void run() Q_DECL_OVERRIDE;
 
 signals:
-    void updateValues(MusicStream::Event, QVariant value = QVariant());
-    void updateValues(QWORD, DWORD);
+    void updateValue(MusicStream::Event, QVariant value = QVariant());
+    void updateInfo(QWORD, DWORD);
     void updatePlaylistStyle();
     void setTotals(QWORD);
     void threadFinished();
@@ -144,7 +142,7 @@ private:
 signals:
     void selectRowSignal(int);
     void playNewMusic(QVariant);
-    void updateValues(MusicStream::Event, QVariant);
+    void updateValue(MusicStream::Event, QVariant);
 
 private:
     QStandardItemModel* model;

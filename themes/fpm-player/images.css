@@ -20,12 +20,15 @@ QLabel#windowIcon {
 --------------------------------------------------------- */
 QPushButton#minimize {
     qproperty-icon: url("{theme_path}images/Arrowhead-Down-White.png");
+    qproperty-iconSize: 14px 14px;
 }
 QPushButton#minimizeTray {
     qproperty-icon: url("{theme_path}images/Data-Collapse.png");
+    qproperty-iconSize: 14px 14px;
 }
 QPushButton#close {
     qproperty-icon: url("{theme_path}images/Power-Off.png");
+    qproperty-iconSize: 14px 14px;
 }
 QPushButton#play {
     qproperty-icon: url("{theme_path}images/media_playback_start.png");

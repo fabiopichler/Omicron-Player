@@ -24,7 +24,7 @@ class DialogBase : public QDialog
     Q_PROPERTY(int spacingLayout READ spacingLayout WRITE setSpacingLayout)
 
 public:
-    explicit DialogBase(QWidget *);
+    explicit DialogBase(QWidget *, bool = true);
     ~DialogBase();
     void setWindowTitle(const QString &);
     void setLayout(QLayout *);

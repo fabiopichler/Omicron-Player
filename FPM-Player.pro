@@ -48,18 +48,18 @@ win32:INCLUDEPATH += "D:/Frameworks/bass"
 
 contains(QMAKE_HOST.arch, x86_64) {
 
-    win32:LIBS += -L"D:/Frameworks/bass/x64" -lbass -lbass_fx -lbasscd -ltags -lUser32 -lAdvapi32
+    win32:LIBS += -L"D:/Frameworks/bass/x64" -lbass -lbass_fx -lbasscd -lbassenc -ltags -lUser32 -lAdvapi32
 
     linux:!android {
-        LIBS += -Wl,-rpath=./lib -L"/home/Frameworks/bass/x64" -lbass -lbass_fx -lbasscd -ltags
+        LIBS += -Wl,-rpath=./lib -L"/home/Frameworks/bass/x64" -lbass -lbass_fx -lbasscd -lbassenc -ltags
     }
 
 } else {
 
-    win32:LIBS += -L"D:/Frameworks/bass" -lbass -lbass_fx -lbasscd -ltags -lUser32 -lAdvapi32
+    win32:LIBS += -L"D:/Frameworks/bass" -lbass -lbass_fx -lbasscd -lbassenc -ltags -lUser32 -lAdvapi32
 
     linux:!android {
-        LIBS += -Wl,-rpath=./lib -L"/home/Frameworks/bass" -lbass -lbass_fx -lbasscd -ltags
+        LIBS += -Wl,-rpath=./lib -L"/home/Frameworks/bass" -lbass -lbass_fx -lbasscd -lbassenc -ltags
     }
 }
 
@@ -109,7 +109,13 @@ SOURCES += src/Main.cpp \
     src/Gui/MainWindow.cpp \
     src/Gui/VolumeControl.cpp \
     src/Gui/Widgets.cpp \
-    src/Core/Fade.cpp
+    src/Core/Fade.cpp \
+    src/Core/ServerStream.cpp \
+    src/Gui/ServerWindow.cpp \
+    src/Tools/ServerConfig.cpp \
+    src/Core/Directory.cpp \
+    src/Core/RecorderStream.cpp \
+    src/Gui/RecorderWindow.cpp
 
 HEADERS += src/Main.h \
     src/Version.h \
@@ -137,7 +143,13 @@ HEADERS += src/Main.h \
     src/Gui/MainWindow.h \
     src/Gui/VolumeControl.h \
     src/Gui/Widgets.h \
-    src/Core/Fade.h
+    src/Core/Fade.h \
+    src/Core/ServerStream.h \
+    src/Gui/ServerWindow.h \
+    src/Tools/ServerConfig.h \
+    src/Core/Directory.h \
+    src/Core/RecorderStream.h \
+    src/Gui/RecorderWindow.h
 
 win32:RC_FILE = rc/Win.rc
 

@@ -56,10 +56,12 @@ int main(int argc, char **argv)
     }
 #endif
 
+    qRegisterMetaType<QFileInfo>("QFileInfo");
     qRegisterMetaType<DWORD>("DWORD");
     qRegisterMetaType<QWORD>("QWORD");
     qRegisterMetaType<MusicStream::Event>("MusicStream::Event");
     qRegisterMetaType<RadioStream::Event>("RadioStream::Event");
+    qRegisterMetaType<RecorderStream::Event>("RecorderStream::Event");
 
     do
     {
@@ -161,6 +163,7 @@ Main::Main()
     trayIcon = nullptr;
     updateApp = nullptr;
     window = nullptr;
+    iniSettings = nullptr;
 }
 
 Main::~Main()
@@ -173,6 +176,7 @@ Main::~Main()
     Theme::free();
     Database::free();
     QFontDatabase::removeAllApplicationFonts();
+
     BASS_Stop();
     BASS_PluginFree(0);
     BASS_Free();
@@ -184,10 +188,10 @@ bool Main::init(const int &argc)
         return false;
 
     if (!QDir().exists(Global::getConfigPath()))
-        QDir().mkdir(Global::getConfigPath());
+        QDir().mkpath(Global::getConfigPath());
 
     if (!QDir().exists(Global::getConfigPath("themes")))
-        QDir().mkdir(Global::getConfigPath("themes"));
+        QDir().mkpath(Global::getConfigPath("themes"));
 
     QFontDatabase::addApplicationFont(Global::getQrcPath("fonts/verdana.ttf"));
     QFontDatabase::addApplicationFont(Global::getQrcPath("fonts/verdanab.ttf"));
@@ -206,6 +210,8 @@ bool Main::init(const int &argc)
     }
     else
     {
+        QMessageBox::critical(nullptr, "Erro", "Ops! Algo deu errado...\n"
+                              "Não foi possível criar ou configurar o Banco de Dados.");
         return false;
     }
 
@@ -218,10 +224,7 @@ bool Main::init(const int &argc)
                                                this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 
     setupRadiolist();
-
     Theme::init();
-    if (!Theme::load())
-        return false;
 
     updateApp = new UpdateApp(this, iniSettings);
 
@@ -235,10 +238,19 @@ bool Main::init(const int &argc)
     if (!setupBass())
         return false;
 
-    if (Database::value("Current", "mode").toString() != "Radio" || argc > 1)
-        startMusicMode();
-    else
+    QString mode = Database::value("Current", "mode").toString();
+
+    if (mode == "Radio" && argc < 2)
         startRadioMode();
+    else if (mode == "Recorder" && argc < 2)
+        startRecorderMode();
+    else if (mode == "Server" && argc < 2)
+        startServerMode();
+    else
+        startMusicMode();
+
+    if (!Theme::load())
+        return false;
 
     return true;
 }
@@ -265,6 +277,29 @@ void Main::startRadioMode()
     window->setWindowTitle("Rádio » "+AppName);
     trayIcon->setToolTip(AppName+" » Modo Web Rádio");
     updateTrayIconMenu();
+}
+
+void Main::startRecorderMode()
+{
+    delete window;
+    window = new MainWindow(this, iniSettings);
+    window->initWindow(new RecorderWindow(this, window));
+    window->setWindowTitle("Gravador » "+AppName);
+    trayIcon->setToolTip(AppName+" » Modo Gravador");
+    updateTrayIconMenu();
+}
+
+void Main::startServerMode()
+{
+    /*delete window;
+    window = new MainWindow(this, iniSettings);
+    window->initWindow(new ServerWindow(this, window));
+    window->setWindowTitle("Servidor » "+AppName);
+    trayIcon->setToolTip(AppName+" » Modo Servidor");
+    updateTrayIconMenu();*/
+
+    QMessageBox::information(window, "Servidor", "O desenvolvimento do \"Modo Servidor\" não foi concluído...\n"
+                             "Estará disponível na próxima versão (versão 2.1).");
 }
 
 void Main::setWindowTitle(QString arg)
@@ -366,14 +401,16 @@ void Main::setupRadiolist()
 
 bool Main::setupBass()
 {
-    if (HIWORD(BASS_GetVersion())!=BASSVERSION) {
-        QMessageBox::warning(nullptr,"Incorrect BASS.DLL",
+    if (HIWORD(BASS_GetVersion()) != BASSVERSION)
+    {
+        QMessageBox::critical(nullptr,"Incorrect BASS.DLL",
                              "An incorrect version of BASS.DLL was loaded (2.4 is required)");
         return false;
     }
 
-    if (HIWORD(BASS_FX_GetVersion())!=BASSVERSION) {
-        QMessageBox::warning(nullptr,"Incorrect BASS_FX.DLL",
+    if (HIWORD(BASS_FX_GetVersion()) != BASSVERSION)
+    {
+        QMessageBox::critical(nullptr,"Incorrect BASS_FX.DLL",
                              "An incorrect version of BASS_FX.DLL was loaded (2.4 is required)");
         return false;
     }
@@ -399,7 +436,7 @@ bool Main::setupBass()
         Database::setValue("Config", "device", -1);
         if (!BASS_Init(-1, 44100, 0, 0, nullptr))
         {
-            QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Não foi possível iniciar o programa!<br>"
+            QMessageBox::critical(nullptr,"Erro",Global::getErrorHtml("Não foi possível iniciar o programa!<br>"
                                              "Verifique se seu dispositivo de áudio está funcionando corretamente"
                                                                         " e tente novamente."));
             return false;
@@ -483,7 +520,7 @@ void Main::updateTrayIconMenu()
             SIGNAL(triggered()), this, SIGNAL(nextStream()));
 
     trayIconMenu->addSeparator();
-    connect(trayIconMenu->addAction("Sair"), SIGNAL(triggered()), qApp, SLOT(quit()));
+    connect(trayIconMenu->addAction("Fechar"), SIGNAL(triggered()), qApp, SLOT(quit()));
 
     trayIcon->setContextMenu(trayIconMenu);
 }
