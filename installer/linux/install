@@ -13,8 +13,8 @@
 #*******************************************************************************
 
 echo
-echo "FPM Player 1.1.0 (Instalação)"
-echo "Copyright (c) 2016 Fábio Pichler, Todos os direitos Reservados"
+echo "FPM Player 2.0.0 (Instalação)"
+echo "Copyright (c) 2016, Fábio Pichler, Todos os direitos Reservados"
 echo
 
 if [ ! `whoami` = "root" ]
@@ -23,6 +23,18 @@ then
     echo "Abortado..."
     echo
     exit
+fi
+
+if [ -e "/opt/FPM-Player/uninstall" ]
+then
+    echo "Desinstalando a versão antiga do programa... Aguarde..."
+    echo
+    echo "--------------------------------------------------------"
+    
+    /opt/FPM-Player/uninstall
+    
+    echo "--------------------------------------------------------"
+    echo
 fi
 
 echo "Iniciando o programa de instalação..."

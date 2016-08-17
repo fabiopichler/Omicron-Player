@@ -14,7 +14,7 @@
 
 echo
 echo "FPM Player (Desinstalação)"
-echo "Copyright (c) 2016 Fábio Pichler, Todos os direitos Reservados"
+echo "Copyright (c) 2016, Fábio Pichler, Todos os direitos Reservados"
 echo
 
 if [ ! `whoami` = "root" ]

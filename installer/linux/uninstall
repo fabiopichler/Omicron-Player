@@ -12,4 +12,9 @@
 #
 #*******************************************************************************
 
-/opt/FPM-Player/uninstall
+
+
+if [ -e "/opt/FPM-Player/uninstall" ]
+then
+    /opt/FPM-Player/uninstall
+fi

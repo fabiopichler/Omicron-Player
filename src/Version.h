@@ -37,7 +37,7 @@
 #define CURRENT_RELEASE_DATE "17/08/2016"
 
 ;// Nome do arquivo da lista de rádios
-#define FILE_RADIOLIST "RadioList_2016-05-16.fprp"
+#define FILE_RADIOLIST "RadioList_2016-08-17.fprp"
 
 ;// Data de lançamento da lista de rádios
 #define FILE_RADIOLIST_DATE "2016-05-16"
