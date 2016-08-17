@@ -454,6 +454,9 @@ void Database::upgrade()
 {
     setValue("Config", "theme", "app:fpm-player-dark");
 
+    // ---------------------------------------------------------------------
+    // Version: 2.0.0
+    // ---------------------------------------------------------------------
     // --- RecorderMode ---
     if (!exist("RecorderMode", "device"))
         add("RecorderMode", "device", "-1");
