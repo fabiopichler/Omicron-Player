@@ -175,11 +175,8 @@ Main::~Main()
 
     Theme::free();
     Database::free();
+    Stream::free();
     QFontDatabase::removeAllApplicationFonts();
-
-    BASS_Stop();
-    BASS_PluginFree(0);
-    BASS_Free();
 }
 
 bool Main::init(const int &argc)
@@ -235,7 +232,7 @@ bool Main::init(const int &argc)
         Database::setValue("RadioConfig", "recordPath",
                            QStandardPaths::writableLocation(QStandardPaths::MusicLocation)+"/"+AppName+" Recordings/");
 
-    if (!setupBass())
+    if (!Stream::init())
         return false;
 
     QString mode = Database::value("Current", "mode").toString();
@@ -397,87 +394,6 @@ void Main::setupRadiolist()
                               QFile::ReadOwner|QFile::WriteOwner|QFile::ExeOwner|QFile::ReadGroup
                               |QFile::ExeGroup|QFile::ReadOther|QFile::ExeOther);
     }
-}
-
-bool Main::setupBass()
-{
-    if (HIWORD(BASS_GetVersion()) != BASSVERSION)
-    {
-        QMessageBox::critical(nullptr,"Incorrect BASS.DLL",
-                             "An incorrect version of BASS.DLL was loaded (2.4 is required)");
-        return false;
-    }
-
-    if (HIWORD(BASS_FX_GetVersion()) != BASSVERSION)
-    {
-        QMessageBox::critical(nullptr,"Incorrect BASS_FX.DLL",
-                             "An incorrect version of BASS_FX.DLL was loaded (2.4 is required)");
-        return false;
-    }
-
-    int device = Database::value("Config", "device").toInt();
-    BASS_DEVICEINFO deviceInfo;
-    bool deviceOk = false;
-
-    for (int i = 1; BASS_GetDeviceInfo(i,&deviceInfo); i++)
-    {
-        if (deviceInfo.flags&BASS_DEVICE_ENABLED)
-        {
-            if (device == i)
-            {
-                deviceOk = true;
-                break;
-            }
-        }
-    }
-
-    if (!BASS_Init((deviceOk ? device : -1), 44100, 0, 0, nullptr))
-    {
-        Database::setValue("Config", "device", -1);
-        if (!BASS_Init(-1, 44100, 0, 0, nullptr))
-        {
-            QMessageBox::critical(nullptr,"Erro",Global::getErrorHtml("Não foi possível iniciar o programa!<br>"
-                                             "Verifique se seu dispositivo de áudio está funcionando corretamente"
-                                                                        " e tente novamente."));
-            return false;
-        }
-    }
-
-#ifndef Q_OS_ANDROID // Desativar os plugins no Android, apenas para os testes (ainda não funciona nele).
-    if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+bass_aac).toLocal8Bit().constData(),0))
-        QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+bass_aac));
-
-    if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+bass_ac3).toLocal8Bit().constData(),0))
-        QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+bass_ac3));
-
-    if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+bass_ape).toLocal8Bit().constData(),0))
-        QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+bass_ape));
-
-    if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+bassflac).toLocal8Bit().constData(),0))
-        QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+bassflac));
-
-    if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+basswv).toLocal8Bit().constData(),0))
-        QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+basswv));
-
-    if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+bassopus).toLocal8Bit().constData(),0))
-        QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+bassopus));
-#endif
-#ifdef Q_OS_WIN
-    if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+basswma).toLocal8Bit().constData(),0))
-        QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+basswma));
-#endif // Q_OS_WIN
-
-    QString proxy = Database::value("RadioConfig", "net_proxy", "0").toString();
-
-    BASS_SetConfig(BASS_CONFIG_NET_PLAYLIST, 1);
-    BASS_SetConfig(BASS_CONFIG_NET_PREBUF, 0);
-    BASS_SetConfig(BASS_CONFIG_NET_READTIMEOUT, Database::value("RadioConfig", "net_readtimeout", 20000).toInt());
-    BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, Database::value("RadioConfig", "net_timeout", 20000).toInt());
-    BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
-    BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY, (proxy == "0" ? NULL : proxy.toLocal8Bit().data()));
-    BASS_SetConfig(BASS_CONFIG_CD_AUTOSPEED, TRUE);
-
-    return true;
 }
 
 void Main::updateTrayIconMenu()

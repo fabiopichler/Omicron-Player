@@ -13,7 +13,7 @@
 #pragma once
 
 #include "Global.h"
-#include "StreamBase.h"
+#include "Stream.h"
 #include "NetPlaylist.h"
 #include "../Tools/Equalizer.h"
 
@@ -30,7 +30,7 @@
 class RadioPlaylist;
 class NetworkStream;
 
-class RadioStream : public StreamBase
+class RadioStream : public Stream
 {
     Q_OBJECT
 

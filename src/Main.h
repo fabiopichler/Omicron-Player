@@ -20,7 +20,6 @@
 #include "Gui/MainWindow.h"
 
 #include <QApplication>
-#include <bass.h>
 #include <QDir>
 #include <QFile>
 #include <QSettings>
@@ -50,8 +49,6 @@ public slots:
 
 private:
     void setupRadiolist();
-    bool setupBass();
-
     void updateTrayIconMenu();
 
 private slots:

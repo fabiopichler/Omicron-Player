@@ -14,7 +14,7 @@
 
 #include "Global.h"
 #include "Database.h"
-#include "StreamBase.h"
+#include "Stream.h"
 #include "Fade.h"
 #include "../Tools/MusicPlaylistManager.h"
 #include "../Tools/Equalizer.h"
@@ -34,7 +34,7 @@
 
 class MusicPlaylist;
 
-class MusicStream : public StreamBase
+class MusicStream : public Stream
 {
     Q_OBJECT
 

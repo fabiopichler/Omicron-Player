@@ -318,7 +318,7 @@ void RecordList::addRow(QString arg)
                                                                .replace(".", ":")
                                                                .replace(" ", " - ")
                                                                .trimmed());
-    item << new QStandardItem(StreamBase::getFileType(info.ctype));
+    item << new QStandardItem(Stream::getFileType(info.ctype));
 
     item << new QStandardItem(QString::asprintf("%02i:%02i:%02i",
                                                 static_cast<unsigned int>(time/3600),

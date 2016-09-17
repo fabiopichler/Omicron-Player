@@ -92,7 +92,6 @@ SOURCES += src/Main.cpp \
     src/Gui/TitleBar.cpp \
     src/Tools/Equalizer.cpp \
     src/Core/Database.cpp \
-    src/Core/StreamBase.cpp \
     src/Core/NetPlaylist.cpp \
     src/Core/MusicStream.cpp \
     src/Core/RadioStream.cpp \
@@ -115,7 +114,8 @@ SOURCES += src/Main.cpp \
     src/Tools/ServerConfig.cpp \
     src/Core/Directory.cpp \
     src/Core/RecorderStream.cpp \
-    src/Gui/RecorderWindow.cpp
+    src/Gui/RecorderWindow.cpp \
+    src/Core/Stream.cpp
 
 HEADERS += src/Main.h \
     src/Version.h \
@@ -126,7 +126,6 @@ HEADERS += src/Main.h \
     src/Gui/TitleBar.h \
     src/Tools/Equalizer.h \
     src/Core/Database.h \
-    src/Core/StreamBase.h \
     src/Core/NetPlaylist.h \
     src/Core/MusicStream.h \
     src/Core/RadioStream.h \
@@ -149,7 +148,8 @@ HEADERS += src/Main.h \
     src/Tools/ServerConfig.h \
     src/Core/Directory.h \
     src/Core/RecorderStream.h \
-    src/Gui/RecorderWindow.h
+    src/Gui/RecorderWindow.h \
+    src/Core/Stream.h
 
 win32:RC_FILE = rc/Win.rc
 

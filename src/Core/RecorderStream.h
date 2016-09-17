@@ -13,7 +13,7 @@
 #pragma once
 
 #include "Global.h"
-#include "StreamBase.h"
+#include "Stream.h"
 
 #include <bassenc.h>
 #include <QTreeView>
@@ -21,7 +21,7 @@
 
 class RecordList;
 
-class RecorderStream : public StreamBase
+class RecorderStream : public Stream
 {
     Q_OBJECT
 

@@ -16,7 +16,7 @@
 int MusicStream::currentDrive = -1;
 QStringList MusicStream::musicPlaylist;
 
-MusicStream::MusicStream(QWidget *parent) : StreamBase()
+MusicStream::MusicStream(QWidget *parent) : Stream()
 {
     this->parent = parent;
     mprev = false;

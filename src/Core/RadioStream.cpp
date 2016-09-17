@@ -14,7 +14,7 @@
 #include <iostream>
 #include <QElapsedTimer>
 
-RadioStream::RadioStream(QWidget *parent) : StreamBase()
+RadioStream::RadioStream(QWidget *parent) : Stream()
 {
     this->parent = parent;
 

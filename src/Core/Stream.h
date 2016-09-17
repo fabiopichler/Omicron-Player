@@ -13,7 +13,6 @@
 #pragma once
 
 #include "Global.h"
-#include "Database.h"
 
 #include <bass.h>
 
@@ -25,12 +24,16 @@ struct EncoderList
     static int current;
 };
 
-class StreamBase : public QThread
+class Stream : public QThread
 {
     Q_OBJECT
 
 public:
-    StreamBase();
+    Stream();
+
+    static bool init();
+    static void free();
+
     const int &getVolume() const;
     double getPosition() const;
     static QString getFileType(const DWORD &);
