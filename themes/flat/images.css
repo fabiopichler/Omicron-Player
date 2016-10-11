@@ -31,28 +31,28 @@ QPushButton#close {
     qproperty-iconSize: 14px 14px;
 }
 QPushButton#play {
-    qproperty-icon: url("{theme_path}images/media_playback_start.png");
-    qproperty-iconSize: 26px 26px;
+    qproperty-icon: url("{theme_path}images/Media-Play.png");
+    qproperty-iconSize: 20px 20px;
 }
 QPushButton#pause {
-    qproperty-icon: url("{theme_path}images/media_playback_pause.png");
-    qproperty-iconSize: 26px 26px;
+    qproperty-icon: url("{theme_path}images/Media-Pause.png");
+    qproperty-iconSize: 18px 18px;
 }
 QPushButton#stop {
-    qproperty-icon: url("{theme_path}images/media_playback_stop.png");
-    qproperty-iconSize: 26px 26px;
+    qproperty-icon: url("{theme_path}images/Media-Stop.png");
+    qproperty-iconSize: 18px 18px;
 }
 QPushButton#prev {
-    qproperty-icon: url("{theme_path}images/media_skip_backward.png");
-    qproperty-iconSize: 26px 26px;
+    qproperty-icon: url("{theme_path}images/Media-Back.png");
+    qproperty-iconSize: 18px 18px;
 }
 QPushButton#next {
-    qproperty-icon: url("{theme_path}images/media_skip_forward.png");
-    qproperty-iconSize: 26px 26px;
+    qproperty-icon: url("{theme_path}images/Media-Next.png");
+    qproperty-iconSize: 18px 18px;
 }
 QPushButton#record {
-    qproperty-icon: url("{theme_path}images/media_record.png");
-    qproperty-iconSize: 26px 26px;
+    qproperty-icon: url("{theme_path}images/Recorded-Media.png");
+    qproperty-iconSize: 20px 20px;
 }
 QPushButton#repeat {
     qproperty-icon: url("{theme_path}images/No-Repeat.png");

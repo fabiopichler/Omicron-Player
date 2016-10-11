@@ -18,6 +18,7 @@
 #include <bassenc.h>
 #include <QTreeView>
 #include <QStandardItemModel>
+#include <QSortFilterProxyModel>
 
 class RecordList;
 

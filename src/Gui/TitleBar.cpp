@@ -12,6 +12,8 @@
 
 #include "TitleBar.h"
 
+#include "../Core/Theme.h"
+
 Titlebar::Titlebar(QWidget *parent, const int &flag) : Widget(parent)
 {
     this->parent = parent;
@@ -49,8 +51,8 @@ Titlebar::Titlebar(QWidget *parent, const int &flag) : Widget(parent)
     }
 
     layout->addWidget(buttonClose);
-    layout->setContentsMargins(3,2,4,2);
-    layout->setSpacing(1);
+    layout->setSpacing(0);
+    layout->setContentsMargins(0,0,0,0);
     setLayout(layout);
 
     if (flag == DIALOG)
@@ -60,8 +62,12 @@ Titlebar::Titlebar(QWidget *parent, const int &flag) : Widget(parent)
     else
     {
         connect(buttonMinimize, SIGNAL(clicked()), parent, SLOT(showMinimized()));
-        connect(buttonMinimizeTray, SIGNAL(clicked()), parent, SLOT(hide()));
+        //connect(buttonMinimizeTray, SIGNAL(clicked()), parent, SLOT(hide()));
         connect(buttonClose, SIGNAL(clicked()), this, SLOT(quitApp()));
+
+        connect(buttonMinimizeTray, &QPushButton::clicked, [=]() {
+            Theme::load();
+        });
     }
 }
 

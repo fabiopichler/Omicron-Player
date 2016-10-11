@@ -1,0 +1,114 @@
+/*******************************************************************************
+  FPM Player
+
+  Copyright (c) 2016, Fábio Pichler
+  All rights reserved.
+
+  License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
+  Author: Fábio Pichler
+  Website: http://fabiopichler.net
+
+*******************************************************************************/
+
+/* QWidget
+--------------------------------------------------------- */
+QWidget#window {
+    border: 1px solid #333;
+}
+QWidget#selectPlWidget {
+    border: 1px solid #333;
+}
+QWidget#configContent {
+    border: 1px solid #333;
+}
+
+/* QMenu
+--------------------------------------------------------- */
+QMenu::item:selected {
+    background: #333;
+}
+
+/* QListWidget
+--------------------------------------------------------- */
+QListWidget {
+    border: 1px solid #333;
+}
+
+/* QLabel
+--------------------------------------------------------- */
+QLabel#windowTitle {
+    color: #555;
+}
+QLabel#contentsTitle {
+    background: #333;
+}
+QLabel#topTitle {
+    color: #555;
+}
+
+/* QLineEdit
+--------------------------------------------------------- */
+QLineEdit:focus {
+    border: 1px solid #333;
+}
+
+/* QPushButton
+--------------------------------------------------------- */
+QPushButton {
+    background: #333;
+}
+
+/* QHeaderView
+--------------------------------------------------------- */
+QHeaderView::section {
+    background: #333;
+}
+
+/* QTreeView
+--------------------------------------------------------- */
+QTreeView {
+    border: 1px solid #333;
+}
+QTreeView::item:hover {
+    color: #333;
+}
+QTreeView::item:selected {
+    background: #bbb;
+    color: #555;
+}
+
+/* QProgressBar
+--------------------------------------------------------- */
+QProgressBar::chunk:vertical,
+QProgressBar::chunk:horizontal {
+    background: #333;
+}
+
+/* QSlider
+--------------------------------------------------------- */
+QSlider#timeSlider::sub-page:horizontal {
+    background: #333;
+}
+
+/* QComboBox
+--------------------------------------------------------- */
+QComboBox:!editable, QComboBox::drop-down:editable {
+    background: #333;
+}
+QComboBox:editable:focus {
+    border: 1px solid #333;
+}
+
+/* QListView
+--------------------------------------------------------- */
+QListView#ComboBox::item:selected {
+    background: #333;
+}
+
+/* QSpinBox
+--------------------------------------------------------- */
+QSpinBox::up-button,
+QSpinBox::down-button {
+    background: #333;
+}
+

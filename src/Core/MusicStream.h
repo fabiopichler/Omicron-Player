@@ -28,10 +28,6 @@
 #include <tags.h>
 #include <qfiledialog.h>
 
-#ifndef Q_OS_ANDROID
-    #include <basscd.h>
-#endif
-
 class MusicPlaylist;
 
 class MusicStream : public Stream

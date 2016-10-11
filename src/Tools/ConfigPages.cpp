@@ -119,8 +119,9 @@ InterfacePage::InterfacePage(QWidget *parent) : Widget(parent)
     connect(themeCombo, SIGNAL(activated(int)), this, SLOT(changeTheme(int)));
     connect(styleCombo, SIGNAL(activated(int)), this, SLOT(changeStyle(int)));
     connect(installButton, &QPushButton::clicked, [=]() {
-        QMessageBox::information(this, "Info", "Na versão atual do programa, não é possível instalar um novo tema. "
-                                 "Esta funcionalidade, será implementana futuramente.");
+        Theme::load();
+        //QMessageBox::information(this, "Info", "Na versão atual do programa, não é possível instalar um novo tema. "
+        //                         "Esta funcionalidade, será implementana futuramente.");
     });
 }
 

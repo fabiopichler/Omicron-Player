@@ -11,6 +11,7 @@
 *******************************************************************************/
 
 #include "RecorderStream.h"
+#include "Database.h"
 #include <QKeyEvent>
 #include <iostream>
 

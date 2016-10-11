@@ -15,6 +15,11 @@
 #include "Global.h"
 
 #include <bass.h>
+#include <QThread>
+
+#ifndef Q_OS_ANDROID
+    #include <basscd.h>
+#endif
 
 struct EncoderList
 {

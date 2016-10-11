@@ -22,6 +22,7 @@ QWidget {
 }
 QWidget#titleBar {
     background: #2a2a2a;
+    min-height: 28px;
 }
 QWidget#window {
     background: rgba(0,0,0,0,0);
@@ -247,11 +248,12 @@ QPushButton#minimize,
 QPushButton#minimizeTray,
 QPushButton#close {
     background: none;
-    padding: 0 5px;
-    margin-left: 4px;
+    padding: 0 12px;
     border: none;
     border-radius: 0;
     min-width: 10px;
+    height: 28px;
+    margin-left: 1px;
 }
 QPushButton#minimize:hover,
 QPushButton#minimizeTray:hover {
