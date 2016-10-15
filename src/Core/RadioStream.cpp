@@ -471,7 +471,7 @@ bool RadioStream::buffering(int &_progress)
                     }
 
                     if (!strncmp(icy, "icy-br:", 7))
-                        bitrate = Global::cStrToQString(icy+7);
+                        bitrate = Global::cStrToQString(icy+7).trimmed();
                 }
             }
         }
