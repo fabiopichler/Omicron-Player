@@ -11,48 +11,51 @@
 *******************************************************************************/
 
 #include "TitleBar.h"
-
 #include "../Core/Theme.h"
+#include <QUiLoader>
 
 Titlebar::Titlebar(QWidget *parent, const int &flag) : Widget(parent)
 {
     this->parent = parent;
-    setObjectName("titleBar");
 
-    titleIcon = new QLabel;
-    titleIcon->setObjectName("windowIcon");
-    titleIcon->setPixmap(QPixmap(Global::getQrcPath("icon.png")));
-    titleIcon->setStyleSheet("border: none; background: transparent;");
-    titleIcon->setContentsMargins(4,0,6,0);
+    QFile file(Global::getThemePath("TitleBar.xml"));
+    QWidget *uiWidget;
 
-    label = new QLabel(parent->windowTitle());
-    label->setObjectName("windowTitle");
-
-    buttonMinimize = new QPushButton;
-    buttonMinimize->setObjectName("minimize");
-    buttonMinimize->setToolTip("Minimizar");
-
-    buttonMinimizeTray = new QPushButton;
-    buttonMinimizeTray->setObjectName("minimizeTray");
-    buttonMinimizeTray->setToolTip("Minimizar para a Bandeja");
-
-    buttonClose = new QPushButton;
-    buttonClose->setObjectName("close");
-    buttonClose->setToolTip("Fechar");
-
-    QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget(titleIcon);
-    layout->addWidget(label, 1);
-
-    if (flag != DIALOG)
+    if (!file.open(QFile::ReadOnly) || !(uiWidget = QUiLoader().load(&file, this)))
     {
-        layout->addWidget(buttonMinimize);
-        layout->addWidget(buttonMinimizeTray);
+        file.close();
+        Theme::setDefault(defaultTheme);
+        throw "Ops! Algo deu errado...\nHouve um erro ao inicializar o tema atual.";
+        return;
     }
 
-    layout->addWidget(buttonClose);
+    file.close();
+
+    titleIcon = uiWidget->findChild<QLabel *>("windowIcon");
+    titleIcon->setPixmap(QPixmap(Global::getQrcPath("icon.png")));
+
+    label = uiWidget->findChild<QLabel *>("windowTitle");
+    label->setText(parent->windowTitle());
+
+    buttonMinimize = uiWidget->findChild<QPushButton *>("minimize");
+    buttonMinimize->setToolTip("Minimizar");
+
+    buttonMinimizeTray = uiWidget->findChild<QPushButton *>("minimizeTray");
+    buttonMinimizeTray->setToolTip("Minimizar para a Bandeja");
+
+    buttonClose = uiWidget->findChild<QPushButton *>("close");
+    buttonClose->setToolTip("Fechar");
+
+    if (flag == DIALOG)
+    {
+        buttonMinimize->hide();
+        buttonMinimizeTray->hide();
+    }
+
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(uiWidget);
+    layout->setMargin(0);
     layout->setSpacing(0);
-    layout->setContentsMargins(0,0,0,0);
     setLayout(layout);
 
     if (flag == DIALOG)

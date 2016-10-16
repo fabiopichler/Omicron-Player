@@ -11,7 +11,9 @@
 *******************************************************************************/
 
 #include "MusicWindow.h"
+#include "../Core/Theme.h"
 #include "../Core/Directory.h"
+#include <QUiLoader>
 
 MusicWindow::MusicWindow(QObject *parentMain, QWidget *parent) : DropArea(parent)
 {
@@ -23,6 +25,18 @@ MusicWindow::MusicWindow(QObject *parentMain, QWidget *parent) : DropArea(parent
     musicStream = new MusicStream(this);
     playlist = musicStream->playlist;
     static bool initialized = true;
+
+    QFile file(Global::getThemePath("MusicWindow.xml"));
+
+    if (!file.open(QFile::ReadOnly) || !(uiWidget = QUiLoader().load(&file, this)))
+    {
+        file.close();
+        Theme::setDefault(defaultTheme);
+        throw "Ops! Algo deu errado...\nHouve um erro ao inicializar o tema atual.";
+        return;
+    }
+
+    file.close();
 
     createMenuBar();
     createWidgets();
@@ -105,7 +119,7 @@ void MusicWindow::createMenuBar()
     aboutMenu->addSeparator();
     aboutAction = aboutMenu->addAction("Sobre");
 
-    menuBar = new QMenuBar();
+    QMenuBar *menuBar = uiWidget->findChild<QMenuBar *>("menuBar");
     menuBar->addMenu(fileMenu);
     menuBar->addMenu(modeMenu);
     menuBar->addMenu(toolsMenu);
@@ -121,56 +135,40 @@ void MusicWindow::createWidgets()
     musicStream->setVolume(volume);
 
     timeSlider = new Slider(Qt::Horizontal);
+    timeSlider->setObjectName("timeSlider");
     timeSlider->setEnabled(false);
     timeSlider->setMaximum(0);
-    timeSlider->setObjectName("timeSlider");
 
-    searchLineEdit = new QLineEdit;
-    searchLineEdit->setObjectName("searchLineEdit");
+    searchLineEdit = uiWidget->findChild<QLineEdit *>("searchLineEdit");
     searchLineEdit->setClearButtonEnabled(true);
     searchLineEdit->setPlaceholderText("Pesquisa rápida");
 
-    leftChProgressBar = new QProgressBar;
-    leftChProgressBar->setOrientation(Qt::Horizontal);
-    leftChProgressBar->setInvertedAppearance(true);
-    leftChProgressBar->setFixedHeight(20);
-    leftChProgressBar->setTextVisible(false);
+    leftChProgressBar = uiWidget->findChild<QProgressBar *>("leftChProgressBar");
+    leftChProgressBar->setObjectName("channelsProgressBar");
     leftChProgressBar->setRange(0,32768);
+    leftChProgressBar->setTextVisible(false);
 
-    rightChProgressBar = new QProgressBar;
-    rightChProgressBar->setOrientation(Qt::Horizontal);
-    rightChProgressBar->setFixedHeight(20);
-    rightChProgressBar->setTextVisible(false);
+    rightChProgressBar = uiWidget->findChild<QProgressBar *>("rightChProgressBar");
+    rightChProgressBar->setObjectName("channelsProgressBar");
     rightChProgressBar->setRange(0,32768);
-
-    infoWidget = new Widget;
-    infoWidget->setObjectName("radioInfoWidget");
-
-    tracksWidget = new Widget;
-    tracksWidget->setMinimumWidth(10);
-    tracksWidget->setFixedHeight(22);
-    tracksWidget->setContentsMargins(10, 0, 10, 0);
-    tracksWidget->setObjectName("tracksWidget");
+    rightChProgressBar->setTextVisible(false);
 }
 
 void MusicWindow::createLabels()
 {
-    timeLabel = new QLabel("--:--");
-    totalTimeLabel = new QLabel("--:--");
-    currentTrackLabel = new QLabel(QString::asprintf("%03i",
-                                  (playlist->isEmpty() ? 0 : Database::value("MusicMode", "index", 0).toInt() + 1)));
-    totalTracksLabel = new QLabel(QString::asprintf("%03i", playlist->length()));
-    currentTagLabel = new QLabel;
-    separatorLabel = new QLabel(" / ");
-    fileTypeLabel = new QLabel("---");
+    currentTrackLabel = uiWidget->findChild<QLabel *>("currentTrackLabel");
+    totalTracksLabel = uiWidget->findChild<QLabel *>("totalTracksLabel");
+    currentTagLabel = uiWidget->findChild<QLabel *>("currentTagLabel");
+    totalTimeLabel = uiWidget->findChild<QLabel *>("totalTimeLabel");
+    fileTypeLabel = uiWidget->findChild<QLabel *>("fileTypeLabel");
+    timeLabel = uiWidget->findChild<QLabel *>("timeLabel");
 
-    timeLabel->setTextFormat(Qt::PlainText);
-    totalTimeLabel->setTextFormat(Qt::PlainText);
     currentTrackLabel->setTextFormat(Qt::PlainText);
     totalTracksLabel->setTextFormat(Qt::PlainText);
     currentTagLabel->setTextFormat(Qt::PlainText);
-    separatorLabel->setTextFormat(Qt::PlainText);
+    totalTimeLabel->setTextFormat(Qt::PlainText);
     fileTypeLabel->setTextFormat(Qt::PlainText);
+    timeLabel->setTextFormat(Qt::PlainText);
 
     currentTrackLabel->setToolTip("Faixa atual");
     totalTracksLabel->setToolTip("Total de faixas");
@@ -178,11 +176,10 @@ void MusicWindow::createLabels()
     currentTagLabel->setFixedHeight(20);
 
     currentTagLabel->setObjectName("radioTitleLabel");
-    timeLabel->setObjectName("radioTitleLabel");
     totalTimeLabel->setObjectName("radioTitleLabel");
     currentTrackLabel->setObjectName("trackLabel");
-    separatorLabel->setObjectName("trackLabel");
     totalTracksLabel->setObjectName("trackLabel");
+    timeLabel->setObjectName("radioTitleLabel");
 
     int hour = QTime::currentTime().hour();
 
@@ -192,22 +189,33 @@ void MusicWindow::createLabels()
         currentTagLabel->setText("Boa Tarde");
     else
         currentTagLabel->setText("Boa Noite");
+
+    timeLabel->setText("--:--");
+    totalTimeLabel->setText("--:--");
+    currentTrackLabel->setText(QString::asprintf("%03i",
+                                      (playlist->isEmpty() ? 0 : Database::value("MusicMode", "index", 0).toInt() + 1)));
+    totalTracksLabel->setText(QString::asprintf("%03i", playlist->length()));
+    fileTypeLabel->setText("---");
 }
 
 void MusicWindow::createButtons()
 {
-    playButton = new QPushButton;
-    pauseButton = new QPushButton;
-    stopButton = new QPushButton;
-    prevButton = new QPushButton;
-    nextButton = new QPushButton;
-    changeFavoriteButton = new QPushButton;
-    repeatButton = new QPushButton;
-    randomButton = new QPushButton;
-    playlistButton = new QPushButton;
-    playlistModeButton = new QPushButton("Playlist");
-    musicModeButton = new QPushButton("Músicas/CD");
-    favoriteButton = new QPushButton("Favoritos");
+    playButton = uiWidget->findChild<QPushButton *>("play");
+    pauseButton = uiWidget->findChild<QPushButton *>("pause");
+    stopButton = uiWidget->findChild<QPushButton *>("stop");
+    prevButton = uiWidget->findChild<QPushButton *>("prev");
+    nextButton = uiWidget->findChild<QPushButton *>("next");
+    changeFavoriteButton = uiWidget->findChild<QPushButton *>("changeFavorite");
+    repeatButton = uiWidget->findChild<QPushButton *>("repeat");
+    randomButton = uiWidget->findChild<QPushButton *>("random");
+    playlistButton = uiWidget->findChild<QPushButton *>("musicPlaylist");
+    playlistModeButton = uiWidget->findChild<QPushButton *>("playlistMode");
+    musicModeButton = uiWidget->findChild<QPushButton *>("musicMode");
+    favoriteButton = uiWidget->findChild<QPushButton *>("favorite");
+
+    playlistModeButton->setText("Playlist");
+    musicModeButton->setText("Músicas/CD");
+    favoriteButton->setText("Favoritos");
 
     playButton->setToolTip("Reproduzir");
     pauseButton->setToolTip("Pausar");
@@ -216,15 +224,6 @@ void MusicWindow::createButtons()
     nextButton->setToolTip("Próxima faixa");
     playlistButton->setToolTip("Editar Playlist");
 
-    playButton->setObjectName("play");
-    pauseButton->setObjectName("pause");
-    stopButton->setObjectName("stop");
-    prevButton->setObjectName("prev");
-    nextButton->setObjectName("next");
-    changeFavoriteButton->setObjectName("changeFavorite");
-    repeatButton->setObjectName("repeat");
-    randomButton->setObjectName("random");
-    playlistButton->setObjectName("musicPlaylist");
     playlistModeButton->setObjectName("tabStyle");
     musicModeButton->setObjectName("tabStyle");
     favoriteButton->setObjectName("tabStyleLast");
@@ -238,83 +237,15 @@ void MusicWindow::createButtons()
 
 void MusicWindow::createLayouts()
 {
-    QHBoxLayout *labelLayout = new QHBoxLayout;
-    labelLayout->addWidget(currentTrackLabel);
-    labelLayout->addWidget(separatorLabel);
-    labelLayout->addWidget(totalTracksLabel);
-    labelLayout->setAlignment(Qt::AlignCenter);
-    labelLayout->setSpacing(0);
-    labelLayout->setMargin(0);
+    uiWidget->findChild<QVBoxLayout *>("playlistLayout")->addWidget(playlist);
+    uiWidget->findChild<QHBoxLayout *>("timeLayout")->insertWidget(1, timeSlider);
+    uiWidget->findChild<QHBoxLayout *>("bottomLayout")->addWidget(volumeControl);
 
-    tracksWidget->setLayout(labelLayout);
-
-    QHBoxLayout *topLayout = new QHBoxLayout;
-    topLayout->addWidget(tracksWidget);
-    topLayout->addWidget(fileTypeLabel);
-    topLayout->addStretch(1);
-    topLayout->addWidget(changeFavoriteButton);
-    topLayout->addWidget(repeatButton);
-    topLayout->addWidget(randomButton);
-    topLayout->addWidget(playlistButton);
-    topLayout->setSpacing(10);
-    topLayout->setContentsMargins(8,0,8,0);
-
-    QHBoxLayout *searchLayout = new QHBoxLayout;
-    searchLayout->addWidget(playlistModeButton);
-    searchLayout->addWidget(musicModeButton);
-    searchLayout->addWidget(favoriteButton);
-    searchLayout->addSpacing(8);
-    searchLayout->addWidget(searchLineEdit);
-    searchLayout->setSpacing(0);
-    searchLayout->setContentsMargins(8,0,8,0);
-
-    QHBoxLayout *timeLayout = new QHBoxLayout;
-    timeLayout->addWidget(timeLabel);
-    timeLayout->addWidget(timeSlider);
-    timeLayout->addWidget(totalTimeLabel);
-    timeLayout->setAlignment(Qt::AlignCenter);
-    timeLayout->setSpacing(8);
-    timeLayout->setContentsMargins(0,0,0,0);
-
-    QVBoxLayout *infoLayout = new QVBoxLayout;
-    infoLayout->addWidget(currentTagLabel, 0, Qt::AlignHCenter);
-    infoLayout->addLayout(timeLayout);
-    infoLayout->setSpacing(0);
-    infoLayout->setContentsMargins(8,6,8,9);
-    infoWidget->setLayout(infoLayout);
-
-    QHBoxLayout *channelLayout = new QHBoxLayout;
-    channelLayout->addWidget(leftChProgressBar);
-    channelLayout->addWidget(rightChProgressBar);
-    channelLayout->setSpacing(1);
-
-    QVBoxLayout *playlistLayout = new QVBoxLayout;
-    playlistLayout->addWidget(playlist);
-    playlistLayout->setContentsMargins(8,0,8,0);
-
-    QHBoxLayout *bottomLayout = new QHBoxLayout;
-    bottomLayout->addWidget(playButton);
-    bottomLayout->addWidget(pauseButton);
-    bottomLayout->addWidget(stopButton);
-    bottomLayout->addWidget(prevButton);
-    bottomLayout->addWidget(nextButton);
-    bottomLayout->addLayout(channelLayout);
-    bottomLayout->addWidget(volumeControl);
-    bottomLayout->setAlignment(Qt::AlignBottom);
-    bottomLayout->setSpacing(5);
-    bottomLayout->setContentsMargins(8,0,8,0);
-
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->setMenuBar(menuBar);
-    mainLayout->addLayout(topLayout);
-    mainLayout->addLayout(searchLayout);
-    mainLayout->addLayout(playlistLayout);
-    mainLayout->addWidget(infoWidget);
-    mainLayout->addLayout(bottomLayout);
-    mainLayout->setSpacing(8);
-    mainLayout->setContentsMargins(0,8,0,8);
-
-    setLayout(mainLayout);
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(uiWidget);
+    layout->setMargin(0);
+    layout->setSpacing(0);
+    setLayout(layout);
 }
 
 void MusicWindow::createEvents()

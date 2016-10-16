@@ -73,11 +73,9 @@ signals:
 private:
     friend class RadioStream;
     QObject *parentMain;
-    QWidget *parent;
-    Widget *infoWidget;
+    QWidget *parent, *uiWidget;
     RadioStream *radioStream;
     RadioPlaylist *playlist;
-    QMenuBar *menuBar;
     QAction *openLinkAction, *displayRecordingsAction, *exitAction, *musicModeAction, *recorderModeAction,
         *serverModeAction, *playlistManagerAction, *equalizerAction, *configAction, *checkUpdateAction,
         *websiteAction, *aboutAction;

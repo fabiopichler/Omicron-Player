@@ -46,6 +46,10 @@ QWidget#radioInfoWidget {
     border-top: 1px solid rgb(185,190,210);
     border-bottom: 1px solid #eee;
 }
+QWidget#tracksWidget {
+    height: 19px;
+    max-height: 19px;
+}
 QWidget#statusWidget,
 QWidget#tracksWidget {
 	margin-top: 1px;
@@ -135,7 +139,11 @@ QListWidget {
 
 /* QLabel
 --------------------------------------------------------- */
-QLabel#windowIcon {}
+QLabel#windowIcon {
+    margin: 0 6px;
+    border: none;
+    background: transparent;
+}
 QLabel#windowTitle {
     border: none;
     background: transparent;
@@ -516,6 +524,13 @@ QProgressBar::chunk:horizontal {
                                 stop: 0.51 rgb(65,125,175),
                                 stop: 0.54 rgb(65,125,175),
                                 stop: 1.0 rgb(65,125,175));
+}
+QProgressBar#bufferProgressBar {
+    height: 16px;
+    width: 92px;
+}
+QProgressBar#channelsProgressBar {
+    height: 18px;
 }
 
 /* QSlider

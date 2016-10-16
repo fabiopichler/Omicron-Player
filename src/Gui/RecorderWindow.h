@@ -40,6 +40,7 @@ public:
 private:
     void createMenuBar();
     void createWidgets();
+    void createComboBox();
     void createLabels();
     void createButtons();
     void createLayouts();
@@ -63,15 +64,14 @@ signals:
 
 private:
     QObject *parentMain;
-    Widget *statusWidget;
+    QWidget *uiWidget;
     RecorderStream *recorderStream;
     RecordList *recordList;
-    QMenuBar *menuBar;
     QAction *displayRecordingsAction,*exitAction,*radioModeAction,*serverModeAction,*musicModeAction,
         *equalizerAction,*checkUpdateAction,*websiteAction, *aboutAction, *configAction;
     ErrorWindow *errorWindow;
     QProgressBar *leftChProgressBar, *rightChProgressBar;
-    QLabel *timeLabel, *statusLabel, *nameLabel, *currentTitleLabel;
+    QLabel *timeLabel, *statusLabel;
     QPushButton *recordButton, *stopButton, *playButton;
     ComboBox *deviceComboBox, *encoderComboBox, *bitrateComboBox;
     Slider *timeSlider;

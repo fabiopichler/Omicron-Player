@@ -11,6 +11,7 @@
 *******************************************************************************/
 
 #include "Database.h"
+#include "Theme.h"
 #include <iostream>
 
 QSqlDatabase *Database::db = nullptr;
@@ -352,7 +353,7 @@ void Database::defaultConfig()
 
     query.exec("CREATE TABLE Config (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO Config VALUES "
-               "('theme', 'app:fpm-player-dark'), "
+               "('theme', '" + defaultTheme + "'), "
                "('style', 'default'), "
                "('device', '-1'), "
                "('autoDlRadioList', 'true'), "
@@ -452,7 +453,7 @@ void Database::defaultConfig()
 
 void Database::upgrade()
 {
-    setValue("Config", "theme", "app:fpm-player-dark");
+    setValue("Config", "theme", defaultTheme);
 
     // ---------------------------------------------------------------------
     // Version: 2.0.0

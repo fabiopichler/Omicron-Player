@@ -16,7 +16,7 @@
 #
 #-------------------------------------------------
 
-QT = core widgets gui network sql xml
+QT = core widgets gui network sql xml uitools
 TEMPLATE = app
 CONFIG += c++11
 

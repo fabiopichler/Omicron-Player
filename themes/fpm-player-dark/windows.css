@@ -15,8 +15,8 @@
     font-size: 12px;
 } 
 QMenuBar {
-    padding: 0 5px;
+    padding: 1px 5px;
 }
 QMenuBar::item {
-    margin: 1px 0 0 0;
+    margin: 0;
 }

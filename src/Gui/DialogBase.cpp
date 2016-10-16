@@ -35,7 +35,7 @@ DialogBase::~DialogBase()
 
 void DialogBase::setWindowTitle(const QString &title)
 {
-    if (titleBar)
+    if (titleBar && titleBar->label)
         titleBar->label->setText(title);
     QDialog::setWindowTitle(title);
 }
@@ -47,7 +47,7 @@ void DialogBase::setLayout(QLayout *layout)
 
     if (titleBar)
         mainLayout->addWidget(titleBar);
-    mainLayout->addWidget(mainWidget);
+    mainLayout->addWidget(mainWidget, 1);
 
     QDialog::setLayout(mainLayout);
 }

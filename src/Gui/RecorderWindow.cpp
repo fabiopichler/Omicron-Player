@@ -11,7 +11,9 @@
 *******************************************************************************/
 
 #include "RecorderWindow.h"
+#include "../Core/Theme.h"
 #include <QDesktopServices>
+#include <QUiLoader>
 
 RecorderWindow::RecorderWindow(QObject *parentMain, QWidget *parent) : Widget(parent)
 {
@@ -21,8 +23,21 @@ RecorderWindow::RecorderWindow(QObject *parentMain, QWidget *parent) : Widget(pa
     recorderStream = new RecorderStream(this);
     recordList = recorderStream->recordList;
 
+    QFile file(Global::getThemePath("RecorderWindow.xml"));
+
+    if (!file.open(QFile::ReadOnly) || !(uiWidget = QUiLoader().load(&file, this)))
+    {
+        file.close();
+        Theme::setDefault(defaultTheme);
+        throw "Ops! Algo deu errado...\nHouve um erro ao inicializar o tema atual.";
+        return;
+    }
+
+    file.close();
+
     createMenuBar();
     createWidgets();
+    createComboBox();
     createLabels();
     createButtons();
     createLayouts();
@@ -69,7 +84,7 @@ void RecorderWindow::createMenuBar()
     aboutMenu->addSeparator();
     aboutAction = aboutMenu->addAction("Sobre");
 
-    menuBar = new QMenuBar();
+    QMenuBar *menuBar = uiWidget->findChild<QMenuBar *>("menuBar");
     menuBar->addMenu(fileMenu);
     menuBar->addMenu(modeMenu);
     menuBar->addMenu(toolsMenu);
@@ -77,6 +92,27 @@ void RecorderWindow::createMenuBar()
 }
 
 void RecorderWindow::createWidgets()
+{
+    // --- leftChProgressBar ---
+    leftChProgressBar = uiWidget->findChild<QProgressBar *>("leftChProgressBar");
+    leftChProgressBar->setObjectName("channelsProgressBar");
+    leftChProgressBar->setRange(0,32768);
+    leftChProgressBar->setTextVisible(false);
+
+    rightChProgressBar = uiWidget->findChild<QProgressBar *>("rightChProgressBar");
+    rightChProgressBar->setObjectName("channelsProgressBar");
+    rightChProgressBar->setRange(0,32768);
+    rightChProgressBar->setTextVisible(false);
+
+    // --- timeSlider ---
+    timeSlider = new Slider(Qt::Horizontal);
+    timeSlider->setEnabled(false);
+    timeSlider->setMaximum(0);
+    timeSlider->setObjectName("timeSlider");
+    timeSlider->setStyleSheet("margin: 0 20px");
+}
+
+void RecorderWindow::createComboBox()
 {
     int current = EncoderList::current;
 
@@ -112,114 +148,45 @@ void RecorderWindow::createWidgets()
         bitrateComboBox->addItem(QString("%1 kbps").arg(recorderStream->encoderList[current].bitrate[i]));
 
     bitrateComboBox->setCurrentIndex(recorderStream->encoderList[current].index);
-
-    // --- leftChProgressBar ---
-    leftChProgressBar = new QProgressBar;
-    leftChProgressBar->setOrientation(Qt::Horizontal);
-    leftChProgressBar->setInvertedAppearance(true);
-    leftChProgressBar->setFixedHeight(20);
-    leftChProgressBar->setTextVisible(false);
-    leftChProgressBar->setRange(0,32768);
-
-    // --- rightChProgressBar ---
-    rightChProgressBar = new QProgressBar;
-    rightChProgressBar->setOrientation(Qt::Horizontal);
-    rightChProgressBar->setFixedHeight(20);
-    rightChProgressBar->setTextVisible(false);
-    rightChProgressBar->setRange(0,32768);
-
-    // --- timeSlider ---
-    timeSlider = new Slider(Qt::Horizontal);
-    timeSlider->setEnabled(false);
-    timeSlider->setMaximum(0);
-    timeSlider->setObjectName("timeSlider");
-    timeSlider->setStyleSheet("margin: 0 20");
-
-    // --- statusWidget ---
-    statusWidget = new Widget;
-    statusWidget->setMinimumWidth(10);
-    statusWidget->setFixedHeight(22);
-    statusWidget->setContentsMargins(10, 0, 10, 0);
-    statusWidget->setObjectName("statusWidget");
 }
 
 void RecorderWindow::createLabels()
 {
-    timeLabel = new QLabel("--:--:--");
-    timeLabel->setMinimumWidth(80);
-    timeLabel->setAlignment(Qt::AlignCenter);
+    timeLabel = uiWidget->findChild<QLabel *>("timeLabel");
+    timeLabel->setText("--:--:--");
 
-    statusLabel = new QLabel("Parado");
-    statusLabel->setAlignment(Qt::AlignCenter);
+    statusLabel = uiWidget->findChild<QLabel *>("statusLabel");
     statusLabel->setStyleSheet("background: transparent");
-
-    nameLabel = new QLabel();
-    currentTitleLabel = new QLabel("---");
+    statusLabel->setText("Parado");
 }
 
 void RecorderWindow::createButtons()
 {
-    recordButton = new QPushButton;
-    stopButton = new QPushButton;
-    playButton = new QPushButton;
+    recordButton = uiWidget->findChild<QPushButton *>("record");
+    stopButton = uiWidget->findChild<QPushButton *>("stop");
+    playButton = uiWidget->findChild<QPushButton *>("play");
 
     recordButton->setToolTip("Gravar");
     stopButton->setToolTip("Parar");
     playButton->setToolTip("Reproduzir");
-
-    recordButton->setObjectName("record");
-    stopButton->setObjectName("stop");
-    playButton->setObjectName("play");
 
     stopButton->setEnabled(false);
 }
 
 void RecorderWindow::createLayouts()
 {
-    QHBoxLayout *statusLayout = new QHBoxLayout;
-    statusLayout->addWidget(statusLabel, 1);
-    statusLayout->setSpacing(0);
-    statusLayout->setMargin(0);
+    uiWidget->findChild<QHBoxLayout *>("topLayout")->insertWidget(0, deviceComboBox);
+    uiWidget->findChild<QHBoxLayout *>("topLayout")->insertWidget(1, encoderComboBox);
+    uiWidget->findChild<QHBoxLayout *>("topLayout")->insertWidget(2, bitrateComboBox);
 
-    statusWidget->setLayout(statusLayout);
+    uiWidget->findChild<QVBoxLayout *>("recordListLayout")->addWidget(recordList);
+    uiWidget->findChild<QVBoxLayout *>("timeSliderLayout")->addWidget(timeSlider);
 
-    QHBoxLayout *topLayout = new QHBoxLayout;
-    topLayout->addWidget(deviceComboBox);
-    topLayout->addWidget(encoderComboBox);
-    topLayout->addWidget(bitrateComboBox);
-    topLayout->addWidget(statusWidget);
-    topLayout->setContentsMargins(8,0,8,0);
-
-    QVBoxLayout *recordListLayout = new QVBoxLayout;
-    recordListLayout->addWidget(recordList);
-    recordListLayout->addWidget(timeSlider);
-    recordListLayout->setContentsMargins(8,0,8,0);
-
-    QHBoxLayout *channelLayout = new QHBoxLayout;
-    channelLayout->addWidget(leftChProgressBar);
-    channelLayout->addWidget(rightChProgressBar);
-    channelLayout->setSpacing(1);
-
-    QHBoxLayout *bottomLayout = new QHBoxLayout;
-    bottomLayout->addWidget(recordButton);
-    bottomLayout->addWidget(stopButton);
-    bottomLayout->addWidget(playButton);
-    bottomLayout->addLayout(channelLayout);
-    bottomLayout->addWidget(timeLabel);
-    bottomLayout->setAlignment(Qt::AlignBottom);
-    bottomLayout->setSpacing(5);
-    bottomLayout->setContentsMargins(8,0,8,0);
-
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->setMenuBar(menuBar);
-    mainLayout->addLayout(topLayout);
-    mainLayout->addLayout(recordListLayout);
-    mainLayout->addLayout(bottomLayout);
-
-    mainLayout->setSpacing(8);
-    mainLayout->setContentsMargins(0,8,0,8);
-
-    setLayout(mainLayout);
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(uiWidget);
+    layout->setMargin(0);
+    layout->setSpacing(0);
+    setLayout(layout);
 }
 
 void RecorderWindow::createEvents()

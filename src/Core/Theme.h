@@ -16,12 +16,15 @@
 
 #include <QSettings>
 
+const QString defaultTheme = "app:fpm-player-dark";
+
 class Theme
 {
 public:
     static void init();
     static void free();
     static bool load();
+    static bool setDefault(const QString &);
     static QVariant get(const QString &key, const QVariant &value = QVariant());
     static QString getString(const QString &key, const QVariant &value = QVariant());
     static QList<QStringList> themes();

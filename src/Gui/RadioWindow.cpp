@@ -13,6 +13,7 @@
 #include "RadioWindow.h"
 #include "../Core/Theme.h"
 #include <QDesktopServices>
+#include <QUiLoader>
 
 RadioWindow::RadioWindow(QObject *parentMain, QWidget *parent) : Widget(parent)
 {
@@ -23,6 +24,18 @@ RadioWindow::RadioWindow(QObject *parentMain, QWidget *parent) : Widget(parent)
     errorWindow = new ErrorWindow(this);
     radioStream = new RadioStream(this);
     playlist = radioStream->playlist;
+
+    QFile file(Global::getThemePath("RadioWindow.xml"));
+
+    if (!file.open(QFile::ReadOnly) || !(uiWidget = QUiLoader().load(&file, this)))
+    {
+        file.close();
+        Theme::setDefault(defaultTheme);
+        throw "Ops! Algo deu errado...\nHouve um erro ao inicializar o tema atual.";
+        return;
+    }
+
+    file.close();
 
     createMenuBar();
     createWidgets();
@@ -80,7 +93,7 @@ void RadioWindow::createMenuBar()
     aboutMenu->addSeparator();
     aboutAction = aboutMenu->addAction("Sobre");
 
-    menuBar = new QMenuBar();
+    QMenuBar *menuBar = uiWidget->findChild<QMenuBar *>("menuBar");
     menuBar->addMenu(fileMenu);
     menuBar->addMenu(modeMenu);
     menuBar->addMenu(toolsMenu);
@@ -97,42 +110,34 @@ void RadioWindow::createWidgets()
 
     loaderMovie = new QMovie;
 
-    searchLineEdit = new QLineEdit;
-    searchLineEdit->setObjectName("searchLineEdit");
+    searchLineEdit = uiWidget->findChild<QLineEdit *>("searchLineEdit");
     searchLineEdit->setClearButtonEnabled(true);
     searchLineEdit->setPlaceholderText("Pesquisa rápida");
 
-    leftChProgressBar = new QProgressBar;
-    leftChProgressBar->setOrientation(Qt::Horizontal);
-    leftChProgressBar->setInvertedAppearance(true);
-    leftChProgressBar->setFixedHeight(20);
-    leftChProgressBar->setTextVisible(false);
+    leftChProgressBar = uiWidget->findChild<QProgressBar *>("leftChProgressBar");
+    leftChProgressBar->setObjectName("channelsProgressBar");
     leftChProgressBar->setRange(0,32768);
+    leftChProgressBar->setTextVisible(false);
 
-    rightChProgressBar = new QProgressBar;
-    rightChProgressBar->setOrientation(Qt::Horizontal);
-    rightChProgressBar->setFixedHeight(20);
-    rightChProgressBar->setTextVisible(false);
+    rightChProgressBar = uiWidget->findChild<QProgressBar *>("rightChProgressBar");
+    rightChProgressBar->setObjectName("channelsProgressBar");
     rightChProgressBar->setRange(0,32768);
+    rightChProgressBar->setTextVisible(false);
 
-    bufferProgressBar = new QProgressBar;
-    bufferProgressBar->setOrientation(Qt::Horizontal);
-    bufferProgressBar->setFixedHeight(18);
-    bufferProgressBar->setTextVisible(false);
+    bufferProgressBar = uiWidget->findChild<QProgressBar *>("bufferProgressBar");
     bufferProgressBar->setRange(0,100);
-    bufferProgressBar->setFixedWidth(103);
     bufferProgressBar->setToolTip("Buffer");
-
-    infoWidget = new Widget;
-    infoWidget->setObjectName("radioInfoWidget");
 }
 
 void RadioWindow::createLabels()
 {
-    timeLabel = new QLabel("--:--:--");
-    statusLabel = new QLabel("---");
-    nameLabel = new QLabel;
-    streamTitleLabel = new QLabel;
+    timeLabel = uiWidget->findChild<QLabel *>("timeLabel");
+    statusLabel = uiWidget->findChild<QLabel *>("statusLabel");
+    nameLabel = uiWidget->findChild<QLabel *>("radioTitleLabel");
+    streamTitleLabel = uiWidget->findChild<QLabel *>("musicTitleLabel");
+
+    timeLabel->setText("--:--:--");
+    statusLabel->setText("---");
 
     timeLabel->setTextFormat(Qt::PlainText);
     statusLabel->setTextFormat(Qt::PlainText);
@@ -140,8 +145,9 @@ void RadioWindow::createLabels()
     streamTitleLabel->setTextFormat(Qt::PlainText);
 
     nameLabel->setObjectName("radioTitleLabel");
-    streamTitleLabel->setObjectName("radioTitleLabel");
     nameLabel->setOpenExternalLinks(true);
+
+    streamTitleLabel->setObjectName("radioTitleLabel");
     streamTitleLabel->setFixedHeight(21);
 
     int hour = QTime::currentTime().hour();
@@ -156,17 +162,21 @@ void RadioWindow::createLabels()
 
 void RadioWindow::createButtons()
 {
-    playButton = new QPushButton;
-    stopButton = new QPushButton;
-    prevButton = new QPushButton;
-    nextButton = new QPushButton;
-    recordButton = new QPushButton;
-    changeFavoriteButton = new QPushButton;
-    openLinkButton = new QPushButton;
-    playlistButton = new QPushButton;
-    allPlaylistsButton = new QPushButton("Todos");
-    customPlaylistButton = new QPushButton("Personalizados");
-    favoriteButton = new QPushButton("Favoritos");
+    playButton = uiWidget->findChild<QPushButton *>("play");
+    stopButton = uiWidget->findChild<QPushButton *>("stop");
+    prevButton = uiWidget->findChild<QPushButton *>("prev");
+    nextButton = uiWidget->findChild<QPushButton *>("next");
+    recordButton = uiWidget->findChild<QPushButton *>("record");
+    changeFavoriteButton = uiWidget->findChild<QPushButton *>("changeFavorite");
+    openLinkButton = uiWidget->findChild<QPushButton *>("openLink");
+    playlistButton = uiWidget->findChild<QPushButton *>("radioPlaylist");
+    allPlaylistsButton = uiWidget->findChild<QPushButton *>("allPlaylists");
+    customPlaylistButton = uiWidget->findChild<QPushButton *>("customPlaylist");
+    favoriteButton = uiWidget->findChild<QPushButton *>("favorite");
+
+    allPlaylistsButton->setText("Todos");
+    customPlaylistButton->setText("Personalizados");
+    favoriteButton->setText("Favoritos");
 
     playButton->setToolTip("Reproduzir");
     stopButton->setToolTip("Parar");
@@ -176,14 +186,6 @@ void RadioWindow::createButtons()
     openLinkButton->setToolTip("Abrir Link Rapidamente");
     playlistButton->setToolTip("Editar Lista de Rádios");
 
-    playButton->setObjectName("play");
-    stopButton->setObjectName("stop");
-    prevButton->setObjectName("prev");
-    nextButton->setObjectName("next");
-    recordButton->setObjectName("record");
-    changeFavoriteButton->setObjectName("changeFavorite");
-    openLinkButton->setObjectName("openLink");
-    playlistButton->setObjectName("radioPlaylist");
     allPlaylistsButton->setObjectName("tabStyle");
     customPlaylistButton->setObjectName("tabStyle");
     favoriteButton->setObjectName("tabStyleLast");
@@ -193,67 +195,14 @@ void RadioWindow::createButtons()
 
 void RadioWindow::createLayouts()
 {
-    QHBoxLayout *buttonLayout = new QHBoxLayout;
-    buttonLayout->addWidget(timeLabel);
-    buttonLayout->addSpacing(3);
-    buttonLayout->addWidget(changeFavoriteButton);
-    buttonLayout->addWidget(openLinkButton);
-    buttonLayout->addWidget(playlistButton);
-    buttonLayout->setAlignment(Qt::AlignRight);
-    buttonLayout->setSpacing(7);
+    uiWidget->findChild<QVBoxLayout *>("playlistLayout")->addWidget(playlist);
+    uiWidget->findChild<QHBoxLayout *>("bottomLayout")->addWidget(volumeControl);
 
-    QHBoxLayout *topLayout = new QHBoxLayout;
-    topLayout->addWidget(bufferProgressBar);
-    topLayout->addWidget(statusLabel);
-    topLayout->addLayout(buttonLayout);
-    topLayout->setContentsMargins(8,0,8,0);
-
-    QHBoxLayout *searchLayout = new QHBoxLayout;
-    searchLayout->addWidget(allPlaylistsButton);
-    searchLayout->addWidget(customPlaylistButton);
-    searchLayout->addWidget(favoriteButton);
-    searchLayout->addSpacing(8);
-    searchLayout->addWidget(searchLineEdit);
-    searchLayout->setSpacing(0);
-    searchLayout->setContentsMargins(8,0,8,0);
-
-    QHBoxLayout *channelLayout = new QHBoxLayout;
-    channelLayout->addWidget(leftChProgressBar);
-    channelLayout->addWidget(rightChProgressBar);
-    channelLayout->setSpacing(1);
-
-    QHBoxLayout *bottomLayout = new QHBoxLayout;
-    bottomLayout->addWidget(playButton);
-    bottomLayout->addWidget(stopButton);
-    bottomLayout->addWidget(prevButton);
-    bottomLayout->addWidget(nextButton);
-    bottomLayout->addWidget(recordButton);
-    bottomLayout->addLayout(channelLayout);
-    bottomLayout->addWidget(volumeControl);
-    bottomLayout->setAlignment(Qt::AlignBottom);
-    bottomLayout->setSpacing(5);
-    bottomLayout->setContentsMargins(8,0,8,0);
-
-    QVBoxLayout *playlistLayout = new QVBoxLayout;
-    playlistLayout->addWidget(playlist);
-    playlistLayout->setContentsMargins(8,0,8,0);
-
-    QVBoxLayout *infoLayout = new QVBoxLayout;
-    infoLayout->addWidget(nameLabel, 0, Qt::AlignHCenter);
-    infoLayout->addWidget(streamTitleLabel, 0, Qt::AlignHCenter);
-    infoWidget->setLayout(infoLayout);
-
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->setMenuBar(menuBar);
-    mainLayout->addLayout(topLayout);
-    mainLayout->addLayout(searchLayout);
-    mainLayout->addLayout(playlistLayout);
-    mainLayout->addWidget(infoWidget);
-    mainLayout->addLayout(bottomLayout);
-    mainLayout->setSpacing(8);
-    mainLayout->setContentsMargins(0,8,0,8);
-
-    setLayout(mainLayout);
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(uiWidget);
+    layout->setMargin(0);
+    layout->setSpacing(0);
+    setLayout(layout);
 }
 
 void RadioWindow::createEvents()

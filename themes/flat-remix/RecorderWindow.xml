@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ****************************************************************************
+  FPM Player
+
+  Copyright (c) 2016, Fábio Pichler
+  All rights reserved.
+
+  License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
+  Author: Fábio Pichler
+  Website: http://fabiopichler.net
+
+********************************************************************************* -->
+
+<ui version="4.0">
+    <widget class="QWidget">
+        <layout class="QVBoxLayout">
+            <property name="spacing">
+                <number>8</number>
+            </property>
+            
+            <property name="topMargin">
+                <number>0</number>
+            </property>
+            
+            <property name="bottomMargin">
+                <number>8</number>
+            </property>
+            
+            <property name="rightMargin">
+                <number>0</number>
+            </property>
+            
+            <property name="leftMargin">
+                <number>0</number>
+            </property>
+     
+            <item>
+                <widget class="QMenuBar" name="menuBar" />
+            </item>
+            
+            <item>
+                <layout class="QHBoxLayout" name="topLayout">
+                    <property name="rightMargin">
+                        <number>8</number>
+                    </property>
+            
+                    <property name="leftMargin">
+                        <number>8</number>
+                    </property>
+                    
+                    <item>
+                        <widget class="QWidget" name="statusWidget">
+                            <layout class="QVBoxLayout">
+                                <item>
+                                    <widget class="QLabel" name="statusLabel">
+                                        <property name="sizePolicy">
+                                            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                                                <horstretch>1</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
+                                        
+                                        <property name="alignment">
+                                            <set>Qt::AlignCenter</set>
+                                        </property>
+                                    </widget>
+                                </item>
+                            </layout>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
+            
+            <item>
+                <layout class="QVBoxLayout" name="recordListLayout">
+                    <property name="rightMargin">
+                        <number>8</number>
+                    </property>
+            
+                    <property name="leftMargin">
+                        <number>8</number>
+                    </property>
+                </layout>
+            </item>
+            
+            <item>
+                <layout class="QVBoxLayout" name="timeSliderLayout">
+                    <property name="rightMargin">
+                        <number>8</number>
+                    </property>
+            
+                    <property name="leftMargin">
+                        <number>8</number>
+                    </property>
+                </layout>
+            </item>
+            
+            <item>
+                <layout class="QHBoxLayout" name="bottomLayout">
+                    <property name="spacing">
+                        <number>5</number>
+                    </property>
+            
+                    <property name="rightMargin">
+                        <number>8</number>
+                    </property>
+            
+                    <property name="leftMargin">
+                        <number>8</number>
+                    </property>
+                    
+                    <item>
+                        <widget class="QPushButton" name="record" />
+                    </item>
+                    
+                    <item>
+                        <widget class="QPushButton" name="stop" />
+                    </item>
+                    
+                    <item>
+                        <widget class="QPushButton" name="play" />
+                    </item>
+                    
+                    <item>
+                        <layout class="QHBoxLayout">
+                            <property name="spacing">
+                                <number>1</number>
+                            </property>
+            
+                            <item>
+                                <widget class="QProgressBar" name="leftChProgressBar">
+                                    <property name="orientation">
+                                        <enum>Qt::Horizontal</enum>
+                                    </property>
+                                    
+                                    <property name="invertedAppearance">
+                                        <bool>true</bool>
+                                    </property>
+                                </widget>
+                            </item>
+                            
+                            <item>
+                                <widget class="QProgressBar" name="rightChProgressBar">
+                                    <property name="orientation">
+                                        <enum>Qt::Horizontal</enum>
+                                    </property>
+                                </widget>
+                            </item>
+                        </layout>
+                    </item>
+                    
+                    <item>
+                        <widget class="QLabel" name="timeLabel">
+                            <property name="alignment">
+                                <set>Qt::AlignCenter</set>
+                            </property>
+                            
+                            <property name="minimumWidth">
+                                <number>80</number>
+                            </property>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
+        </layout>
+    </widget>
+</ui>

@@ -18,7 +18,7 @@
 /* QWidget
 --------------------------------------------------------- */
 QWidget {
-    background: #363636;/*3a3a3a*/
+    background: #363636;
 }
 QWidget#titleBar {
     background: #2a2a2a;
@@ -47,6 +47,10 @@ QWidget#radioInfoWidget {
     border-top: 1px solid #232323;
     border-bottom: 1px solid #404040;
 }
+QWidget#tracksWidget {
+    height: 19px;
+    max-height: 19px;
+}
 QWidget#statusWidget,
 QWidget#tracksWidget {
 	margin-top: 1px;
@@ -74,14 +78,14 @@ QMenuBar::item {
     margin: 0;
 }
 QMenuBar::item:selected {
-    background: #4b4b4b;
+    background: rgba(200,200,200,0.2);
     border-top: 1px solid #232323;
     border-right: 1px solid #232323;
     border-left: 1px solid #232323;
     color: #fff;
 }
 QMenuBar::item:pressed {
-    background: #666;
+    background: rgba(200,200,200,0.4);
     color: #fff;
 }
 
@@ -143,7 +147,11 @@ QListWidget {
 
 /* QLabel
 --------------------------------------------------------- */
-QLabel#windowIcon {}
+QLabel#windowIcon {
+    margin: 0 6px;
+    border: none;
+    background: transparent;
+}
 QLabel#windowTitle {
     border: none;
     background: transparent;
@@ -257,7 +265,7 @@ QPushButton#close {
 }
 QPushButton#minimize:hover,
 QPushButton#minimizeTray:hover {
-    background: #4b4b4b;
+    background: rgba(200,200,200,0.2);
 }
 QPushButton#close:hover {
     background: #d56161;
@@ -282,7 +290,7 @@ QPushButton#stop:hover,
 QPushButton#prev:hover,
 QPushButton#next:hover,
 QPushButton#record:hover {
-    background: #4b4b4b;
+    background: rgba(200,200,200,0.2);
     border: 1px solid #232323;
 }
 QPushButton#repeat,
@@ -307,7 +315,7 @@ QPushButton#changeFavorite:hover,
 QPushButton#openLink:hover,
 QPushButton#radioPlaylist:hover,
 QPushButton#volumeBt:hover {
-    background: #4b4b4b;
+    background: rgba(200,200,200,0.2);
     border: 1px solid #232323;
 }
 QPushButton#tabStyle {
@@ -507,6 +515,13 @@ QProgressBar::chunk:horizontal {
                                 stop: 1.0 #868686);
     width: 3px;
     margin: 0.5px 0.5px 0.5px 0;
+}
+QProgressBar#bufferProgressBar {
+    height: 16px;
+    width: 92px;
+}
+QProgressBar#channelsProgressBar {
+    height: 18px;
 }
 
 /* QSlider

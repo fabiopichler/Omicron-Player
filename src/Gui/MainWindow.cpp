@@ -15,6 +15,7 @@
 
 MainWindow::MainWindow(QObject *parent, QSettings *_iniSettings) : parentMain(parent), iniSettings(_iniSettings)
 {
+    centralWidget = nullptr;
     titleBar = new Titlebar(this);
 
     mainLayout = new QVBoxLayout;
@@ -37,9 +38,13 @@ MainWindow::MainWindow(QObject *parent, QSettings *_iniSettings) : parentMain(pa
 
 MainWindow::~MainWindow()
 {
-    Database::setValue("Current", "mode", centralWidget->mode);
     iniSettings->setValue("Window/Position", pos());
-    delete centralWidget;
+
+    if (centralWidget)
+    {
+        Database::setValue("Current", "mode", centralWidget->mode);
+        delete centralWidget;
+    }
 }
 
 void MainWindow::initWindow(Widget *widget)

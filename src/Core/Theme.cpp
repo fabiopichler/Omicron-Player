@@ -48,15 +48,14 @@ bool Theme::load()
 
     if (!QFile::exists(themePath + "theme.ini"))
     {
-        if (Database::value("Config", "theme").toString() == "app:fpm-player-dark")
+        if (Database::value("Config", "theme").toString() == defaultTheme)
         {
             QMessageBox::critical(nullptr, "Erro", "Não foi possível carregar o Tema Padrão. Reinstale o programa para "
                                                    "resolver este problema.");
             return false;
         }
 
-        Database::setValue("Config", "theme", "app:fpm-player-dark");
-        Database::setValue("Config", "style", "default");
+        setDefault(defaultTheme);
         return load();
     }
 
@@ -88,6 +87,17 @@ bool Theme::load()
     qApp->setStyleSheet(css);
 
     return true;
+}
+
+bool Theme::setDefault(const QString &name)
+{
+    if (Database::setValue("Config", "theme", name))
+    {
+        Database::setValue("Config", "style", "default");
+        return true;
+    }
+
+    return false;
 }
 
 QVariant Theme::get(const QString &key, const QVariant &value)
