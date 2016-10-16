@@ -16,6 +16,7 @@
 #include <iostream>
 #include <QProxyStyle>
 
+// Classe responsável por retirar o efeito de "foco" do QTreeView.
 class ProxyStyle : public QProxyStyle
 {
 public:
@@ -28,6 +29,7 @@ public:
     }
 };
 
+// Função main() (meio óbvio, né?)
 int main(int argc, char **argv)
 {
     int code = EXIT_SUCCESS;
@@ -35,12 +37,20 @@ int main(int argc, char **argv)
     Main *appMain = nullptr;
     QStringList libraryPaths;
 
+    // Se estiver em desenvolvimento, acrescentar a pasta de plugins do sistema.
+    // Nota: Definir Global::inDevelopment como false, antes de compilar para o lançamento.
     if (Global::inDevelopment)
-        libraryPaths << QApplication::libraryPaths()[0]; // Para o desenvolvimento
+    {
+        QStringList list = QApplication::libraryPaths();
+        if (!list.isEmpty())
+            libraryPaths << list[0]; // Para o desenvolvimento
+    }
     libraryPaths << QFileInfo(Global::cStrToQString(argv[0])).absolutePath() + "/plugins";
     QApplication::setLibraryPaths(libraryPaths);
 
-#ifdef Q_OS_WIN
+#ifdef Q_OS_WIN // Windows
+    // Se desinstalar o programa (no Windows), iniciá-lo e passar o argumento --uninstall-app para
+    // remover as informações do regitro do Windows.
     if (argc == 2 && strcmp(argv[1], "--uninstall-app") == 0)
     {
         Global::setupSupportedFiles();
@@ -48,6 +58,7 @@ int main(int argc, char **argv)
 
         QString configPath = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation);
 
+        // Informar "uninstalled" como valor da versão na base de dados.
         if (Database::init(configPath + "/" + AppConfigDir + "/Config.db"))
             Database::setValue("Version", "current", "uninstalled");
 
@@ -63,8 +74,10 @@ int main(int argc, char **argv)
     qRegisterMetaType<RadioStream::Event>("RadioStream::Event");
     qRegisterMetaType<RecorderStream::Event>("RecorderStream::Event");
 
+    // Loop que mantém o programa aberto, caso reinicie-o.
     do
     {
+        // Deletar os objetos das classes SingleApplication e Main, caso reinicie o programa.
         delete appMain;
         delete app;
 
@@ -76,6 +89,10 @@ int main(int argc, char **argv)
         app = new SingleApplication(argc, argv, AppNameId+"-debug-676fgm5m5l5a4x31bc");
 #endif // QT_NO_DEBUG
 
+        // Se executar o programa, e ele já estiver executando (outro processo),
+        // verificar se existem os argumentos --open-file ou --add-file, caso existam,
+        // enviar uma mensagem para o processo principal, informando se deve abrir
+        // um novo arquivo ou apenas adicionar o arquivo no playlist.
         if (app->isRunning() && argc > 2 && (strcmp(argv[1], "--open-file") == 0 || strcmp(argv[1], "--add-file") == 0))
         {
             int code;
@@ -83,6 +100,7 @@ int main(int argc, char **argv)
 
             sprintf(msg, "%s:%s", argv[1], argv[2]);
 
+            // Envia a mensagem pro processo principal, contendo as informações necessárias.
             if (app->sendMessage(msg))
                 code = EXIT_SUCCESS;
             else
@@ -92,24 +110,36 @@ int main(int argc, char **argv)
             delete msg;
             return code;
         }
+        // Verificar se o programa já está rodando (processo principal), caso esteja, enviar mensagens contendo
+        // os parâmetros recebidos pelo processo atual, para o processo principal.
         else if (app->isRunning())
         {
             if (argc < 2)
             {
+                // Caso não tenha passado argumentos extras pro programa, será enviada
+                // uma mensagem  pro processo principal, contendo a string --empty.
                 app->sendMessage("--empty");
             }
             else
             {
+                // Caso o programa tenha recebido argumentos, enviar cada um deles separadamente ao processo principal.
                 for (int i = 1; i < argc; i++)
                     app->sendMessage(argv[i]);
             }
 
+            // A mensagem contendo "--end-arguments", é necessária pro processo principal "saber" que
+            // todas as mensagens foram enviadas.
             if (app->sendMessage("--end-arguments"))
             {
                 delete app;
                 return EXIT_SUCCESS;
             }
 
+            // Caso o processo principal tenha quebrado (por algum motivo qualquer), a conexão com
+            // o servidor local continuará existindo e app->isRunning() retornará true.
+            // Nesse caso, por não existir um processo principal (apenas a conexão dele),
+            // será criado um novo servidor local e o processo atual se tornará o principal,
+            // permitindo que outros processos enviem mensagens para o processo atual.
             if (!app->createServer())
             {
                 delete app;
@@ -131,6 +161,7 @@ int main(int argc, char **argv)
         appMain = new Main;
         QObject::connect(app, SIGNAL(messageAvailable(QStringList)), appMain, SLOT(receiveMessage(QStringList)));
 
+        // Verifica se o programa foi iniciado corretamente.
         if (appMain->init(argc))
         {
 #ifdef QT_NO_DEBUG // RELEASE
@@ -139,6 +170,8 @@ int main(int argc, char **argv)
         }
         else
         {
+            // Caso o programa não tenha sido iniciado corretamente, o loop será quebrado e o processo encerrado.
+
             stdCout("Error! Could not initialize.");
             code = EXIT_FAILURE;
             break;
@@ -157,6 +190,7 @@ int main(int argc, char **argv)
 //================================================================================================================
 // class Main
 //================================================================================================================
+//! Construtor da classe.
 Main::Main()
 {
     continueRunning = false;
@@ -166,6 +200,7 @@ Main::Main()
     iniSettings = nullptr;
 }
 
+//! Destrutor da Classe.
 Main::~Main()
 {
     delete trayIcon;
@@ -179,75 +214,114 @@ Main::~Main()
     QFontDatabase::removeAllApplicationFonts();
 }
 
+//! Método para inicializar o programa.
+/*!
+  \param argc Quantidade de argumentos recebidos ao inicializar o programa.
+  \return Retorna true se o programa foi inicializado corretamente, false se algo deu errado.
+*/
 bool Main::init(const int &argc)
 {
+    // Inicializar a classe Global.
     if (!Global::init(argc))
         return false;
 
+    // Criar o diretório pras configurações, caso não exista.
     if (!QDir().exists(Global::getConfigPath()))
         QDir().mkpath(Global::getConfigPath());
 
+    // Criar o diretório pros temas instalados pelo usuário, caso não exista.
     if (!QDir().exists(Global::getConfigPath("themes")))
         QDir().mkpath(Global::getConfigPath("themes"));
 
+    // Carregar as fontes pro programa.
     QFontDatabase::addApplicationFont(Global::getQrcPath("fonts/verdana.ttf"));
     QFontDatabase::addApplicationFont(Global::getQrcPath("fonts/verdanab.ttf"));
 
+    // Inicializar a conexão com o banco de dados.
     if (Database::init(Global::getConfigPath("Config.db")))
     {
+        // Verificar se a versão do programa continua a mesma.
+        // Caso tenha mudado, dar um upgrade nas configurações (tabelas do banco de dados,
+        // registro do Windows e etc.).
         if (Database::value("Version", "current").toString() != CurrentVersion)
         {
             Database::upgrade();
             Database::setValue("Version", "current", CurrentVersion);
             Database::setValue("Version", "updates_lastCheck", "0000-00-00");
 #ifdef Q_OS_WIN
+            // Adicionar (ou atualizar) as informações de tipo de arquivos no registro do Windows.
+            // Caso as informações já existam, elas serão apenas atualizadas pela nova versão do programa.
             FileAssociation(QApplication::applicationFilePath()).registerList(Global::supportedFiles, false);
 #endif
         }
     }
     else
     {
+        // Mostrar uma mensagem e encerrar o programa,
+        // caso não seja possível abrir uma conexão com o banco de dados.
         QMessageBox::critical(nullptr, "Erro", "Ops! Algo deu errado...\n"
                               "Não foi possível criar ou configurar o Banco de Dados.");
         return false;
     }
 
+    // Criar um arquivo extra de configurações.
     iniSettings = new QSettings(Global::getConfigPath("Settings.ini"), QSettings::IniFormat);
     iniSettings->setIniCodec("UTF-8");
 
+    // Criar o ícone na bandeja do sistema.
     trayIcon = new QSystemTrayIcon(QIcon(Global::getQrcPath("tray-icons/icon-1.png")), 0);
     trayIcon->show();
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
                                                this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 
+    // Configurar a lista de rádios.
     setupRadiolist();
+
+    // Inicializar a classe responsável pelo tema visual do programa.
     Theme::init();
 
+    // Carregar o tema visual do programa. Caso houver algum erro no processo, retornará false.
+    if (!Theme::load())
+        return false;
+
+    // Instanciar a classe para conectar à internet e verificar se existem novas versões do programa.
     updateApp = new UpdateApp(this, iniSettings);
 
+    // Carrega o equalizador do banco de dados para Global::equalizerValues.
     for (int i = 0; i < 16; i++)
         Global::equalizerValues << Database::value("CurrentEqualizer", QString::number(i)).toInt();
 
+    // Configura o diretório de gravações no banco de dados, caso não esteja configurado.
     if (Database::value("RadioConfig", "recordPath").toString().isEmpty())
         Database::setValue("RadioConfig", "recordPath",
                            QStandardPaths::writableLocation(QStandardPaths::MusicLocation)+"/"+AppName+" Recordings/");
 
+    // Inicializa a biblioteca BASS e seus plugins. Caso haja algum erro, retorna false.
     if (!Stream::init())
         return false;
 
     QString mode = Database::value("Current", "mode").toString();
 
-    if (mode == "Radio" && argc < 2)
-        startRadioMode();
-    else if (mode == "Recorder" && argc < 2)
-        startRecorderMode();
-    else if (mode == "Server" && argc < 2)
-        startServerMode();
-    else
-        startMusicMode();
+    try
+    {
+        // Verifica qual o modo que deve ser inicializado (Modo Radio, Modo Recorder, Modo Server ou Modo Music).
+        if (mode == "Radio" && argc < 2)
+            startRadioMode();
 
-    if (!Theme::load())
+        else if (mode == "Recorder" && argc < 2)
+            startRecorderMode();
+
+        else if (mode == "Server" && argc < 2)
+            startServerMode();
+
+        else
+            startMusicMode();
+    }
+    catch (const char *e)
+    {
+        QMessageBox::critical(nullptr, "Erro", e);
         return false;
+    }
 
     return true;
 }
@@ -256,6 +330,7 @@ bool Main::init(const int &argc)
 // public slots
 //================================================================================================================
 
+//! Inicia o Modo Música.
 void Main::startMusicMode()
 {
     delete window;
@@ -266,6 +341,7 @@ void Main::startMusicMode()
     updateTrayIconMenu();
 }
 
+//! Inicia o Modo Rádio.
 void Main::startRadioMode()
 {
     delete window;
@@ -276,6 +352,7 @@ void Main::startRadioMode()
     updateTrayIconMenu();
 }
 
+//! Inicia o Modo Gravador.
 void Main::startRecorderMode()
 {
     delete window;
@@ -286,6 +363,7 @@ void Main::startRecorderMode()
     updateTrayIconMenu();
 }
 
+//! Inicia o Modo Servidor.
 void Main::startServerMode()
 {
     /*delete window;
@@ -296,29 +374,43 @@ void Main::startServerMode()
     updateTrayIconMenu();*/
 
     QMessageBox::information(window, "Servidor", "O desenvolvimento do \"Modo Servidor\" não foi concluído...\n"
-                             "Estará disponível na próxima versão (versão 2.1).");
+                             "Estará disponível na próxima versão (versão 2.2).");
 }
 
-void Main::setWindowTitle(QString arg)
+//! Define o título da janela do programa.
+/*!
+  \param title String a ser passa para o novo título.
+*/
+void Main::setWindowTitle(QString title)
 {
-    window->setWindowTitle(arg);
+    window->setWindowTitle(title);
 }
 
+//! Exibe uma notificação de erro do programa.
+/*!
+  \param msg String contendo uma mensagem de erro.
+*/
 void Main::showError(QString msg)
 {
     trayIcon->showMessage(AppName, msg, QSystemTrayIcon::Warning);
 }
 
+//! Exibe uma notificação do programa.
+/*!
+  \param msg String contendo uma mensagem de notificação.
+*/
 void Main::showNotification(QString msg)
 {
     trayIcon->showMessage(AppName, msg);
 }
 
+//! Abre o site oficial no navegador padrão do usuário.
 void Main::openSite()
 {
     QDesktopServices::openUrl(QUrl(OfficialSite));
 }
 
+//! Exibe um diálogo com o "sobre o programa".
 void Main::about()
 {
     DialogBase ab(window);
@@ -353,17 +445,17 @@ void Main::about()
     ab.exec();
 }
 
+//! Inicializa um diálogo contendo as configurações do programa.
 void Main::initConfigDialog()
 {
-    ConfigDialog *configDialog = new ConfigDialog(this, window);
-    configDialog->exec();
-    delete configDialog;
+    ConfigDialog(this, window).exec();
 }
 
 //================================================================================================================
 // private
 //================================================================================================================
 
+//! Configura a lista de rádios.
 void Main::setupRadiolist()
 {
     if (iniSettings->value("Radiolist/FileName").toString().isEmpty())
@@ -396,16 +488,18 @@ void Main::setupRadiolist()
     }
 }
 
+//! Atualiza o menu (e seus ícones) da bandeja do sistema.
 void Main::updateTrayIconMenu()
 {
     QStringList titles;
+    QMenu *trayIconMenu = new QMenu;
+
     if (window->currentMode() == "Music")
         titles << "Reproduzir Faixa" << "Pausar faixa atual" << "Parar faixa atual" << "Faixa anterior" << "Próxima faixa";
     else
         titles << "Reproduzir Rádio" << "" << "Parar Rádio atual" << "Rádio anterior" << "Próxima rádio";
 
-    QMenu *trayIconMenu = new QMenu;
-
+    // Oculta ou exibe a interface gráfica.
     connect(trayIconMenu->addAction("Ocultar/Exibir Interface"), &QAction::triggered, [=]() {
         if (window->isHidden())
         {
@@ -419,23 +513,33 @@ void Main::updateTrayIconMenu()
     });
 
     trayIconMenu->addSeparator();
+
+    // Play
     connect(trayIconMenu->addAction(QIcon(Global::getThemePath("images/media_playback_start.png")),titles[0]),
             SIGNAL(triggered()), this, SIGNAL(playStream()));
 
     if (window->currentMode() == "Music")
     {
+        // Pause
         connect(trayIconMenu->addAction(QIcon(Global::getThemePath("images/media_playback_pause.png")),titles[1]),
                 SIGNAL(triggered()), this, SIGNAL(pauseStream()));
     }
 
+    // Stop
     connect(trayIconMenu->addAction(QIcon(Global::getThemePath("images/media_playback_stop.png")),titles[2]),
             SIGNAL(triggered()), this, SIGNAL(stopStream()));
+
+    // Faixa anterior
     connect(trayIconMenu->addAction(QIcon(Global::getThemePath("images/media_skip_backward.png")),titles[3]),
             SIGNAL(triggered()), this, SIGNAL(prevStream()));
+
+    // Próxima faixa
     connect(trayIconMenu->addAction(QIcon(Global::getThemePath("images/media_skip_forward.png")),titles[4]),
             SIGNAL(triggered()), this, SIGNAL(nextStream()));
 
     trayIconMenu->addSeparator();
+
+    // Fechar o programa
     connect(trayIconMenu->addAction("Fechar"), SIGNAL(triggered()), qApp, SLOT(quit()));
 
     trayIcon->setContextMenu(trayIconMenu);
@@ -472,13 +576,19 @@ void Main::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
     }
 }
 
+//! Verificar por atualizações.
 void Main::checkUpdate()
 {
     updateApp->startChecking(true);
 }
 
+//! Recebe mensagens de outras instâncias.
+/*!
+  \param arg Lista de argumentos.
+*/
 void Main::receiveMessage(QStringList arg)
 {
+    // Se o parâmentro --empty foi passado, apenas ativar a janela do programa.
     if (!arg.isEmpty() && arg[0] == "--empty")
     {
         window->hide();
@@ -523,6 +633,7 @@ void Main::receiveMessage(QStringList arg)
     }
 }
 
+//! Define as configurações padrão do programa, após isso, reinicie-o.
 void Main::defaultConfig()
 {
     if (QMessageBox::warning(nullptr, "Definir a Configuração Padrão?", "Você está prestes a redefinir todas as "
