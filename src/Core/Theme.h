@@ -24,6 +24,7 @@ public:
     static void init();
     static void free();
     static bool load();
+    static QWidget *loadUi(QString, QWidget * = nullptr);
     static bool setDefault(const QString &);
     static QVariant get(const QString &key, const QVariant &value = QVariant());
     static QString getString(const QString &key, const QVariant &value = QVariant());

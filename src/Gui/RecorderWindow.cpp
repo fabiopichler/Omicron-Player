@@ -13,7 +13,6 @@
 #include "RecorderWindow.h"
 #include "../Core/Theme.h"
 #include <QDesktopServices>
-#include <QUiLoader>
 
 RecorderWindow::RecorderWindow(QObject *parentMain, QWidget *parent) : Widget(parent)
 {
@@ -23,17 +22,11 @@ RecorderWindow::RecorderWindow(QObject *parentMain, QWidget *parent) : Widget(pa
     recorderStream = new RecorderStream(this);
     recordList = recorderStream->recordList;
 
-    QFile file(Global::getThemePath("RecorderWindow.xml"));
-
-    if (!file.open(QFile::ReadOnly) || !(uiWidget = QUiLoader().load(&file, this)))
+    if (!(uiWidget = Theme::loadUi("RecorderWindow.xml", this)))
     {
-        file.close();
-        Theme::setDefault(defaultTheme);
-        throw "Ops! Algo deu errado...\nHouve um erro ao inicializar o tema atual.";
+        throw "Ops! Algo deu errado...\nHouve um erro ao carregar o arquivo \"RecorderWindow.xml\" do tema atual.";
         return;
     }
-
-    file.close();
 
     createMenuBar();
     createWidgets();

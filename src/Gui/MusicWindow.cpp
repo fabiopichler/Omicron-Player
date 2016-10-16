@@ -13,7 +13,6 @@
 #include "MusicWindow.h"
 #include "../Core/Theme.h"
 #include "../Core/Directory.h"
-#include <QUiLoader>
 
 MusicWindow::MusicWindow(QObject *parentMain, QWidget *parent) : DropArea(parent)
 {
@@ -26,17 +25,11 @@ MusicWindow::MusicWindow(QObject *parentMain, QWidget *parent) : DropArea(parent
     playlist = musicStream->playlist;
     static bool initialized = true;
 
-    QFile file(Global::getThemePath("MusicWindow.xml"));
-
-    if (!file.open(QFile::ReadOnly) || !(uiWidget = QUiLoader().load(&file, this)))
+    if (!(uiWidget = Theme::loadUi("MusicWindow.xml", this)))
     {
-        file.close();
-        Theme::setDefault(defaultTheme);
-        throw "Ops! Algo deu errado...\nHouve um erro ao inicializar o tema atual.";
+        throw "Ops! Algo deu errado...\nHouve um erro ao carregar o arquivo \"MusicWindow.xml\" do tema atual.";
         return;
     }
-
-    file.close();
 
     createMenuBar();
     createWidgets();

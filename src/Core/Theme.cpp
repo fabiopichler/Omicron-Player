@@ -12,6 +12,7 @@
 
 #include "Theme.h"
 #include "Database.h"
+#include <QUiLoader>
 
 QSettings *Theme::settings = nullptr;
 
@@ -87,6 +88,18 @@ bool Theme::load()
     qApp->setStyleSheet(css);
 
     return true;
+}
+
+QWidget *Theme::loadUi(QString fileName, QWidget *parent)
+{
+    QWidget *uiWidget = nullptr;
+    QFile file(Global::getThemePath(fileName));
+
+    if (!file.open(QFile::ReadOnly) || !(uiWidget = QUiLoader().load(&file, parent)))
+        Theme::setDefault(defaultTheme);
+
+    file.close();
+    return uiWidget;
 }
 
 bool Theme::setDefault(const QString &name)

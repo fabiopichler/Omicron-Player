@@ -12,24 +12,18 @@
 
 #include "TitleBar.h"
 #include "../Core/Theme.h"
-#include <QUiLoader>
 
 Titlebar::Titlebar(QWidget *parent, const int &flag) : Widget(parent)
 {
     this->parent = parent;
 
-    QFile file(Global::getThemePath("TitleBar.xml"));
     QWidget *uiWidget;
 
-    if (!file.open(QFile::ReadOnly) || !(uiWidget = QUiLoader().load(&file, this)))
+    if (!(uiWidget = Theme::loadUi("TitleBar.xml", this)))
     {
-        file.close();
-        Theme::setDefault(defaultTheme);
-        throw "Ops! Algo deu errado...\nHouve um erro ao inicializar o tema atual.";
+        throw "Ops! Algo deu errado...\nHouve um erro ao carregar o arquivo \"TitleBar.xml\" do tema atual.";
         return;
     }
-
-    file.close();
 
     titleIcon = uiWidget->findChild<QLabel *>("windowIcon");
     titleIcon->setPixmap(QPixmap(Global::getQrcPath("icon.png")));

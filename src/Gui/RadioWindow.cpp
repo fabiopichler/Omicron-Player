@@ -13,7 +13,6 @@
 #include "RadioWindow.h"
 #include "../Core/Theme.h"
 #include <QDesktopServices>
-#include <QUiLoader>
 
 RadioWindow::RadioWindow(QObject *parentMain, QWidget *parent) : Widget(parent)
 {
@@ -25,17 +24,11 @@ RadioWindow::RadioWindow(QObject *parentMain, QWidget *parent) : Widget(parent)
     radioStream = new RadioStream(this);
     playlist = radioStream->playlist;
 
-    QFile file(Global::getThemePath("RadioWindow.xml"));
-
-    if (!file.open(QFile::ReadOnly) || !(uiWidget = QUiLoader().load(&file, this)))
+    if (!(uiWidget = Theme::loadUi("RadioWindow.xml", this)))
     {
-        file.close();
-        Theme::setDefault(defaultTheme);
-        throw "Ops! Algo deu errado...\nHouve um erro ao inicializar o tema atual.";
+        throw "Ops! Algo deu errado...\nHouve um erro ao carregar o arquivo \"RadioWindow.xml\" do tema atual.";
         return;
     }
-
-    file.close();
 
     createMenuBar();
     createWidgets();
