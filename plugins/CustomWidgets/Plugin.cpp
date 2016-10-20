@@ -13,20 +13,20 @@
 #include "MyComboBoxPlugin.h"
 #include "MySliderPlugin.h"
 #include "MyLabelPlugin.h"
-#include "MainPlugin.h"
+#include "Plugin.h"
 
-Widgets::Widgets(QObject *parent) : QObject(parent)
+Plugin::Plugin(QObject *parent) : QObject(parent)
 {
     m_widgets.append(new MyComboBoxPlugin(this));
     m_widgets.append(new MySliderPlugin(this));
     m_widgets.append(new MyLabelPlugin(this));
 }
 
-QList<QDesignerCustomWidgetInterface*> Widgets::customWidgets() const
+QList<QDesignerCustomWidgetInterface*> Plugin::customWidgets() const
 {
     return m_widgets;
 }
 
 #if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2(widgetsplugin, Widgets)
+Q_EXPORT_PLUGIN2(widgetsplugin, Plugin)
 #endif // QT_VERSION < 0x050000

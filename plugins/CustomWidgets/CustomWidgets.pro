@@ -32,9 +32,9 @@ MOC_DIR = moc/$${BUILDDIR}
 RCC_DIR = rcc/$${BUILDDIR}
 !android:DESTDIR = ../../Build/designer
 
-win32:RC_FILE = Win.rc
+win32:RC_FILE = Plugin.rc
 
-HEADERS = MainPlugin.h \
+HEADERS = Plugin.h \
     MyComboBoxPlugin.h \
     MyLabelPlugin.h \
     MySliderPlugin.h \
@@ -42,7 +42,7 @@ HEADERS = MainPlugin.h \
     ../../src/Gui/Widgets/MyLabel.h \
     ../../src/Gui/Widgets/MySlider.h
 
-SOURCES = MainPlugin.cpp \
+SOURCES = Plugin.cpp \
     MyComboBoxPlugin.cpp \
     MyLabelPlugin.cpp \
     MySliderPlugin.cpp \

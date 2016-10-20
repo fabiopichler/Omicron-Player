@@ -34,7 +34,7 @@ CONFIG(debug, debug|release) {
     BUILDDIR = Release
     TARGET = "FPM-Player"
     unix:MAKEFILE = Makefile.release
-    RESOURCES += qrc/Files.qrc
+    RESOURCES += ../qrc/Files.qrc
 
 }
 
@@ -84,7 +84,7 @@ contains(ANDROID_TARGET_ARCH,x86) {
 
 }
 
-win32:RC_FILE = rc/Win.rc
+win32:RC_FILE = ../rc/Win.rc
 
 SOURCES += Main.cpp \
     Core/SingleApp.cpp \

@@ -15,7 +15,7 @@
 #include <QtDesigner>
 #include <qplugin.h>
 
-class Widgets : public QObject, public QDesignerCustomWidgetCollectionInterface
+class Plugin : public QObject, public QDesignerCustomWidgetCollectionInterface
 {
     Q_OBJECT
     Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
@@ -24,7 +24,7 @@ class Widgets : public QObject, public QDesignerCustomWidgetCollectionInterface
 #endif // QT_VERSION >= 0x050000
 
 public:
-    explicit Widgets(QObject *parent = 0);
+    explicit Plugin(QObject *parent = 0);
 
     virtual QList<QDesignerCustomWidgetInterface*> customWidgets() const;
 

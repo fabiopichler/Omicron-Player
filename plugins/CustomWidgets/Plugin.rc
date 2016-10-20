@@ -11,7 +11,7 @@
 *******************************************************************************/
 
 #include <windows.h>
-#include "../src/Version.h"
+#include "../../src/Version.h"
 
 1 VERSIONINFO
  FILEVERSION PRODUCT_VERSION
