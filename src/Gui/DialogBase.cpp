@@ -42,7 +42,7 @@ void DialogBase::setWindowTitle(const QString &title)
 
 void DialogBase::setLayout(QLayout *layout)
 {
-    Widget *mainWidget = new Widget(this);
+    MyWidget *mainWidget = new MyWidget(this);
     mainWidget->setLayout(layout);
 
     if (titleBar)

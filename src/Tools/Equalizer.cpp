@@ -52,7 +52,7 @@ void Equalizer::createLabels()
         eqDb[i]->setMinimumWidth(32);
     }
 
-    presetCombo = new ComboBox;
+    presetCombo = new MyComboBox;
     presetCombo->setObjectName("presetCombo");
 
     loadPresetIndex();

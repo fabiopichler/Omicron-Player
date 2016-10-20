@@ -18,7 +18,6 @@
 #include "../Gui/DialogBase.h"
 #include "../Tools/RadioPlaylistManager.h"
 #include "ErrorWindow.h"
-#include "Widgets.h"
 #include "VolumeControl.h"
 
 #include <QPushButton>
@@ -35,7 +34,7 @@
 #include <QProgressBar>
 #include <QMovie>
 
-class RadioWindow : public Widget
+class RadioWindow : public MyWidget
 {
     Q_OBJECT
 

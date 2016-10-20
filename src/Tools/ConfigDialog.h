@@ -37,7 +37,7 @@ private:
 private:
     QObject *parentMain;
     QWidget *parent;
-    Widget *contentsWidget;
+    MyWidget *contentsWidget;
     QListWidget *contentsListWidget;
     QStackedWidget *pagesWidget;
     QLabel *contentsTitle;

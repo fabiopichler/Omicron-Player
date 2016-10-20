@@ -17,7 +17,7 @@
 #include <QDragEnterEvent>
 #include <QMimeData>
 
-DropArea::DropArea(QWidget *parent) : Widget(parent)
+DropArea::DropArea(QWidget *parent) : MyWidget(parent)
 {
     setAcceptDrops(true);
 }

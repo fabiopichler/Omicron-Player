@@ -13,7 +13,7 @@
 #include "TitleBar.h"
 #include "../Core/Theme.h"
 
-Titlebar::Titlebar(QWidget *parent, const int &flag) : Widget(parent)
+Titlebar::Titlebar(QWidget *parent, const int &flag) : MyWidget(parent)
 {
     this->parent = parent;
 

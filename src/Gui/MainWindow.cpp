@@ -47,7 +47,7 @@ MainWindow::~MainWindow()
     }
 }
 
-void MainWindow::initWindow(Widget *widget)
+void MainWindow::initWindow(MyWidget *widget)
 {
     centralWidget = widget;
     mainLayout->addWidget(widget, 1);

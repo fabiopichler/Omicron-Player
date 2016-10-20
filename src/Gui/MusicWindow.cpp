@@ -127,8 +127,7 @@ void MusicWindow::createWidgets()
     volumeControl->setVolume(volume);
     musicStream->setVolume(volume);
 
-    timeSlider = new Slider(Qt::Horizontal);
-    timeSlider->setObjectName("timeSlider");
+    timeSlider = uiWidget->findChild<QSlider *>("timeSlider");
     timeSlider->setEnabled(false);
     timeSlider->setMaximum(0);
 
@@ -231,7 +230,6 @@ void MusicWindow::createButtons()
 void MusicWindow::createLayouts()
 {
     uiWidget->findChild<QVBoxLayout *>("playlistLayout")->addWidget(playlist);
-    uiWidget->findChild<QHBoxLayout *>("timeLayout")->insertWidget(1, timeSlider);
     uiWidget->findChild<QHBoxLayout *>("bottomLayout")->addWidget(volumeControl);
 
     QVBoxLayout *layout = new QVBoxLayout;
@@ -594,7 +592,7 @@ void MusicWindow::addDirectory(bool isOpenMode)
 void MusicWindow::openCD()
 {
 #ifndef Q_OS_ANDROID
-    ComboBox *actionCombo = new ComboBox;
+    MyComboBox *actionCombo = new MyComboBox;
     int a = 0;
     static int curdrive = 0;
     bool playCD = false;

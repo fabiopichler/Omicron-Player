@@ -12,36 +12,19 @@
 
 #pragma once
 
-#include "../Core/Global.h"
-#include "Widgets/MyWidget.h"
+#include <QSlider>
 
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QPushButton>
-#include <QMouseEvent>
-#include <QObject>
-
-class Titlebar : public MyWidget
+class MySlider : public QSlider
 {
     Q_OBJECT
 
 public:
-    Titlebar(QWidget *, const int &flag = -1);
-    ~Titlebar();
+    MySlider(QWidget *parent = nullptr);
 
 private:
     void mousePressEvent(QMouseEvent *) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent *) Q_DECL_OVERRIDE;
+    void mouseReleaseEvent(QMouseEvent *) Q_DECL_OVERRIDE;
 
-private slots:
-    void quitApp();
-
-public:
-    QLabel *label;
-
-private:
-    QWidget *parent;
-    QLabel *titleIcon;
-    QPushButton *buttonMinimize, *buttonMinimizeTray, *buttonClose;
-    QPoint cursor;
+    bool sendEvent;
 };

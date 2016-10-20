@@ -40,14 +40,14 @@ RadioPlaylistManager::~RadioPlaylistManager()
 
 void RadioPlaylistManager::createWidgets()
 {
-    topWidget = new Widget;
+    topWidget = new MyWidget;
     topWidget->setObjectName("topWidgetDialog");
     topTitle = new QLabel("Web Rádios");
     topTitle->setObjectName("topTitle");
     topDesc = new QLabel("» Adicione, edite ou remova suas Web Rádios personalizadas.");
     topDesc->setObjectName("topDesc");
 
-    selectPlWidget = new Widget;
+    selectPlWidget = new MyWidget;
     selectPlWidget->setObjectName("selectPlWidget");
 }
 

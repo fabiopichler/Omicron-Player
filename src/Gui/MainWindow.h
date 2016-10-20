@@ -18,7 +18,7 @@
 #include "ServerWindow.h"
 #include "TitleBar.h"
 
-class MainWindow : public Widget
+class MainWindow : public MyWidget
 {
     Q_OBJECT
     Q_PROPERTY(int marginLayout READ marginLayout WRITE setMarginLayout)
@@ -27,7 +27,7 @@ class MainWindow : public Widget
 public:
     MainWindow(QObject *, QSettings *);
     ~MainWindow();
-    void initWindow(Widget *);
+    void initWindow(MyWidget *);
     QString &currentMode();
 
     int marginLayout() const;
@@ -43,7 +43,7 @@ private:
 
 private:
     QObject *parentMain;
-    Widget *centralWidget;
+    MyWidget *centralWidget;
     Titlebar *titleBar;
     QSettings *iniSettings;
     QVBoxLayout *mainLayout;

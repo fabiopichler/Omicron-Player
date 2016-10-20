@@ -21,7 +21,7 @@
 //================================================================================================================
 // GeneralPage
 //================================================================================================================
-GeneralPage::GeneralPage(QWidget *parent) : Widget(parent)
+GeneralPage::GeneralPage(QWidget *parent) : MyWidget(parent)
 {
     setObjectName("configPagesWidget");
 
@@ -30,7 +30,7 @@ GeneralPage::GeneralPage(QWidget *parent) : Widget(parent)
 
     //---------------------------------------
     QLabel *errorLabel = new QLabel("Notificar erros de reprodução:");
-    errorCombo = new ComboBox;
+    errorCombo = new MyComboBox;
     QString current = Database::value("Config", "errorNotification").toString();
     const char *list[] = {"dialog", "systray", "false"};
 
@@ -68,12 +68,12 @@ void GeneralPage::changeError(int index)
 //================================================================================================================
 // InterfacePage
 //================================================================================================================
-InterfacePage::InterfacePage(QWidget *parent) : Widget(parent)
+InterfacePage::InterfacePage(QWidget *parent) : MyWidget(parent)
 {
     setObjectName("configPagesWidget");
 
     QLabel *themeLabel = new QLabel("Tema:");
-    themeCombo = new ComboBox;
+    themeCombo = new MyComboBox;
 
     updateThemeList();
 
@@ -83,7 +83,7 @@ InterfacePage::InterfacePage(QWidget *parent) : Widget(parent)
 
     //--------------------------------------------
     QLabel *styleLabel = new QLabel("Estilo:");
-    styleCombo = new ComboBox;
+    styleCombo = new MyComboBox;
 
     updateStyleList();
 
@@ -171,7 +171,7 @@ void InterfacePage::updateStyleList()
 //================================================================================================================
 // MusicPage
 //================================================================================================================
-MusicPage::MusicPage(QWidget *parent) : Widget(parent)
+MusicPage::MusicPage(QWidget *parent) : MyWidget(parent)
 {
     setObjectName("configPagesWidget");
 
@@ -226,7 +226,7 @@ MusicPage::MusicPage(QWidget *parent) : Widget(parent)
 //================================================================================================================
 // WebRadioPage
 //================================================================================================================
-WebRadioPage::WebRadioPage(QWidget *parent) : Widget(parent)
+WebRadioPage::WebRadioPage(QWidget *parent) : MyWidget(parent)
 {
     setObjectName("configPagesWidget");
 
@@ -241,7 +241,7 @@ WebRadioPage::WebRadioPage(QWidget *parent) : Widget(parent)
 
     QLabel *readtimeoutLabel = new QLabel("Tempo limite ao reconectar:");
 
-    readtimeoutCombo = new ComboBox;
+    readtimeoutCombo = new MyComboBox;
     readtimeoutCombo->addItem("5 segundos", 5000);
     readtimeoutCombo->addItem("10 segundos", 10000);
     readtimeoutCombo->addItem("20 segundos (padrão)", 20000);
@@ -255,7 +255,7 @@ WebRadioPage::WebRadioPage(QWidget *parent) : Widget(parent)
 
     QLabel *timeoutLabel = new QLabel("Tempo limite ao conectar:");
 
-    timeoutCombo = new ComboBox;
+    timeoutCombo = new MyComboBox;
     timeoutCombo->addItem("5 segundos", 5000);
     timeoutCombo->addItem("10 segundos", 10000);
     timeoutCombo->addItem("20 segundos (padrão)", 20000);
@@ -269,7 +269,7 @@ WebRadioPage::WebRadioPage(QWidget *parent) : Widget(parent)
 
     QLabel *modeLabel = new QLabel("Se a conexão cair:");
 
-    modeCombo = new ComboBox;
+    modeCombo = new MyComboBox;
     modeCombo->addItem("Parar a reprodução");
     modeCombo->addItem("Tentar reproduzir, novamente");
     modeCombo->addItem("Reproduzir a próxima estação da lista");
@@ -402,7 +402,7 @@ void FileTypeTree::selectAllRows()
 
 //------------------------------------------------------------------------------------------
 
-FileTypePage::FileTypePage(QWidget *parent) : Widget(parent)
+FileTypePage::FileTypePage(QWidget *parent) : MyWidget(parent)
 {
     setObjectName("configPagesWidget");
 
@@ -483,14 +483,14 @@ void FileTypePage::associateFiles()
 //================================================================================================================
 // AudioPage
 //================================================================================================================
-AudioPage::AudioPage(QObject *parentMain, QWidget *parent) : Widget(parent)
+AudioPage::AudioPage(QObject *parentMain, QWidget *parent) : MyWidget(parent)
 {
     this->parentMain = parentMain;
     setObjectName("configPagesWidget");
 
     QGroupBox *configGroup = new QGroupBox("Dispositivo de saída de áudio");
 
-    ComboBox *deviceCombo = new ComboBox;
+    MyComboBox *deviceCombo = new MyComboBox;
     deviceCombo->addItem("Padrão do Sistema");
 
     int device = Database::value("Config", "device").toInt();
@@ -542,7 +542,7 @@ void AudioPage::changeDevice(int arg)
 //================================================================================================================
 // RecordingsPage
 //================================================================================================================
-RecordingsPage::RecordingsPage(QWidget *parent) : Widget(parent)
+RecordingsPage::RecordingsPage(QWidget *parent) : MyWidget(parent)
 {
     setObjectName("configPagesWidget");  
 
@@ -606,7 +606,7 @@ void RecordingsPage::searchDir()
 //================================================================================================================
 // NetworkPage
 //================================================================================================================
-NetworkPage::NetworkPage(QWidget *parent) : Widget(parent)
+NetworkPage::NetworkPage(QWidget *parent) : MyWidget(parent)
 {
     setObjectName("configPagesWidget");
 
@@ -639,7 +639,7 @@ NetworkPage::NetworkPage(QWidget *parent) : Widget(parent)
 //================================================================================================================
 // UpdatePage
 //================================================================================================================
-UpdatePage::UpdatePage(QWidget *parent) : Widget(parent)
+UpdatePage::UpdatePage(QWidget *parent) : MyWidget(parent)
 {
     setObjectName("configPagesWidget");
 
@@ -648,7 +648,7 @@ UpdatePage::UpdatePage(QWidget *parent) : Widget(parent)
                                    "<li>Atualize a base de estações de rádio (lista padrão),<br>caso exista uma nova atualização disponível.</li></ul>");
     QLabel *updateLabel = new QLabel("Verificar a cada:");
 
-    ComboBox *updateCombo = new ComboBox;
+    MyComboBox *updateCombo = new MyComboBox;
     updateCombo->addItem("Desativado");
     updateCombo->addItem("1 dia");
     updateCombo->addItem("1 semana");

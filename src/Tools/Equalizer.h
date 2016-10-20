@@ -15,6 +15,7 @@
 #include "../Core/Database.h"
 #include "../Gui/DialogBase.h"
 #include "../Core/Global.h"
+#include "../Gui/Widgets/MyComboBox.h"
 
 #include <QDebug>
 #include <QPushButton>
@@ -58,7 +59,7 @@ private:
     QLabel *eqDb[16];
     QSlider *eq[16];
     QList<int> oldValues;
-    ComboBox *presetCombo;
+    MyComboBox *presetCombo;
     bool isNewPreset, presetComboUpdate;
     int lastId, currentIndex;
 };

@@ -15,6 +15,7 @@
 #include "../Core/RecorderStream.h"
 #include "../Core/Global.h"
 #include "../Tools/Equalizer.h"
+#include "Widgets/MySlider.h"
 #include "ErrorWindow.h"
 
 #include <QPushButton>
@@ -29,7 +30,7 @@
 #include <QMenuBar>
 #include <QProgressBar>
 
-class RecorderWindow : public Widget
+class RecorderWindow : public MyWidget
 {
     Q_OBJECT
 
@@ -73,6 +74,6 @@ private:
     QProgressBar *leftChProgressBar, *rightChProgressBar;
     QLabel *timeLabel, *statusLabel;
     QPushButton *recordButton, *stopButton, *playButton;
-    ComboBox *deviceComboBox, *encoderComboBox, *bitrateComboBox;
-    Slider *timeSlider;
+    QComboBox *deviceComboBox, *encoderComboBox, *bitrateComboBox;
+    QSlider *timeSlider;
 };

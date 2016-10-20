@@ -40,7 +40,7 @@
             </item>
             
             <item>
-                <layout class="QHBoxLayout" name="topLayout">
+                <layout class="QHBoxLayout">
                     <property name="rightMargin">
                         <number>8</number>
                     </property>
@@ -48,6 +48,18 @@
                     <property name="leftMargin">
                         <number>8</number>
                     </property>
+                    
+                    <item>
+                        <widget class="MyComboBox" name="deviceComboBox" />
+                    </item>
+                    
+                    <item>
+                        <widget class="MyComboBox" name="encoderComboBox" />
+                    </item>
+                    
+                    <item>
+                        <widget class="MyComboBox" name="bitrateComboBox" />
+                    </item>
                     
                     <item>
                         <widget class="QWidget" name="statusWidget">
@@ -85,14 +97,22 @@
             </item>
             
             <item>
-                <layout class="QVBoxLayout" name="timeSliderLayout">
+                <layout class="QVBoxLayout">
                     <property name="rightMargin">
-                        <number>8</number>
+                        <number>30</number>
                     </property>
             
                     <property name="leftMargin">
-                        <number>8</number>
+                        <number>30</number>
                     </property>
+                    
+                    <item>
+                        <widget class="MySlider" name="timeSlider">
+                            <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                            </property>
+                        </widget>
+                    </item>
                 </layout>
             </item>
             

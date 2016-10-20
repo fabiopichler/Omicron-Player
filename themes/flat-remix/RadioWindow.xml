@@ -181,7 +181,7 @@
                         </item>
                             
                         <item>
-                            <widget class="QLabel" name="musicTitleLabel">
+                            <widget class="MyLabel" name="musicTitleLabel">
                                 <property name="alignment">
                                     <set>Qt::AlignCenter</set>
                                 </property>

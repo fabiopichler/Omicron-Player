@@ -12,12 +12,12 @@
 
 #pragma once
 
-#include "Widgets.h"
+#include "Widgets/MyWidget.h"
 
 #include <QLabel>
 #include <QDebug>
 
-class DropArea : public Widget
+class DropArea : public MyWidget
 {
     Q_OBJECT
 

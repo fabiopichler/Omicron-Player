@@ -84,6 +84,8 @@ contains(ANDROID_TARGET_ARCH,x86) {
 
 }
 
+win32:RC_FILE = rc/Win.rc
+
 SOURCES += src/Main.cpp \
     src/Core/SingleApp.cpp \
     src/Core/Update.cpp \
@@ -107,7 +109,6 @@ SOURCES += src/Main.cpp \
     src/Core/Theme.cpp \
     src/Gui/MainWindow.cpp \
     src/Gui/VolumeControl.cpp \
-    src/Gui/Widgets.cpp \
     src/Core/Fade.cpp \
     src/Core/ServerStream.cpp \
     src/Gui/ServerWindow.cpp \
@@ -115,7 +116,11 @@ SOURCES += src/Main.cpp \
     src/Core/Directory.cpp \
     src/Core/RecorderStream.cpp \
     src/Gui/RecorderWindow.cpp \
-    src/Core/Stream.cpp
+    src/Core/Stream.cpp \
+    src/Gui/Widgets/MyWidget.cpp \
+    src/Gui/Widgets/MyComboBox.cpp \
+    src/Gui/Widgets/MySlider.cpp \
+    src/Gui/Widgets/MyLabel.cpp
 
 HEADERS += src/Main.h \
     src/Version.h \
@@ -141,7 +146,6 @@ HEADERS += src/Main.h \
     src/Core/Theme.h \
     src/Gui/MainWindow.h \
     src/Gui/VolumeControl.h \
-    src/Gui/Widgets.h \
     src/Core/Fade.h \
     src/Core/ServerStream.h \
     src/Gui/ServerWindow.h \
@@ -149,7 +153,9 @@ HEADERS += src/Main.h \
     src/Core/Directory.h \
     src/Core/RecorderStream.h \
     src/Gui/RecorderWindow.h \
-    src/Core/Stream.h
-
-win32:RC_FILE = rc/Win.rc
+    src/Core/Stream.h \
+    src/Gui/Widgets/MyWidget.h \
+    src/Gui/Widgets/MyComboBox.h \
+    src/Gui/Widgets/MySlider.h \
+    src/Gui/Widgets/MyLabel.h
 

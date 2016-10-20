@@ -223,6 +223,14 @@
                                 <item>
                                     <widget class="QLabel" name="timeLabel" />
                                 </item>
+                                
+                                <item>
+                                    <widget class="MySlider" name="timeSlider">
+                                        <property name="orientation">
+                                            <enum>Qt::Horizontal</enum>
+                                        </property>
+                                    </widget>
+                                </item>
                             
                                 <item>
                                     <widget class="QLabel" name="totalTimeLabel" />

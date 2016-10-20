@@ -26,7 +26,8 @@ VolumeControl::VolumeControl(QWidget *parent) : QPushButton(parent)
     button->setObjectName("volumeBt");
     button->setToolTip("Desativar som");
 
-    slider = new Slider(Qt::Horizontal, popup);
+    slider = new MySlider(popup);
+    slider->setOrientation(Qt::Horizontal);
     slider->setRange(0, 100);
 
     label = new QLabel(popup);

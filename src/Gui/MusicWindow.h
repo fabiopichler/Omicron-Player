@@ -88,7 +88,7 @@ private:
         *playlistButton,*playlistModeButton,*musicModeButton,*favoriteButton, *changeFavoriteButton;
     QLabel *timeLabel,*totalTimeLabel,*currentTrackLabel,*totalTracksLabel,*currentTagLabel,
         *fileTypeLabel;
-    Slider *timeSlider;
+    QSlider *timeSlider;
     QProgressBar *leftChProgressBar, *rightChProgressBar;
     QLineEdit *searchLineEdit;
     VolumeControl *volumeControl;

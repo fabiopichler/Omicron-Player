@@ -14,7 +14,8 @@
 
 #include "../Core/Global.h"
 #include "../Core/Database.h"
-#include "../Gui/Widgets.h"
+#include "../Gui/Widgets/MyWidget.h"
+#include "../Gui/Widgets/MyComboBox.h"
 
 #include <QWidget>
 #include <QGroupBox>
@@ -22,7 +23,7 @@
 //================================================================================================================
 // GeneralPage
 //================================================================================================================
-class GeneralPage : public Widget
+class GeneralPage : public MyWidget
 {
     Q_OBJECT
 
@@ -33,13 +34,13 @@ private slots:
     void changeError(int);
 
 private:
-    ComboBox *errorCombo;
+    MyComboBox *errorCombo;
 };
 
 //================================================================================================================
 // InterfacePage
 //================================================================================================================
-class InterfacePage : public Widget
+class InterfacePage : public MyWidget
 {
     Q_OBJECT
 
@@ -55,13 +56,13 @@ private:
     void updateStyleList();
 
 private:
-    ComboBox *themeCombo, *styleCombo;
+    MyComboBox *themeCombo, *styleCombo;
 };
 
 //================================================================================================================
 // MusicPage
 //================================================================================================================
-class MusicPage : public Widget
+class MusicPage : public MyWidget
 {
     Q_OBJECT
 
@@ -75,7 +76,7 @@ private:
 //================================================================================================================
 // WebRadioPage
 //================================================================================================================
-class WebRadioPage : public Widget
+class WebRadioPage : public MyWidget
 {
     Q_OBJECT
 
@@ -88,7 +89,7 @@ public slots:
     void modeChanged();
 
 private:
-    ComboBox *readtimeoutCombo, *timeoutCombo, *modeCombo;
+    MyComboBox *readtimeoutCombo, *timeoutCombo, *modeCombo;
 };
 
 //================================================================================================================
@@ -119,7 +120,7 @@ private:
     QWidget *parent;
 };
 
-class FileTypePage : public Widget
+class FileTypePage : public MyWidget
 {
     Q_OBJECT
 
@@ -140,7 +141,7 @@ private:
 //================================================================================================================
 // AudioPage
 //================================================================================================================
-class AudioPage : public Widget
+class AudioPage : public MyWidget
 {
     Q_OBJECT
 
@@ -160,7 +161,7 @@ private:
 //================================================================================================================
 // RecordingsPage
 //================================================================================================================
-class RecordingsPage : public Widget
+class RecordingsPage : public MyWidget
 {
     Q_OBJECT
 
@@ -178,7 +179,7 @@ private:
 //================================================================================================================
 // NetworkPage
 //================================================================================================================
-class NetworkPage : public Widget
+class NetworkPage : public MyWidget
 {
     Q_OBJECT
 
@@ -192,7 +193,7 @@ private:
 //================================================================================================================
 // UpdatePage
 //================================================================================================================
-class UpdatePage : public Widget
+class UpdatePage : public MyWidget
 {
     Q_OBJECT
 

@@ -113,14 +113,14 @@ void MusicPlaylistManager::createWidgets()
 {
     dropArea = new DropArea(this);
 
-    topWidget = new Widget;
+    topWidget = new MyWidget;
     topWidget->setObjectName("topWidgetDialog");
     topTitle = new QLabel("Playlist");
     topTitle->setObjectName("topTitle");
     topDesc = new QLabel("» Aqui você pode criar, editar ou remover seus playlists.");
     topDesc->setObjectName("topDesc");
 
-    selectPlWidget = new Widget;
+    selectPlWidget = new MyWidget;
     selectPlWidget->setObjectName("selectPlWidget");
 }
 

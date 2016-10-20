@@ -14,7 +14,7 @@
 #include "../Core/Theme.h"
 #include <QDesktopServices>
 
-RadioWindow::RadioWindow(QObject *parentMain, QWidget *parent) : Widget(parent)
+RadioWindow::RadioWindow(QObject *parentMain, QWidget *parent) : MyWidget(parent)
 {
     this->parentMain = parentMain;
     this->parent = parent;
@@ -222,6 +222,7 @@ void RadioWindow::createEvents()
     connect(websiteAction, SIGNAL(triggered()), parentMain, SLOT(openSite()));
     connect(aboutAction, SIGNAL(triggered()), parentMain, SLOT(about()));
 
+    //connect(streamTitleLabel, SIGNAL(clicked()), radioStream, SLOT());
     connect(searchLineEdit, SIGNAL(textChanged(QString)), playlist, SLOT(textFilterChanged(QString)));
 
     connect(parentMain, SIGNAL(playStream()), radioStream, SLOT(play()));

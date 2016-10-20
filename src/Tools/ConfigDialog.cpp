@@ -73,7 +73,7 @@ void ConfigDialog::createWidgets()
     contentsTitle = new QLabel;
     contentsTitle->setObjectName("contentsTitle");
 
-    contentsWidget = new Widget;
+    contentsWidget = new MyWidget;
     contentsWidget->setObjectName("configContent");
 
     defaultsButton = new QPushButton("Definir configurações padrão");

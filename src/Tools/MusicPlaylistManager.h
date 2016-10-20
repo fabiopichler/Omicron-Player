@@ -67,7 +67,7 @@ public:
 
 private:
     QWidget *parent;
-    Widget *topWidget, *selectPlWidget;
+    MyWidget *topWidget, *selectPlWidget;
     DropArea *dropArea;
     QMenu *menu;
     QLabel *plSelectedLabel, *topTitle, *topDesc;

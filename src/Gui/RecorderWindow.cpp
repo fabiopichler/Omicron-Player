@@ -14,7 +14,7 @@
 #include "../Core/Theme.h"
 #include <QDesktopServices>
 
-RecorderWindow::RecorderWindow(QObject *parentMain, QWidget *parent) : Widget(parent)
+RecorderWindow::RecorderWindow(QObject *parentMain, QWidget *parent) : MyWidget(parent)
 {
     this->parentMain = parentMain;
     mode = "Recorder";
@@ -97,12 +97,10 @@ void RecorderWindow::createWidgets()
     rightChProgressBar->setRange(0,32768);
     rightChProgressBar->setTextVisible(false);
 
-    // --- timeSlider ---
-    timeSlider = new Slider(Qt::Horizontal);
+    // --- timeSlider ---    
+    timeSlider = uiWidget->findChild<QSlider *>("timeSlider");
     timeSlider->setEnabled(false);
     timeSlider->setMaximum(0);
-    timeSlider->setObjectName("timeSlider");
-    timeSlider->setStyleSheet("margin: 0 20px");
 }
 
 void RecorderWindow::createComboBox()
@@ -110,7 +108,7 @@ void RecorderWindow::createComboBox()
     int current = EncoderList::current;
 
     // --- deviceComboBox ---
-    deviceComboBox = new ComboBox;
+    deviceComboBox = uiWidget->findChild<QComboBox *>("deviceComboBox");
     deviceComboBox->setFixedWidth(180);
 
     QStringList list = recorderStream->getDeviceInfo();
@@ -125,7 +123,7 @@ void RecorderWindow::createComboBox()
     }
 
     // --- encoderComboBox ---
-    encoderComboBox = new ComboBox;
+    encoderComboBox = uiWidget->findChild<QComboBox *>("encoderComboBox");
     encoderComboBox->setStyleSheet("min-width: 1px;");
 
     for (int i = 0; i < 3; i++)
@@ -134,7 +132,7 @@ void RecorderWindow::createComboBox()
     encoderComboBox->setCurrentIndex(current);
 
     // --- bitrateComboBox ---
-    bitrateComboBox = new ComboBox;
+    bitrateComboBox = uiWidget->findChild<QComboBox *>("bitrateComboBox");
     bitrateComboBox->setStyleSheet("min-width: 1px;");
 
     for (int i = 0; i < recorderStream->encoderList[current].bitrate.length(); i++)
@@ -168,12 +166,7 @@ void RecorderWindow::createButtons()
 
 void RecorderWindow::createLayouts()
 {
-    uiWidget->findChild<QHBoxLayout *>("topLayout")->insertWidget(0, deviceComboBox);
-    uiWidget->findChild<QHBoxLayout *>("topLayout")->insertWidget(1, encoderComboBox);
-    uiWidget->findChild<QHBoxLayout *>("topLayout")->insertWidget(2, bitrateComboBox);
-
     uiWidget->findChild<QVBoxLayout *>("recordListLayout")->addWidget(recordList);
-    uiWidget->findChild<QVBoxLayout *>("timeSliderLayout")->addWidget(timeSlider);
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(uiWidget);

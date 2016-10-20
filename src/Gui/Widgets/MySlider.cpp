@@ -10,44 +10,10 @@
 
 *******************************************************************************/
 
-#include "Widgets.h"
-#include <QStyleOption>
-#include <QPainter>
-#include <QListView>
+#include "MySlider.h"
 #include <QMouseEvent>
 
-//================================================================================================================
-// class Widget
-//================================================================================================================
-
-Widget::Widget(QWidget *parent) : QWidget(parent)
-{
-}
-
-void Widget::paintEvent(QPaintEvent *)
-{
-    QStyleOption opt;
-    opt.init(this);
-    QPainter p(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-}
-
-//================================================================================================================
-// class ComboBox
-//================================================================================================================
-
-ComboBox::ComboBox()
-{
-    QListView *listView = new QListView(this);
-    listView->setObjectName("ComboBox");
-    setView(listView);
-}
-
-//================================================================================================================
-// class Slider
-//================================================================================================================
-
-Slider::Slider(Qt::Orientation orientation, QWidget *parent) : QSlider(orientation, parent)
+MySlider::MySlider(QWidget *parent) : QSlider(parent)
 {
     sendEvent = false;
     setPageStep(0);
@@ -57,7 +23,7 @@ Slider::Slider(Qt::Orientation orientation, QWidget *parent) : QSlider(orientati
 // private
 //---------------------------------------------------------------------------------------------------------------
 
-void Slider::mousePressEvent(QMouseEvent *event)
+void MySlider::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
         sendEvent = true;
@@ -65,13 +31,13 @@ void Slider::mousePressEvent(QMouseEvent *event)
     QSlider::mousePressEvent(event);
 }
 
-void Slider::mouseMoveEvent(QMouseEvent *event)
+void MySlider::mouseMoveEvent(QMouseEvent *event)
 {
     sendEvent = false;
     QSlider::mouseMoveEvent(event);
 }
 
-void Slider::mouseReleaseEvent(QMouseEvent *event)
+void MySlider::mouseReleaseEvent(QMouseEvent *event)
 {
     if (sendEvent)
     {
@@ -96,4 +62,3 @@ void Slider::mouseReleaseEvent(QMouseEvent *event)
 
     QSlider::mouseReleaseEvent(event);
 }
-

@@ -60,7 +60,7 @@ public:
 
 private:
     QWidget *parent;
-    Widget *topWidget, *selectPlWidget;
+    MyWidget *topWidget, *selectPlWidget;
     QMenu *menu;
     QLabel *plSelectedLabel, *topTitle, *topDesc;
     QPushButton *menuButton, *openPlButton, *okButton, *applyButton, *cancelButton;

@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "Widgets.h"
+#include "Widgets/MySlider.h"
 
 #include <QPushButton>
 #include <QMenu>
@@ -44,7 +44,7 @@ signals:
 private:
     QPushButton *button;
     QLabel *label;
-    Slider *slider;
+    MySlider *slider;
     bool mmute;
 };
 
