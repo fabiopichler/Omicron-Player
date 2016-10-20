@@ -10,7 +10,7 @@
 
 *******************************************************************************/
 
-#include "../src/Gui/Widgets/MyLabel.h"
+#include "../../src/Gui/Widgets/MyLabel.h"
 #include "MyLabelPlugin.h"
 
 #include <QtPlugin>

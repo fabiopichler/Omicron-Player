@@ -10,7 +10,7 @@
 
 *******************************************************************************/
 
-#include "../src/Gui/Widgets/MyComboBox.h"
+#include "../../src/Gui/Widgets/MyComboBox.h"
 #include "MyComboBoxPlugin.h"
 
 #include <QtPlugin>

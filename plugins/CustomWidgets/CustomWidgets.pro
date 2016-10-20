@@ -26,28 +26,28 @@ CONFIG(debug, debug|release) {
 
 }
 
-TARGET = "designer/FP-CustomWidgets"
+TARGET = "FP-CustomWidgets"
 OBJECTS_DIR = obj/$${BUILDDIR}
 MOC_DIR = moc/$${BUILDDIR}
 RCC_DIR = rcc/$${BUILDDIR}
-!android:DESTDIR = Build
+!android:DESTDIR = ../../Build/designer
 
-win32:RC_FILE = CustomWidgets-Plugin/Win.rc
+win32:RC_FILE = Win.rc
 
-HEADERS = CustomWidgets-Plugin/MainPlugin.h \
-    CustomWidgets-Plugin/MyComboBoxPlugin.h \
-    CustomWidgets-Plugin/MyLabelPlugin.h \
-    CustomWidgets-Plugin/MySliderPlugin.h \
-    src/Gui/Widgets/MyComboBox.h \
-    src/Gui/Widgets/MyLabel.h \
-    src/Gui/Widgets/MySlider.h
+HEADERS = MainPlugin.h \
+    MyComboBoxPlugin.h \
+    MyLabelPlugin.h \
+    MySliderPlugin.h \
+    ../../src/Gui/Widgets/MyComboBox.h \
+    ../../src/Gui/Widgets/MyLabel.h \
+    ../../src/Gui/Widgets/MySlider.h
 
-SOURCES = CustomWidgets-Plugin/MainPlugin.cpp \
-    CustomWidgets-Plugin/MyComboBoxPlugin.cpp \
-    CustomWidgets-Plugin/MyLabelPlugin.cpp \
-    CustomWidgets-Plugin/MySliderPlugin.cpp \
-    src/Gui/Widgets/MyComboBox.cpp \
-    src/Gui/Widgets/MyLabel.cpp \
-    src/Gui/Widgets/MySlider.cpp
+SOURCES = MainPlugin.cpp \
+    MyComboBoxPlugin.cpp \
+    MyLabelPlugin.cpp \
+    MySliderPlugin.cpp \
+    ../../src/Gui/Widgets/MyComboBox.cpp \
+    ../../src/Gui/Widgets/MyLabel.cpp \
+    ../../src/Gui/Widgets/MySlider.cpp
 
 LIBS += -L. 

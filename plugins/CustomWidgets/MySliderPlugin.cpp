@@ -10,7 +10,7 @@
 
 *******************************************************************************/
 
-#include "../src/Gui/Widgets/MySlider.h"
+#include "../../src/Gui/Widgets/MySlider.h"
 #include "MySliderPlugin.h"
 
 #include <QtPlugin>
