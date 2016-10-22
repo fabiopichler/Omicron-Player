@@ -11,6 +11,7 @@
 *******************************************************************************/
 
 #include "VolumeControl.h"
+#include "Widgets/MyWidget.h"
 #include <QtWidgets>
 
 VolumeControl::VolumeControl(QWidget *parent) : QPushButton(parent)
@@ -116,13 +117,8 @@ void VolumeControl::mute(bool act, bool event)
             emit volumeChanged(slider->value());
     }
 
-    button->style()->unpolish(button);
-    button->style()->polish(button);
-    button->update();
-
-    style()->unpolish(this);
-    style()->polish(this);
-    update();
+    MyWidget::updateStyle(button);
+    MyWidget::updateStyle(this);
 }
 
 bool VolumeControl::eventFilter(QObject *obj, QEvent *event)

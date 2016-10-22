@@ -280,13 +280,10 @@ void RecorderWindow::update(RecorderStream::Event index, QVariant value)
 
     case RecorderStream::Recording:
         statusLabel->setProperty("recording", value.toBool());
-        statusLabel->style()->unpolish(statusLabel);
-        statusLabel->style()->polish(statusLabel);
-        statusLabel->update();
+        MyWidget::updateStyle(statusLabel);
+
         timeLabel->setProperty("recording", value.toBool());
-        timeLabel->style()->unpolish(timeLabel);
-        timeLabel->style()->polish(timeLabel);
-        timeLabel->update();
+        MyWidget::updateStyle(timeLabel);
         break;
     }
 }

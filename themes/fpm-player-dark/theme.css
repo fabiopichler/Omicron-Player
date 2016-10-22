@@ -195,6 +195,10 @@ QLabel#trackLabel {
 QLabel[recording="true"] {
     color: #d56161;
 }
+QLabel[searchHover="true"]:hover {
+    text-decoration: underline;
+    color: #49e;
+}
 
 /* QLineEdit
 --------------------------------------------------------- */

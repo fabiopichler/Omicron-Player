@@ -19,7 +19,9 @@ class MyWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit MyWidget(QWidget *parent = 0);
+    explicit MyWidget(QWidget * = 0);
+    static void updateStyle(QWidget *);
+
     QString mode;
 
 private:

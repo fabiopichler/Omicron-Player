@@ -222,7 +222,7 @@ void RadioWindow::createEvents()
     connect(websiteAction, SIGNAL(triggered()), parentMain, SLOT(openSite()));
     connect(aboutAction, SIGNAL(triggered()), parentMain, SLOT(about()));
 
-    //connect(streamTitleLabel, SIGNAL(clicked()), radioStream, SLOT());
+    connect(streamTitleLabel, SIGNAL(clicked()), radioStream, SLOT(webSearch()));
     connect(searchLineEdit, SIGNAL(textChanged(QString)), playlist, SLOT(textFilterChanged(QString)));
 
     connect(parentMain, SIGNAL(playStream()), radioStream, SLOT(play()));
@@ -303,21 +303,10 @@ void RadioWindow::changePlaylist(int plMode)
         radioStream->loadPlaylist(0);
     }
 
-    changeFavoriteButton->style()->unpolish(changeFavoriteButton);
-    changeFavoriteButton->style()->polish(changeFavoriteButton);
-    changeFavoriteButton->update();
-
-    allPlaylistsButton->style()->unpolish(allPlaylistsButton);
-    allPlaylistsButton->style()->polish(allPlaylistsButton);
-    allPlaylistsButton->update();
-
-    customPlaylistButton->style()->unpolish(customPlaylistButton);
-    customPlaylistButton->style()->polish(customPlaylistButton);
-    customPlaylistButton->update();
-
-    favoriteButton->style()->unpolish(favoriteButton);
-    favoriteButton->style()->polish(favoriteButton);
-    favoriteButton->update();
+    MyWidget::updateStyle(changeFavoriteButton);
+    MyWidget::updateStyle(allPlaylistsButton);
+    MyWidget::updateStyle(customPlaylistButton);
+    MyWidget::updateStyle(favoriteButton);
 
     radioStream->playlistMode = playlistMode;
 
@@ -549,9 +538,7 @@ void RadioWindow::updatePlaylistStyle()
         playlist->setProperty("playlistStyle", false);
     }
 
-    playlist->style()->unpolish(playlist);
-    playlist->style()->polish(playlist);
-    playlist->update();
+    MyWidget::updateStyle(playlist);
 }
 
 void RadioWindow::update(RadioStream::Event type, QVariant value)
@@ -606,9 +593,21 @@ void RadioWindow::update(RadioStream::Event type, QVariant value)
         {
             timeLabel->setProperty("recording", false);
         }
-        timeLabel->style()->unpolish(timeLabel);
-        timeLabel->style()->polish(timeLabel);
-        timeLabel->update();
+        MyWidget::updateStyle(timeLabel);
+        break;
+
+    case RadioStream::WebSearch:
+        if (value.toBool())
+        {
+            streamTitleLabel->setProperty("searchHover", true);
+            streamTitleLabel->setCursor(Qt::PointingHandCursor);
+        }
+        else
+        {
+            streamTitleLabel->setProperty("searchHover", false);
+            streamTitleLabel->setCursor(Qt::ArrowCursor);
+        }
+        MyWidget::updateStyle(streamTitleLabel);
         break;
     }
 }
@@ -651,6 +650,7 @@ void RadioWindow::threadFinished(bool stop, bool isQuickLink)
     streamTitleLabel->setText("Parado");
     loaderMovie->stop();
     recordButton->setEnabled(true);
+    update(RadioStream::WebSearch, false);
 
     if (isQuickLink)
         nameLabel->setText("Link Rápido");

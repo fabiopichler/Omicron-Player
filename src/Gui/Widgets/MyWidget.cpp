@@ -18,6 +18,13 @@ MyWidget::MyWidget(QWidget *parent) : QWidget(parent)
 {
 }
 
+void MyWidget::updateStyle(QWidget *widget)
+{
+    widget->style()->unpolish(widget);
+    widget->style()->polish(widget);
+    widget->update();
+}
+
 void MyWidget::paintEvent(QPaintEvent *)
 {
     QStyleOption opt;

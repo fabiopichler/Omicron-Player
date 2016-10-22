@@ -13,6 +13,7 @@
 #include "RadioStream.h"
 #include <iostream>
 #include <QElapsedTimer>
+#include <QDesktopServices>
 
 RadioStream::RadioStream(QWidget *parent) : Stream()
 {
@@ -125,14 +126,15 @@ void RadioStream::openLink(const QString &arg)
 
 void RadioStream::doMeta()
 {
-    QString text;
+    musicName.clear();
+
     if (iswma)
     {
         const char *meta=BASS_ChannelGetTags(stream, 11/*BASS_TAG_WMA_META*/);
         if (meta)
         {
-            text = meta;
-            text.remove("caption=", Qt::CaseInsensitive);
+            musicName = meta;
+            musicName.remove("caption=", Qt::CaseInsensitive);
         }
     }
     else
@@ -148,7 +150,7 @@ void RadioStream::doMeta()
                 {
                     char *t=_strdup(p+13);
                     t[p2-(p+13)]=0;
-                    text = Global::cStrToQString(t);
+                    musicName = Global::cStrToQString(t);
                     delete t;
                 }
             }
@@ -169,17 +171,27 @@ void RadioStream::doMeta()
                 }
 
                 if (title && artist && strcmp(title, "") != 0 && strcmp(artist, "") != 0)
-                    text = Global::cStrToQString(artist) + " - " + Global::cStrToQString(title);
+                    musicName = Global::cStrToQString(artist) + " - " + Global::cStrToQString(title);
 
                 else if (title && strcmp(title, "") != 0)
-                    text = Global::cStrToQString(title);
+                    musicName = Global::cStrToQString(title);
 
                 else if (artist && strcmp(artist, "") != 0)
-                    text = Global::cStrToQString(artist);
+                    musicName = Global::cStrToQString(artist);
             }
         }
     }
-    emit updateValue(StreamTitleLabel, (text.isEmpty() ? "---" : text));
+
+    if (musicName.isEmpty())
+    {
+        emit updateValue(StreamTitleLabel, "---");
+        emit updateValue(WebSearch, false);
+    }
+    else
+    {
+        emit updateValue(StreamTitleLabel, musicName);
+        emit updateValue(WebSearch, true);
+    }
 }
 
 //================================================================================================================
@@ -316,6 +328,19 @@ void RadioStream::updateStatus()
 
         emit updateValue(StatusLabel, statusList[statusListCount]);
         statusListCount++;
+    }
+}
+
+void RadioStream::webSearch()
+{
+    if (!musicName.isEmpty())
+    {
+        QString url = "https://www.google.com/search?q=" + musicName;
+        QDesktopServices::openUrl(QUrl(url.toLower()
+                                          .replace(QRegExp(" +"), "+")
+                                          .replace("&", "%26")
+                                          .replace("#", "%23")
+                                          .trimmed()));
     }
 }
 
@@ -638,6 +663,7 @@ void RadioStream::run()
             connection = nullptr;
             stream = 0;
             isQuickLink = false;
+            musicName.clear();
 
             emit stopMetaTimer();
             emit stopStatusTimer();

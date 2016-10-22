@@ -100,9 +100,7 @@ void MusicPlaylistManager::updatePlaylistStyle(bool arg)
         playlist->setProperty("playlistStyle", false);
     }
 
-    playlist->style()->unpolish(playlist);
-    playlist->style()->polish(playlist);
-    playlist->update();
+    MyWidget::updateStyle(playlist);
 }
 
 //================================================================================================================

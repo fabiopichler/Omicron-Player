@@ -43,7 +43,8 @@ public:
         BufferProgressBar,
         ShowLoaderMovie,
         RadioName,
-        Recording
+        Recording,
+        WebSearch
     };
 
     RadioStream(QWidget *);
@@ -61,6 +62,7 @@ public slots:
     void stopRecord();
     void playNewRadio(int, int selected = 0);
     void updateStatus();
+    void webSearch();
 
 private slots:
     void newConnectionSlot();
@@ -102,7 +104,7 @@ private:
     QStringList statusList;
     short statusListCount;
     bool iswma;
-    QString fileType, recordFileName, quickLink;
+    QString fileType, recordFileName, quickLink, musicName;
     QFile *recordFile;
     int selectedUrl, reconnect;
     double recordTime;

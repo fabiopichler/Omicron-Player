@@ -335,9 +335,7 @@ void MusicWindow::changeRepeatStyle(const short &arg)
         break;
     }
 
-    repeatButton->style()->unpolish(repeatButton);
-    repeatButton->style()->polish(repeatButton);
-    repeatButton->update();
+    MyWidget::updateStyle(repeatButton);
 }
 
 void MusicWindow::changeRandomStyle(const bool &arg)
@@ -353,9 +351,7 @@ void MusicWindow::changeRandomStyle(const bool &arg)
         randomButton->setToolTip("Modo Aleatório Desativado");
     }
 
-    randomButton->style()->unpolish(randomButton);
-    randomButton->style()->polish(randomButton);
-    randomButton->update();
+    MyWidget::updateStyle(randomButton);
 }
 
 void MusicWindow::loadPlaylist(int plMode, const bool &disableCdMode, const bool &load,
@@ -398,21 +394,10 @@ void MusicWindow::loadPlaylist(int plMode, const bool &disableCdMode, const bool
         favoriteButton->setProperty("tabStyle", true);
     }
 
-    changeFavoriteButton->style()->unpolish(changeFavoriteButton);
-    changeFavoriteButton->style()->polish(changeFavoriteButton);
-    changeFavoriteButton->update();
-
-    playlistModeButton->style()->unpolish(playlistModeButton);
-    playlistModeButton->style()->polish(playlistModeButton);
-    playlistModeButton->update();
-
-    musicModeButton->style()->unpolish(musicModeButton);
-    musicModeButton->style()->polish(musicModeButton);
-    musicModeButton->update();
-
-    favoriteButton->style()->unpolish(favoriteButton);
-    favoriteButton->style()->polish(favoriteButton);
-    favoriteButton->update();
+    MyWidget::updateStyle(changeFavoriteButton);
+    MyWidget::updateStyle(playlistModeButton);
+    MyWidget::updateStyle(musicModeButton);
+    MyWidget::updateStyle(favoriteButton);
 
     musicStream->loadPlaylist(playlistMode, disableCdMode, load, stop, playlistName);
 
@@ -801,9 +786,7 @@ void MusicWindow::updatePlaylistStyle(bool arg)
         playlist->setProperty("playlistStyle", false);
     }
 
-    playlist->style()->unpolish(playlist);
-    playlist->style()->polish(playlist);
-    playlist->update();
+    MyWidget::updateStyle(playlist);
 
     if (playlist->isEmpty())
     {
