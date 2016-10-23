@@ -55,8 +55,12 @@ private:
     void updateThemeList();
     void updateStyleList();
 
+signals:
+    void restartApp();
+
 private:
     MyComboBox *themeCombo, *styleCombo;
+    int currentTheme;
 };
 
 //================================================================================================================

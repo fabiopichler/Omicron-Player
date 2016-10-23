@@ -71,6 +71,7 @@ void GeneralPage::changeError(int index)
 InterfacePage::InterfacePage(QWidget *parent) : MyWidget(parent)
 {
     setObjectName("configPagesWidget");
+    currentTheme = 0;
 
     QLabel *themeLabel = new QLabel("Tema:");
     themeCombo = new MyComboBox;
@@ -116,22 +117,33 @@ InterfacePage::InterfacePage(QWidget *parent) : MyWidget(parent)
     mainLayout->addStretch(100);
     setLayout(mainLayout);
 
+    connect(this, SIGNAL(restartApp()), parent, SIGNAL(restartApp()));
     connect(themeCombo, SIGNAL(activated(int)), this, SLOT(changeTheme(int)));
     connect(styleCombo, SIGNAL(activated(int)), this, SLOT(changeStyle(int)));
     connect(installButton, &QPushButton::clicked, [=]() {
-        Theme::load();
-        //QMessageBox::information(this, "Info", "Na versão atual do programa, não é possível instalar um novo tema. "
-        //                         "Esta funcionalidade, será implementana futuramente.");
+        QMessageBox::information(this, "Info", "Na versão atual do programa, não é possível instalar um novo tema. "
+                                 "Esta funcionalidade, será implementana futuramente.");
     });
 }
 
 void InterfacePage::changeTheme(int index)
 {
-    Database::setValue("Config", "theme", themeCombo->itemData(index));
-    Database::setValue("Config", "style", "default");
-    Theme::load();
-    updateStyleList();
-    styleCombo->setCurrentIndex(0);
+    QMessageBox msgBox;
+    QAbstractButton* pButtonYes = msgBox.addButton("Reiniciar programa", QMessageBox::YesRole);
+    msgBox.addButton("Cancelar", QMessageBox::NoRole);
+    msgBox.setText("Para alterar o tema, é preciso reiniciar o programa.\n\nO que deseja fazer?");
+    msgBox.exec();
+
+    if (msgBox.clickedButton() == pButtonYes)
+    {
+        Database::setValue("Config", "theme", themeCombo->itemData(index));
+        Database::setValue("Config", "style", "default");
+        emit restartApp();
+    }
+    else
+    {
+        themeCombo->setCurrentIndex(currentTheme);
+    }
 }
 
 void InterfacePage::changeStyle(int index)
@@ -149,8 +161,12 @@ void InterfacePage::updateThemeList()
     for (int i = 0; i < themes.length(); i++)
     {
         themeCombo->addItem(themes[i][0], themes[i][1]);
+
         if (current == themes[i][1])
+        {
+            currentTheme = i;
             themeCombo->setCurrentIndex(i);
+        }
     }
 }
 

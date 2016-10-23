@@ -451,6 +451,13 @@ void Main::initConfigDialog()
     ConfigDialog(this, window).exec();
 }
 
+//! Reinicia o programa.
+void Main::restart()
+{
+    continueRunning = true;
+    qApp->quit();
+}
+
 //================================================================================================================
 // private
 //================================================================================================================
@@ -496,7 +503,7 @@ void Main::updateTrayIconMenu()
 
     if (window->currentMode() == "Music")
         titles << "Reproduzir Faixa" << "Pausar faixa atual" << "Parar faixa atual" << "Faixa anterior" << "Próxima faixa";
-    else
+    else// if (window->currentMode() == "Radio")
         titles << "Reproduzir Rádio" << "" << "Parar Rádio atual" << "Rádio anterior" << "Próxima rádio";
 
     // Oculta ou exibe a interface gráfica.
@@ -641,8 +648,7 @@ void Main::defaultConfig()
                              "incluindo o equalizador e favoritos.\n\nDeseja continuar?",
                              QMessageBox::Yes|QMessageBox::No) == QMessageBox::Yes)
     {
-        continueRunning = true;
         Database::removeDatabase();
-        qApp->quit();
+        restart();
     }
 }

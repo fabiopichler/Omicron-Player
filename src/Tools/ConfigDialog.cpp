@@ -21,6 +21,8 @@ ConfigDialog::ConfigDialog(QObject *parentMain, QWidget *parent) : DialogBase(pa
     this->parent = parent;
     this->parentMain = parentMain;
 
+    connect(this, SIGNAL(restartApp()), parentMain, SLOT(restart()));
+
     createWidgets();
     createLayouts();
     createEvents();

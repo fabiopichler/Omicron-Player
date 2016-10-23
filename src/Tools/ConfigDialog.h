@@ -34,6 +34,9 @@ private:
     void createEvents();
     void createIcons();
 
+signals:
+    void restartApp();
+
 private:
     QObject *parentMain;
     QWidget *parent;

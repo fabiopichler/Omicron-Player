@@ -61,6 +61,7 @@ public slots:
     void openSite();
     void about();
     void initConfigDialog();
+    void restart();
 
 private:
     void setupRadiolist();
