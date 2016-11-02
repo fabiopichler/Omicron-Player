@@ -19,6 +19,7 @@
 #include <QTreeView>
 #include <QStandardItemModel>
 #include <QSortFilterProxyModel>
+#include <QDateTime>
 
 class RecordList;
 
@@ -45,7 +46,7 @@ public slots:
     void record();
     void play();
     void stop();
-    void updateList();
+    void loadList();
 
 private:
     void createEvents();
@@ -55,6 +56,7 @@ private:
 
 private slots:
     void update();
+    void checkDir();
 
 signals:
     void updateInfo(QWORD, DWORD);
@@ -72,7 +74,8 @@ public:
     EncoderList encoderList[3];
 
 private:
-    QTimer *updateTimer;
+    QTimer *updateTimer, *checkDirTimer;
+    QDateTime pathLastModified;
 
     int input;
     QString recordPath;

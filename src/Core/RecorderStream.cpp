@@ -24,8 +24,11 @@ RecorderStream::RecorderStream(QWidget *parent)
     if (!QDir().exists(recordPath))
         QDir().mkpath(recordPath);
 
+    pathLastModified = QFileInfo(recordPath).lastModified();
+
     recordList = new RecordList(parent);
     updateTimer = new QTimer(this);
+    checkDirTimer = new QTimer(this);
 
     EncoderList::current = Database::value("RecorderMode", "encoder").toInt();
 
@@ -47,13 +50,19 @@ RecorderStream::RecorderStream(QWidget *parent)
 
     createEvents();
     initDevice();
-    updateList();
+    loadList();
+
+    checkDirTimer->start(2000);
 }
 
 RecorderStream::~RecorderStream()
 {
     stop();
+    checkDirTimer->stop();
+
     delete updateTimer;
+    delete checkDirTimer;
+
     BASS_RecordFree();
 }
 
@@ -95,7 +104,7 @@ void RecorderStream::record()
 {
     stop();
 
-    QString cmd, encPath = "\"" + qApp->applicationDirPath() + "/plugins/encoder/";
+    QString cmd, encPath = "\"" + qApp->applicationDirPath() + "/plugins/encoders/";
     int bitrate = encoderList[encoderList[0].current].bitrate[encoderList[encoderList[0].current].index];
     QString recordFileName = recordPath+"/Record "+QDateTime::currentDateTime().toString("yyyy-MM-dd HH.mm.ss");
 
@@ -177,16 +186,17 @@ void RecorderStream::stop()
 
     BASS_ChannelStop(rchan);
     BASS_Encode_Stop(hencode);
+    BASS_StreamFree(rchan);
     BASS_StreamFree(stream);
 
     if (rchan != 0)
-        updateList();
+        loadList();
 
     rchan = 0;
     stream = 0;
 }
 
-void RecorderStream::updateList()
+void RecorderStream::loadList()
 {
     recordList->clear();
     recordPath = Database::value("RadioConfig", "recordPath").toString() + "/Recorder";
@@ -203,6 +213,7 @@ void RecorderStream::updateList()
     }
 
     recordList->selectRow(0);
+    pathLastModified = QFileInfo(recordPath).lastModified();
 }
 
 //================================================================================================================
@@ -214,6 +225,7 @@ void RecorderStream::createEvents()
     connect(this, SIGNAL(startUpdadeTimer(int)), updateTimer, SLOT(start(int)));
     connect(this, SIGNAL(stopUpdateTimer()), updateTimer, SLOT(stop()));
     connect(updateTimer, SIGNAL(timeout()), this, SLOT(update()));
+    connect(checkDirTimer, SIGNAL(timeout()), this, SLOT(checkDir()));
 
     connect(recordList, SIGNAL(play()), this, SLOT(play()));
 }
@@ -258,6 +270,13 @@ void RecorderStream::update()
 
     emit updateInfo(static_cast<QWORD>(BASS_ChannelBytes2Seconds(s, BASS_ChannelGetPosition(s, BASS_POS_BYTE))),
                       BASS_ChannelGetLevel(s));
+}
+
+void RecorderStream::checkDir()
+{
+    if (!BASS_ChannelIsActive(stream) && !BASS_ChannelIsActive(rchan)
+                          && QFileInfo(recordPath).lastModified() != pathLastModified)
+        loadList();
 }
 
 //================================================================================================================
