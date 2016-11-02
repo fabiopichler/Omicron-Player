@@ -331,7 +331,7 @@ QPushButton#repeat[style="one"],
 QPushButton#repeat[style="all"],
 QPushButton#random[active="true"] {}
 QPushButton[tabStyle="false"] {
-    background: #d6d6d6;
+    background: #c2c2c2;
     color: #444;
 }
 QPushButton[tabStyle="false"]:hover {

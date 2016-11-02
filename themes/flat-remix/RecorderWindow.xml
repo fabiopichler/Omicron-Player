@@ -99,11 +99,11 @@
             <item>
                 <layout class="QVBoxLayout">
                     <property name="rightMargin">
-                        <number>30</number>
+                        <number>15</number>
                     </property>
             
                     <property name="leftMargin">
-                        <number>30</number>
+                        <number>15</number>
                     </property>
                     
                     <item>

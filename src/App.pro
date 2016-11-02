@@ -110,9 +110,6 @@ SOURCES += Main.cpp \
     Gui/MainWindow.cpp \
     Gui/VolumeControl.cpp \
     Core/Fade.cpp \
-    Core/ServerStream.cpp \
-    Gui/ServerWindow.cpp \
-    Tools/ServerConfig.cpp \
     Core/Directory.cpp \
     Core/RecorderStream.cpp \
     Gui/RecorderWindow.cpp \
@@ -147,9 +144,6 @@ HEADERS += Main.h \
     Gui/MainWindow.h \
     Gui/VolumeControl.h \
     Core/Fade.h \
-    Core/ServerStream.h \
-    Gui/ServerWindow.h \
-    Tools/ServerConfig.h \
     Core/Directory.h \
     Core/RecorderStream.h \
     Gui/RecorderWindow.h \

@@ -67,8 +67,8 @@ void RadioWindow::createMenuBar()
     musicModeAction = modeMenu->addAction("Modo Músicas");
     QAction *currentAction = modeMenu->addAction("Modo Web Rádio");
     recorderModeAction = modeMenu->addAction("Modo Gravador");
-    modeMenu->addSeparator();
-    serverModeAction = modeMenu->addAction("Modo Servidor");
+    //modeMenu->addSeparator();
+    //serverModeAction = modeMenu->addAction("Modo Servidor");
 
     currentAction->setCheckable(true);
     currentAction->setChecked(true);
@@ -214,7 +214,7 @@ void RadioWindow::createEvents()
     connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(musicModeAction, SIGNAL(triggered()), parentMain, SLOT(startMusicMode()));
     connect(recorderModeAction, SIGNAL(triggered()), parentMain, SLOT(startRecorderMode()));
-    connect(serverModeAction, SIGNAL(triggered()), parentMain, SLOT(startServerMode()));
+    //connect(serverModeAction, SIGNAL(triggered()), parentMain, SLOT(startServerMode()));
     connect(playlistManagerAction, SIGNAL(triggered()), this, SLOT(initPlaylist()));
     connect(equalizerAction, SIGNAL(triggered()), this, SLOT(initEqualizer()));
     connect(configAction, SIGNAL(triggered()), parentMain, SLOT(initConfigDialog()));
@@ -599,11 +599,13 @@ void RadioWindow::update(RadioStream::Event type, QVariant value)
     case RadioStream::WebSearch:
         if (value.toBool())
         {
+            streamTitleLabel->setToolTip("Clique para pesquisar no Google");
             streamTitleLabel->setProperty("searchHover", true);
             streamTitleLabel->setCursor(Qt::PointingHandCursor);
         }
         else
         {
+            streamTitleLabel->setToolTip("");
             streamTitleLabel->setProperty("searchHover", false);
             streamTitleLabel->setCursor(Qt::ArrowCursor);
         }

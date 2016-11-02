@@ -93,8 +93,8 @@ void MusicWindow::createMenuBar()
     QAction *currentAction = modeMenu->addAction("Modo Músicas");
     radioModeAction = modeMenu->addAction("Modo Web Rádio");
     recorderModeAction = modeMenu->addAction("Modo Gravador");
-    modeMenu->addSeparator();
-    serverModeAction = modeMenu->addAction("Modo Servidor");
+    //modeMenu->addSeparator();
+    //serverModeAction = modeMenu->addAction("Modo Servidor");
 
     currentAction->setCheckable(true);
     currentAction->setChecked(true);
@@ -274,7 +274,7 @@ void MusicWindow::createEvents()
     connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(radioModeAction, SIGNAL(triggered()), parentMain, SLOT(startRadioMode()));
     connect(recorderModeAction, SIGNAL(triggered()), parentMain, SLOT(startRecorderMode()));
-    connect(serverModeAction, SIGNAL(triggered()), parentMain, SLOT(startServerMode()));
+    //connect(serverModeAction, SIGNAL(triggered()), parentMain, SLOT(startServerMode()));
     connect(playlistAction, SIGNAL(triggered()), this, SLOT(initPlaylist()));
     connect(equalizerAction, SIGNAL(triggered()), this, SLOT(initEqualizer()));
     connect(configAction, SIGNAL(triggered()), parentMain, SLOT(initConfigDialog()));

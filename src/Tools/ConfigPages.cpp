@@ -128,13 +128,9 @@ InterfacePage::InterfacePage(QWidget *parent) : MyWidget(parent)
 
 void InterfacePage::changeTheme(int index)
 {
-    QMessageBox msgBox;
-    QAbstractButton* pButtonYes = msgBox.addButton("Reiniciar programa", QMessageBox::YesRole);
-    msgBox.addButton("Cancelar", QMessageBox::NoRole);
-    msgBox.setText("Para alterar o tema, é preciso reiniciar o programa.\n\nO que deseja fazer?");
-    msgBox.exec();
-
-    if (msgBox.clickedButton() == pButtonYes)
+    if (QMessageBox::information(this, "Alteração do tema", "É necessário reiniciar o programa "
+                                 "para concluir a alteração do tema.\n\nAlterar o tema e reiniciar o programa?",
+                                 QMessageBox::Yes|QMessageBox::No) == QMessageBox::Yes)
     {
         Database::setValue("Config", "theme", themeCombo->itemData(index));
         Database::setValue("Config", "style", "default");
