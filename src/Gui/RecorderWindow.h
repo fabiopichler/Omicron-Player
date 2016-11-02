@@ -73,7 +73,7 @@ private:
     ErrorWindow *errorWindow;
     QProgressBar *leftChProgressBar, *rightChProgressBar;
     QLabel *timeLabel, *statusLabel;
-    QPushButton *recordButton, *stopButton, *playButton;
+    QPushButton *recordButton, *stopButton, *playButton, *deleteButton;
     QComboBox *deviceComboBox, *encoderComboBox, *bitrateComboBox;
     QSlider *timeSlider;
 };

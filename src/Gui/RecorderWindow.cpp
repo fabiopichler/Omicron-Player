@@ -156,10 +156,12 @@ void RecorderWindow::createButtons()
     recordButton = uiWidget->findChild<QPushButton *>("record");
     stopButton = uiWidget->findChild<QPushButton *>("stop");
     playButton = uiWidget->findChild<QPushButton *>("play");
+    deleteButton = uiWidget->findChild<QPushButton *>("deleteButton");
 
     recordButton->setToolTip("Gravar");
     stopButton->setToolTip("Parar");
     playButton->setToolTip("Reproduzir");
+    deleteButton->setText("Apagar");
 
     stopButton->setEnabled(false);
 }

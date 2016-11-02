@@ -62,24 +62,7 @@
                     </item>
                     
                     <item>
-                        <widget class="QWidget" name="statusWidget">
-                            <layout class="QVBoxLayout">
-                                <item>
-                                    <widget class="QLabel" name="statusLabel">
-                                        <property name="sizePolicy">
-                                            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                                                <horstretch>1</horstretch>
-                                                <verstretch>0</verstretch>
-                                            </sizepolicy>
-                                        </property>
-                                        
-                                        <property name="alignment">
-                                            <set>Qt::AlignCenter</set>
-                                        </property>
-                                    </widget>
-                                </item>
-                            </layout>
-                        </widget>
+                        <widget class="QPushButton" name="deleteButton" />
                     </item>
                 </layout>
             </item>
@@ -97,14 +80,22 @@
             </item>
             
             <item>
-                <layout class="QVBoxLayout">
+                <layout class="QHBoxLayout">
+                    <property name="spacing">
+                        <number>8</number>
+                    </property>
+                    
                     <property name="rightMargin">
-                        <number>15</number>
+                        <number>8</number>
                     </property>
             
                     <property name="leftMargin">
-                        <number>15</number>
+                        <number>8</number>
                     </property>
+                    
+                    <item>
+                        <widget class="QLabel" name="timeLabel" />
+                    </item>
                     
                     <item>
                         <widget class="MySlider" name="timeSlider">
@@ -171,14 +162,24 @@
                     </item>
                     
                     <item>
-                        <widget class="QLabel" name="timeLabel">
-                            <property name="alignment">
-                                <set>Qt::AlignCenter</set>
+                        <widget class="QWidget" name="statusWidget">
+                            <property name="maximumHeight">
+                                <number>20</number>
                             </property>
-                            
-                            <property name="minimumWidth">
-                                <number>80</number>
-                            </property>
+
+                            <layout class="QVBoxLayout">
+                                <item>
+                                    <widget class="QLabel" name="statusLabel">
+                                        <property name="minimumWidth">
+                                            <number>110</number>
+                                        </property>
+                                        
+                                        <property name="alignment">
+                                            <set>Qt::AlignCenter</set>
+                                        </property>
+                                    </widget>
+                                </item>
+                            </layout>
                         </widget>
                     </item>
                 </layout>
