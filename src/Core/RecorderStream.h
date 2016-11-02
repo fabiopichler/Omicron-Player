@@ -47,6 +47,7 @@ public slots:
     void play();
     void stop();
     void loadList();
+    void deleteFile();
 
 private:
     void createEvents();

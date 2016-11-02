@@ -19,12 +19,6 @@ RecorderStream::RecorderStream(QWidget *parent)
 {
     rchan = 0;
     stream = 0;
-    recordPath = Database::value("RadioConfig", "recordPath").toString() + "/Recorder";
-
-    if (!QDir().exists(recordPath))
-        QDir().mkpath(recordPath);
-
-    pathLastModified = QFileInfo(recordPath).lastModified();
 
     recordList = new RecordList(parent);
     updateTimer = new QTimer(this);
@@ -201,6 +195,9 @@ void RecorderStream::loadList()
     recordList->clear();
     recordPath = Database::value("RadioConfig", "recordPath").toString() + "/Recorder";
 
+    if (!QDir().exists(recordPath))
+        QDir().mkpath(recordPath);
+
     QDirIterator dirIt(recordPath, QDirIterator::Subdirectories);
     QRegExp filter(QString(FileNameFilter).replace(" ", "|").remove("*."), Qt::CaseInsensitive);
 
@@ -214,6 +211,22 @@ void RecorderStream::loadList()
 
     recordList->selectRow(0);
     pathLastModified = QFileInfo(recordPath).lastModified();
+}
+
+void RecorderStream::deleteFile()
+{
+    if (recordList->isEmpty())
+        return;
+
+    if (QMessageBox::question(nullptr, "Apagar gravação?",
+                              "Apagar \"" + recordList->getCurrentTitle() + "\"?",
+                              QMessageBox::Yes|QMessageBox::No) == QMessageBox::Yes)
+    {
+        if (QFile(recordList->getCurrentFile()).remove())
+            loadList();
+        else
+            QMessageBox::warning(nullptr, "Erro ao remover", "Não foi possível remover a gravação!");
+    }
 }
 
 //================================================================================================================

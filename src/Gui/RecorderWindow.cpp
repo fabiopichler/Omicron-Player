@@ -109,7 +109,7 @@ void RecorderWindow::createComboBox()
 
     // --- deviceComboBox ---
     deviceComboBox = uiWidget->findChild<QComboBox *>("deviceComboBox");
-    deviceComboBox->setFixedWidth(180);
+    deviceComboBox->setFixedWidth(220);
 
     QStringList list = recorderStream->getDeviceInfo();
     int device = Database::value("RecorderMode", "device").toInt();
@@ -161,9 +161,11 @@ void RecorderWindow::createButtons()
     recordButton->setToolTip("Gravar");
     stopButton->setToolTip("Parar");
     playButton->setToolTip("Reproduzir");
-    deleteButton->setText("Apagar");
 
     stopButton->setEnabled(false);
+
+    deleteButton->setText("Apagar");
+    deleteButton->setShortcut(QKeySequence::Delete);
 }
 
 void RecorderWindow::createLayouts()
@@ -209,6 +211,7 @@ void RecorderWindow::createEvents()
     connect(recordButton, SIGNAL(clicked()), recorderStream, SLOT(record()));
     connect(stopButton, SIGNAL(clicked()), recorderStream, SLOT(stop()));
     connect(playButton, SIGNAL(clicked()), recorderStream, SLOT(play()));
+    connect(deleteButton, SIGNAL(clicked()), recorderStream, SLOT(deleteFile()));
 
     connect(recorderStream, SIGNAL(updateValue(RecorderStream::Event, QVariant)), this, SLOT(update(RecorderStream::Event, QVariant)));
     connect(recorderStream, SIGNAL(updateInfo(QWORD, DWORD)), this, SLOT(update(QWORD, DWORD)));
