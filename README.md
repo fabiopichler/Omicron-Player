@@ -17,7 +17,7 @@ Este projeto, apesar de ser relativamente sério, tem uma finalidade de estudos,
 
 E aceito, sem problemas, que me reportem bugs em [Issues](https://github.com/fabiopichler/FPM-Player/issues) (ou de qualquer outro jeito) ou deem sugestões.
 
-Em outras palavras, não aceito que me enviem códigos, ou seja, que não façam por mim. Porém, caso queira implementar suas próprias funcionalidades, terá que fazer sua própria versão do programa, respeitando a licença BSD e licença das bibliotecas usadas.
+Em outras palavras, não aceito que me enviem códigos, e que não façam por mim. Porém, caso queira implementar suas próprias funcionalidades, terá que fazer sua própria versão do programa, respeitando a licença BSD e licença das bibliotecas usadas.
 
 
 ## Baixar
