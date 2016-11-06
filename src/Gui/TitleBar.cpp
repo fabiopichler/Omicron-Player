@@ -59,12 +59,8 @@ Titlebar::Titlebar(QWidget *parent, const int &flag) : MyWidget(parent)
     else
     {
         connect(buttonMinimize, SIGNAL(clicked()), parent, SLOT(showMinimized()));
-        //connect(buttonMinimizeTray, SIGNAL(clicked()), parent, SLOT(hide()));
+        connect(buttonMinimizeTray, SIGNAL(clicked()), parent, SLOT(hide()));
         connect(buttonClose, SIGNAL(clicked()), this, SLOT(quitApp()));
-
-        connect(buttonMinimizeTray, &QPushButton::clicked, [=]() {
-            Theme::load();
-        });
     }
 }
 

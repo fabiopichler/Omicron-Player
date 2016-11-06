@@ -94,8 +94,15 @@ QWidget *Theme::loadUi(QString fileName, QWidget *parent)
 {
     QWidget *uiWidget = nullptr;
     QFile file(Global::getThemePath(fileName));
+    QUiLoader loader;
 
-    if (!file.open(QFile::ReadOnly) || !(uiWidget = QUiLoader().load(&file, parent)))
+    loader.clearPluginPaths();
+    loader.addPluginPath(Global::getAppPath("plugins/designer"));
+
+    if (Global::inDevelopment)
+        loader.addPluginPath(Global::getAppPath("designer"));
+
+    if (!file.open(QFile::ReadOnly) || !(uiWidget = loader.load(&file, parent)))
         Theme::setDefault(defaultTheme);
 
     file.close();
