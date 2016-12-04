@@ -77,7 +77,7 @@ private:
     RadioPlaylist *playlist;
     QAction *openLinkAction, *displayRecordingsAction, *exitAction, *musicModeAction, *recorderModeAction,
         *serverModeAction, *playlistManagerAction, *equalizerAction, *configAction, *checkUpdateAction,
-        *websiteAction, *aboutAction;
+        *websiteAction, *facebookAction, *aboutAction;
     QPushButton *playButton, *stopButton, *prevButton, *nextButton, *recordButton, *openLinkButton, *playlistButton,
         *changeFavoriteButton, *allPlaylistsButton, *customPlaylistButton, *favoriteButton;
     QLabel *timeLabel, *statusLabel, *nameLabel, *streamTitleLabel, *loaderLabel;

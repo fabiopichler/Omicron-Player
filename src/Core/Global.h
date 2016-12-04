@@ -80,6 +80,7 @@ const QString AppName = APP_NAME,
 
               CheckUpdate = "http://software.fabiopichler.net/updates/fpm-player/check.php",
               OfficialSite = OFFICIAL_WEBSITE,
+              PageOnFacebook = "https://www.facebook.com/fabiopichler.net",
               DownloadUpdate = "http://fabiopichler.net/download/fpm-player/";
 
 class Global

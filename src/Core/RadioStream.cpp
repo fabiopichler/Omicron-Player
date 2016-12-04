@@ -142,6 +142,7 @@ void RadioStream::doMeta()
         const char *meta=BASS_ChannelGetTags(stream,BASS_TAG_META);
         if (meta)
         {
+            qDebug() << meta;
             const char *p=strstr(meta,"StreamTitle='");
             if (p)
             {

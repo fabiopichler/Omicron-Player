@@ -108,7 +108,9 @@ void MusicWindow::createMenuBar()
 
     QMenu *aboutMenu = new QMenu("Ajuda");
     checkUpdateAction = aboutMenu->addAction("Verificar por Atualizações");
+    aboutMenu->addSeparator();
     websiteAction = aboutMenu->addAction("Visitar o Website Oficial");
+    facebookAction = aboutMenu->addAction("Curtir a Página no Facebook");
     aboutMenu->addSeparator();
     aboutAction = aboutMenu->addAction("Sobre");
 
@@ -280,6 +282,7 @@ void MusicWindow::createEvents()
     connect(configAction, SIGNAL(triggered()), parentMain, SLOT(initConfigDialog()));
     connect(checkUpdateAction, SIGNAL(triggered()), parentMain, SLOT(checkUpdate()));
     connect(websiteAction, SIGNAL(triggered()), parentMain, SLOT(openSite()));
+    connect(facebookAction, SIGNAL(triggered()), parentMain, SLOT(openFacebook()));
     connect(aboutAction, SIGNAL(triggered()), parentMain, SLOT(about()));
 
     connect(searchLineEdit, SIGNAL(textChanged(QString)), playlist, SLOT(textFilterChanged(QString)));

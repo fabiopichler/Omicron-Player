@@ -410,6 +410,12 @@ void Main::openSite()
     QDesktopServices::openUrl(QUrl(OfficialSite));
 }
 
+//! Abre a página oficial do Facebook no navegador padrão do usuário.
+void Main::openFacebook()
+{
+    QDesktopServices::openUrl(QUrl(PageOnFacebook));
+}
+
 //! Exibe um diálogo com o "sobre o programa".
 void Main::about()
 {
@@ -420,7 +426,8 @@ void Main::about()
     QLabel lb("<h1 align=\"center\">"+AppName+"</h1>"
               "<h3 align=\"center\">Versão: "+CurrentVersion+" ("+CurrentReleaseDate+")</h3>"
               "<div align=\"center\"><strong>Copyright © 2015-2016, Fábio Pichler, Todos os direitos reservados.</strong><br><br>"
-              "Visite: <a href=\"http://fabiopichler.net\">http://fabiopichler.net</a><br></div>"
+              "Visite: <a href=\"http://fabiopichler.net\">http://fabiopichler.net</a><br>"
+              "Facebook: <a href=\""+PageOnFacebook+"\">"+PageOnFacebook+"</a><br></div>"
               "<div>Este é um programa livre, gratuito e de código aberto,<br>"
               "está licenciado sobre a <a href=\"http://fabiopichler.net/bsd-3-license/\">BSD 3-Clause License</a><br><br>"
               "O "+AppName+" é um software para reprodução de arquivos de<br>"

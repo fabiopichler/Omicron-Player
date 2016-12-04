@@ -69,7 +69,7 @@ private:
     RecorderStream *recorderStream;
     RecordList *recordList;
     QAction *displayRecordingsAction,*exitAction,*radioModeAction,*serverModeAction,*musicModeAction,
-        *equalizerAction,*checkUpdateAction,*websiteAction, *aboutAction, *configAction;
+        *equalizerAction,*checkUpdateAction,*websiteAction, *facebookAction, *aboutAction, *configAction;
     ErrorWindow *errorWindow;
     QProgressBar *leftChProgressBar, *rightChProgressBar;
     QLabel *timeLabel, *statusLabel;

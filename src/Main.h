@@ -59,6 +59,7 @@ public slots:
     void showError(QString);
     void showNotification(QString);
     void openSite();
+    void openFacebook();
     void about();
     void initConfigDialog();
     void restart();

@@ -83,7 +83,8 @@ private:
     MusicPlaylist *playlist;
     QAction *openMusicAction,*addMusicAction,*openDirAction,*addDirAction,*openCDAction,*openPlaylistAction,
         *clearPlaylistAction,*exitAction,*radioModeAction,*recorderModeAction,*serverModeAction,
-        *playlistAction,*equalizerAction,*checkUpdateAction,*websiteAction, *aboutAction, *configAction;
+        *playlistAction,*equalizerAction,*checkUpdateAction,*websiteAction, *facebookAction, *aboutAction,
+        *configAction;
     QPushButton *playButton,*pauseButton,*stopButton,*prevButton,*nextButton,*repeatButton,*randomButton,
         *playlistButton,*playlistModeButton,*musicModeButton,*favoriteButton, *changeFavoriteButton;
     QLabel *timeLabel,*totalTimeLabel,*currentTrackLabel,*totalTracksLabel,*currentTagLabel,
