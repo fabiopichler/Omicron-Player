@@ -1,8 +1,8 @@
 > ## Projeto obsoleto
 > O projeto atual deste repositório foi descontinuado e está sendo refeito com novo nome e com diversas melhorias.
-
+>
 > Em breve, o projeto resurgirá num novo repositório público com todas as novidades e melhorias já aplicadas a ele.
-
+>
 > Atualmente, o novo projeto encontra-se num repositório privado e está sendo refeito do zero, apenas reaproveitando o código antigo (deste repositório) como base.
 
 # FPM Player
