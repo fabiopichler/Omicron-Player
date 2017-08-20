@@ -1,3 +1,7 @@
+> ### Atenção
+> O projeto atual deste repositório foi descontinuado e está sendo refeito com novo nome e muitas melhorias num novo repositório (atualmente privado).
+> Em breve, o projeto resurgirá num novo repositório público com todas as novidades e melhorias já aplicadas.
+
 # FPM Player
 O FPM Player é um software para a reprodução de mídias, como CDs de música, arquivos de áudio (MP3, WMA, OGG, etc.) e Web Rádios.
 
