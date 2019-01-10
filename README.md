@@ -1,11 +1,11 @@
-# FPM Player
-O FPM Player é um software para a reprodução de mídias, como CDs de música, arquivos de áudio (MP3, WMA, OGG, etc.) e Web Rádios.
+# Omicron Media Player 3
+O Omicron Media Player é um software para a reprodução de mídias, como CDs de música, arquivos de áudio (MP3, WMA, OGG, etc.) e Web Rádios.
 
 O principal objetivo, não é fazê-lo cheio de recursos, recursos que nunca serão usados e que só deixam o programa poluído e pesado, assim como acontece com outros reprodutores de músicas, existentes por aí.
 
-A ideia do FPM Player, é que seja um programa mais simples, objetivo, e que reproduza inúmeros formatos de arquivos de áudio, Web Rádios, CDs de música e etc.
+A ideia do Omicron Media Player, é que seja um programa mais simples, objetivo, e que reproduza inúmeros formatos de arquivos de áudio, Web Rádios, CDs de música e etc.
 
-O FPM Player é um software de código aberto (open source) e está licenciado sobre a BSD 3-Clause License.
+O Omicron Media Player é um software de código aberto (open source) e está licenciado sobre a BSD 3-Clause License.
 
 Futuramente, o player contará com novas funcionalidades úteis.
 
@@ -15,7 +15,7 @@ Website oficial: http://fabiopichler.net/fpm-player/
 ## Projeto para Estudos
 Este projeto, apesar de ser relativamente sério, tem uma finalidade de estudos, portanto, não aceito ajuda, de nenhum tipo, seja Pull Request ou o que for.
 
-E aceito, sem problemas, que me reportem bugs em [Issues](https://github.com/fabiopichler/FPM-Player/issues) (ou de qualquer outro jeito) ou deem sugestões.
+E aceito, sem problemas, que me reportem bugs em [Issues](https://github.com/fabiopichler/Omicron-Player-3/issues) (ou de qualquer outro jeito) ou deem sugestões.
 
 Em outras palavras, não aceito que me enviem códigos, e que não façam por mim. Porém, caso queira implementar suas próprias funcionalidades, terá que fazer sua própria versão do programa, respeitando a licença BSD e licença das bibliotecas usadas.
 
@@ -23,7 +23,7 @@ Em outras palavras, não aceito que me enviem códigos, e que não façam por mi
 ## Baixar
 Acesse: http://fabiopichler.net/download/fpm-player/
 
-Ou: https://github.com/fabiopichler/FPM-Player/releases
+Ou: https://github.com/fabiopichler/Omicron-Player-3/releases
 
 
 ## Web Rádios
@@ -47,4 +47,4 @@ Veja uma galeria com imagens do programa: http://software.fabiopichler.net/fpm-p
 
 
 ## Créditos
-Créditos a [Fábio Pichler](http://fabiopichler.net), por criar e disponibilizar o FPM Player para Windows e Linux.
+Créditos a [Fábio Pichler](http://fabiopichler.net), por criar e disponibilizar o Omicron Media Player para Windows e Linux.
