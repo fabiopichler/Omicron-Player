@@ -3,7 +3,7 @@
 #*******************************************************************************
 #  FPM Player Installer
 #
-#  Copyright (c) 2016, Fábio Pichler
+#  Copyright (c) 2015-2019, Fábio Pichler
 #  All rights reserved.
 #
 #  License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
@@ -14,7 +14,7 @@
 
 
 
-if [ -e "/opt/FPM-Player/uninstall" ]
+if [ -e "/opt/Omicron-Player-3/uninstall" ]
 then
-    /opt/FPM-Player/uninstall
+    /opt/Omicron-Player-3/uninstall
 fi

@@ -1,7 +1,7 @@
 /*******************************************************************************
-  FPM Player
+  Omicron Media Player
 
-  Copyright (c) 2016, Fábio Pichler
+  Copyright (c) 2015-2019, Fábio Pichler
   All rights reserved.
 
   License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
@@ -142,7 +142,6 @@ void RadioStream::doMeta()
         const char *meta=BASS_ChannelGetTags(stream,BASS_TAG_META);
         if (meta)
         {
-            qDebug() << meta;
             const char *p=strstr(meta,"StreamTitle='");
             if (p)
             {

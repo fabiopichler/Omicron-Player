@@ -1,7 +1,7 @@
 /*******************************************************************************
-  FPM Player
+  Omicron Media Player
 
-  Copyright (c) 2016, Fábio Pichler
+  Copyright (c) 2015-2019, Fábio Pichler
   All rights reserved.
 
   License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
@@ -425,7 +425,7 @@ void Main::about()
 
     QLabel lb("<h1 align=\"center\">"+AppName+"</h1>"
               "<h3 align=\"center\">Versão: "+CurrentVersion+" ("+CurrentReleaseDate+")</h3>"
-              "<div align=\"center\"><strong>Copyright © 2015-2016, Fábio Pichler, Todos os direitos reservados.</strong><br><br>"
+              "<div align=\"center\"><strong>Copyright © 2015-2015-2019, Fábio Pichler, Todos os direitos reservados.</strong><br><br>"
               "Visite: <a href=\"http://fabiopichler.net\">http://fabiopichler.net</a><br>"
               "Facebook: <a href=\""+PageOnFacebook+"\">"+PageOnFacebook+"</a><br></div>"
               "<div>Este é um programa livre, gratuito e de código aberto,<br>"

@@ -1,7 +1,7 @@
 /*******************************************************************************
-  FPM Player
+  Omicron Media Player
 
-  Copyright (c) 2016, Fábio Pichler
+  Copyright (c) 2015-2019, Fábio Pichler
   All rights reserved.
 
   License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
@@ -44,8 +44,8 @@ const QString AppName = APP_NAME,
               FileRadiolist = FILE_RADIOLIST,
               FileRadiolistDate = FILE_RADIOLIST_DATE,
               PathAudioPlugins = "plugins/audio/",
-              AppConfigDir = "FPM-Player",
-              AppNameId = "FPM-Player",
+              AppConfigDir = "Omicron-Player-3",
+              AppNameId = "Omicron-Player-3",
               PlaylistExt = "fpmp",
               RadioPlaylistExt = "fprp",
 
@@ -78,10 +78,10 @@ const QString AppName = APP_NAME,
               bassopus = "",
 #endif // Q_OS_WIN
 
-              CheckUpdate = "http://software.fabiopichler.net/updates/fpm-player/check.php",
+              CheckUpdate = "http://software.fabiopichler.net/updates/omicron-player/check/",
               OfficialSite = OFFICIAL_WEBSITE,
               PageOnFacebook = "https://www.facebook.com/fabiopichler.net",
-              DownloadUpdate = "http://fabiopichler.net/download/fpm-player/";
+              DownloadUpdate = "https://fabiopichler.net/download/omicron-player/";
 
 class Global
 {

@@ -1,7 +1,7 @@
 ;/*******************************************************************************
-;  FPM Player
+;  Omicron Media Player
 ;
-;  Copyright (c) 2016, Fábio Pichler
+;  Copyright (c) 2015-2019, Fábio Pichler
 ;  All rights reserved.
 ;
 ;  License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
@@ -13,25 +13,25 @@
 #pragma once
 
 ;// Nome do Aplicativo
-#define APP_NAME "FPM Player"
+#define APP_NAME "Omicron Media Player"
 
 ;// Nome da Conpanhia/Autor
 #define COMPANY_NAME "Fábio Pichler"
 
 ;// Nome original do arquivo
-#define ORIGINAL_FILENAME "FPM-Player"
+#define ORIGINAL_FILENAME "Omicron-Player-3"
 
 ;// Website oficial
-#define OFFICIAL_WEBSITE "http://fabiopichler.net/fpm-player/"
+#define OFFICIAL_WEBSITE "https://fabiopichler.net/omicron-player/"
 
 ;// Versão do produto
-#define PRODUCT_VERSION 2,1,0,0
+#define PRODUCT_VERSION 3,0,0,0
 
 ;// Versão do Produto em string
-#define PRODUCT_VERSION_STR "2.1.0"
+#define PRODUCT_VERSION_STR "3.0.0"
 
 ;// Versão do arquivo
-#define FILE_VERSION "2.1.0"
+#define FILE_VERSION "3.0.0"
 
 ;// Data de lançamento atual
 #define CURRENT_RELEASE_DATE "06/11/2016"

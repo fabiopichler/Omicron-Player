@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #*******************************************************************************
-#  FPM Player Installer
+#  Omicron Media Player Installer
 #
-#  Copyright (c) 2016, Fábio Pichler
+#  Copyright (c) 2015-2019, Fábio Pichler
 #  All rights reserved.
 #
 #  License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
@@ -13,8 +13,8 @@
 #*******************************************************************************
 
 echo
-echo "FPM Player (Desinstalação)"
-echo "Copyright (c) 2016, Fábio Pichler, Todos os direitos Reservados"
+echo "Omicron Media Player (Desinstalação)"
+echo "Copyright (c) 2015-2019, Fábio Pichler, Todos os direitos Reservados"
 echo
 
 if [ ! `whoami` = "root" ]
@@ -30,27 +30,27 @@ echo "Iniciando o programa de desinstalação..."
 echo
 echo "Removendo arquivos..."
 
-if rm "/opt/FPM-Player/" -R
+if rm "/opt/Omicron-Player-3/" -R
 then
     let count++
 else
-    echo "Erro ao remover os arquivos em: /opt/FPM-Player/"
+    echo "Erro ao remover os arquivos em: /opt/Omicron-Player-3/"
 fi
 
-if rm "/usr/share/applications/FPM-Player.desktop"
+if rm "/usr/share/applications/Omicron-Player-3.desktop"
 then
     let count++
 else
-    echo "Erro ao remover o arquivo: /usr/share/applications/FPM-Player.desktop"
+    echo "Erro ao remover o arquivo: /usr/share/applications/Omicron-Player-3.desktop"
 fi
 
 echo
 
 if [ $count -eq 2 ]
 then
-    echo "O FPM Player foi desinstalado com sucesso"
+    echo "O Omicron Media Player foi desinstalado com sucesso"
 else
-    echo "Erro ao desinstalar o FPM Player"
+    echo "Erro ao desinstalar o Omicron Media Player"
 fi
 
 echo

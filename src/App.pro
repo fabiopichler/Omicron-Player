@@ -1,7 +1,7 @@
 #*******************************************************************************
-#  FPM Player
+#  Omicron Media Player
 #
-#  Copyright (c) 2016, Fábio Pichler
+#  Copyright (c) 2015-2019, Fábio Pichler
 #  All rights reserved.
 #
 #  License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
@@ -26,13 +26,13 @@ MOBILITY =
 CONFIG(debug, debug|release) {
 
     BUILDDIR = Debug
-    TARGET = "FPM-Player-Debug"
+    TARGET = "Omicron-Player-3-Debug"
     unix:MAKEFILE = Makefile.debug
 
 } else {
 
     BUILDDIR = Release
-    TARGET = "FPM-Player"
+    TARGET = "Omicron-Player-3"
     unix:MAKEFILE = Makefile.release
     RESOURCES += ../qrc/Files.qrc
 
@@ -43,7 +43,7 @@ MOC_DIR = moc/$${BUILDDIR}
 RCC_DIR = rcc/$${BUILDDIR}
 !android:DESTDIR = ../Build
 
-unix:INCLUDEPATH += "/home/Frameworks/bass"
+unix:INCLUDEPATH += "/mnt/projects/Frameworks/bass-linux"
 win32:INCLUDEPATH += "D:/Frameworks/bass"
 
 contains(QMAKE_HOST.arch, x86_64) {
@@ -51,7 +51,8 @@ contains(QMAKE_HOST.arch, x86_64) {
     win32:LIBS += -L"D:/Frameworks/bass/x64" -lbass -lbass_fx -lbasscd -lbassenc -ltags -lUser32 -lAdvapi32
 
     linux:!android {
-        LIBS += -Wl,-rpath=./lib -L"/home/Frameworks/bass/x64" -lbass -lbass_fx -lbasscd -lbassenc -ltags
+        LIBS += -L"/mnt/projects/Frameworks/bass-linux/x64" -lbass -lbass_fx -lbasscd -lbassenc -ltags
+       LIBS += -Wl,-rpath=./lib -Wl,-rpath="/mnt/projects/Frameworks/bass-linux/x64"
     }
 
 } else {
@@ -59,7 +60,7 @@ contains(QMAKE_HOST.arch, x86_64) {
     win32:LIBS += -L"D:/Frameworks/bass" -lbass -lbass_fx -lbasscd -lbassenc -ltags -lUser32 -lAdvapi32
 
     linux:!android {
-        LIBS += -Wl,-rpath=./lib -L"/home/Frameworks/bass" -lbass -lbass_fx -lbasscd -lbassenc -ltags
+        LIBS += -Wl,-rpath=./lib -L"/mnt/projects/Frameworks/bass-linux" -lbass -lbass_fx -lbasscd -lbassenc -ltags
     }
 }
 

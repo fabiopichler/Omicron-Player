@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #*******************************************************************************
-#  FPM Player Installer
+#  Omicron Media Player Installer
 #
-#  Copyright (c) 2016, Fábio Pichler
+#  Copyright (c) 2015-2019, Fábio Pichler
 #  All rights reserved.
 #
 #  License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
@@ -12,7 +12,7 @@
 #
 #*******************************************************************************
 
-DIR_NAME="FPM-Player-2.1.0-setup-Linux-x64"
+DIR_NAME="Omicron-Player-3-3.0-setup-Linux-x64"
 
 mkdir output/${DIR_NAME}
 
@@ -27,4 +27,4 @@ chmod +x "${DIR_NAME}/7zr"
 chmod +x "${DIR_NAME}/install"
 chmod +x "${DIR_NAME}/uninstall"
 
-./7zr a "${DIR_NAME}/data.bin" "../FPM-Player"
+./7zr a "${DIR_NAME}/data.bin" "../Omicron-Player-3"

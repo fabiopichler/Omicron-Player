@@ -3,11 +3,11 @@
 
 #include "..\..\src\Version.h"
 
-#define MyAppName "FPM Player"
+#define MyAppName "Omicron Media Player"
 #define MyAppVersion PRODUCT_VERSION_STR
 #define MyAppPublisher "Fábio Pichler"
 #define MyAppURL OFFICIAL_WEBSITE
-#define MyAppExeName "FPM-Player.exe"
+#define MyAppExeName "Omicron-Player-3.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -21,12 +21,12 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\FPM Player
+DefaultDirName={pf}\Omicron Player 3
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 LicenseFile=LICENSE.txt
 OutputDir=output
-OutputBaseFilename=FPM-Player-{#PRODUCT_VERSION_STR}-setup-Windows-win32
+OutputBaseFilename=Omicron-Player-3-{#PRODUCT_VERSION_STR}-setup-Windows-win32
 Compression=lzma2
 SolidCompression=yes
 
@@ -40,7 +40,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "files-x86\FPM-Player.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "files-x86\Omicron-Player-3.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "files-x86\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
@@ -58,4 +58,4 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 Filename: "{app}\{#MyAppExeName}"; Parameters: "--uninstall-app"
 
 [InstallDelete]
-Type: filesandordirs; Name: "{pf}\FPM Player"
+Type: filesandordirs; Name: "{pf}\Omicron Player 3"
