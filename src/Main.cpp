@@ -16,6 +16,8 @@
 #include <iostream>
 #include <QProxyStyle>
 
+#include "Gui/AboutDialog.hpp"
+
 // Classe responsável por retirar o efeito de "foco" do QTreeView.
 class ProxyStyle : public QProxyStyle
 {
@@ -419,37 +421,7 @@ void Main::openFacebook()
 //! Exibe um diálogo com o "sobre o programa".
 void Main::about()
 {
-    DialogBase ab(window);
-    QPushButton btOk("Ok");
-    QVBoxLayout layout;
-
-    QLabel lb("<h1 align=\"center\">"+AppName+"</h1>"
-              "<h3 align=\"center\">Versão: "+CurrentVersion+" ("+CurrentReleaseDate+")</h3>"
-              "<div align=\"center\"><strong>Copyright © 2015-2015-2019, Fábio Pichler, Todos os direitos reservados.</strong><br><br>"
-              "Visite: <a href=\"http://fabiopichler.net\">http://fabiopichler.net</a><br>"
-              "Facebook: <a href=\""+PageOnFacebook+"\">"+PageOnFacebook+"</a><br></div>"
-              "<div>Este é um programa livre, gratuito e de código aberto,<br>"
-              "está licenciado sobre a <a href=\"http://fabiopichler.net/bsd-3-license/\">BSD 3-Clause License</a><br><br>"
-              "O "+AppName+" é um software para reprodução de arquivos de<br>"
-              "áudio (MP3, WMA, WAV, OGG, etc.), Web Rádios e CD de música.</div>"
-              "<h3>Bibliotecas/Recursos usados</h3>"
-              "<div><strong>Qt:</strong> <a href=\"http://www.qt.io\">http://www.qt.io</a><br>"
-              "<strong>BASS:</strong> <a href=\"http://www.un4seen.com\">http://www.un4seen.com</a><br>"
-              "<strong>Ícones:</strong> <a href=\"http://flaticons.net\">http://flaticons.net</a> | "
-              "<a href=\"http://findicons.com/search/media\">http://findicons.com/search/media</a></div>");
-
-    connect(&btOk, SIGNAL(clicked()), &ab, SLOT(close()));
-
-    lb.setOpenExternalLinks(true);
-
-    layout.addWidget(&lb);
-    layout.addWidget(&btOk, 0, Qt::AlignCenter);
-    layout.setContentsMargins(40,10,40,20);
-    layout.setSpacing(20);
-
-    ab.setWindowTitle("Sobre o "+AppName);
-    ab.setLayout(&layout);
-    ab.exec();
+    AboutDialog(window).exec();
 }
 
 //! Inicializa um diálogo contendo as configurações do programa.

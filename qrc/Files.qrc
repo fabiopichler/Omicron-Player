@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>Omicron-Player.png</file>
         <file>icon.png</file>
         <file>icon2.png</file>
         <file>tray-icons/icon-1.png</file>

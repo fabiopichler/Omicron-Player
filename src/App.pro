@@ -118,7 +118,8 @@ SOURCES += Main.cpp \
     Gui/Widgets/MyWidget.cpp \
     Gui/Widgets/MyComboBox.cpp \
     Gui/Widgets/MySlider.cpp \
-    Gui/Widgets/MyLabel.cpp
+    Gui/Widgets/MyLabel.cpp \
+    Gui/AboutDialog.cpp
 
 HEADERS += Main.h \
     Version.h \
@@ -152,5 +153,6 @@ HEADERS += Main.h \
     Gui/Widgets/MyWidget.h \
     Gui/Widgets/MyComboBox.h \
     Gui/Widgets/MySlider.h \
-    Gui/Widgets/MyLabel.h
+    Gui/Widgets/MyLabel.h \
+    Gui/AboutDialog.hpp
 
