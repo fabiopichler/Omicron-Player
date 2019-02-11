@@ -625,6 +625,12 @@ void MusicStream::run()
             fade = nullptr;
             stream = 0;
             emit stopTagTimer();
+
+            if (Database::value("MusicConfig", "continuePlaying").toBool()
+                              && Database::value("MusicMode", "soundPosition").toInt() > 0)
+            {
+                Database::setValue("MusicMode", "soundPosition", 0);
+            }
         }
         else if (!mstop)
         {
