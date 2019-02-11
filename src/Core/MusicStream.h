@@ -61,6 +61,7 @@ public slots:
 
 private slots:
     void updateTag();
+    void updateSoundPosition();
     void updateCDMode();
     void createFade();
 
@@ -82,6 +83,8 @@ signals:
     void playNewMusic(QStringList);
     void startTagTimer(int);
     void stopTagTimer();
+    void startSoundPositionTimer(int);
+    void stopSoundPositionTimer();
     void startCDTimer(int);
     void stopCDTimer();
     void showNotification(QString);
@@ -97,7 +100,7 @@ public:
 
 private:
     QWidget *parent;
-    QTimer *timerTag, *cdTimer;
+    QTimer *timerTag, *soundPositionTimer, *cdTimer;
     Fade *fade;
     QStringList tagList;
     short tagListCount;

@@ -31,6 +31,7 @@ MusicStream::MusicStream(QWidget *parent) : Stream()
 
     playlist = new MusicPlaylist(parent, playlistMode, repeat, random, mstop);
     timerTag = new QTimer(this);
+    soundPositionTimer = new QTimer(this);
 
 #ifndef Q_OS_ANDROID
     cdTimer = new QTimer(this);
@@ -70,6 +71,7 @@ MusicStream::~MusicStream()
     stop();
 
     delete timerTag;
+    delete soundPositionTimer;
 
 #ifndef Q_OS_ANDROID
     delete cdTimer;
@@ -359,6 +361,12 @@ void MusicStream::updateTag()
     }
 }
 
+void MusicStream::updateSoundPosition()
+{
+    if (Database::value("MusicConfig", "continuePlaying").toBool() && isRunning())
+        Database::setValue("MusicMode", "soundPosition", static_cast<int>(getPosition()));
+}
+
 void MusicStream::updateCDMode()
 {
 #ifndef Q_OS_ANDROID
@@ -409,6 +417,10 @@ void MusicStream::createEvents()
     connect(timerTag, SIGNAL(timeout()), this, SLOT(updateTag()));
     connect(this, SIGNAL(startTagTimer(int)), timerTag, SLOT(start(int)));
     connect(this, SIGNAL(stopTagTimer()), timerTag, SLOT(stop()));
+
+    connect(soundPositionTimer, SIGNAL(timeout()), this, SLOT(updateSoundPosition()));
+    connect(this, SIGNAL(startSoundPositionTimer(int)), soundPositionTimer, SLOT(start(int)));
+    connect(this, SIGNAL(stopSoundPositionTimer()), soundPositionTimer, SLOT(stop()));
 
 #ifndef Q_OS_ANDROID
     connect(cdTimer, SIGNAL(timeout()), this, SLOT(updateCDMode()));
@@ -583,6 +595,8 @@ void MusicStream::run()
             if (mplay && !mstop && Database::value("MusicConfig", "notifiSysTray").toBool())
                 emit showNotification((isCDMode ? "CD: " : "") + playlist->getCurrentTitle());
 
+            emit startSoundPositionTimer(3000);
+
             while ((act = BASS_ChannelIsActive(stream)) && mplay && mstop == false)
             {
                 QWORD position = 0;
@@ -606,6 +620,7 @@ void MusicStream::run()
                 msleep(20);
             }
 
+            emit stopSoundPositionTimer();
             fade->out(stream);
             fade = nullptr;
             stream = 0;
