@@ -756,10 +756,17 @@ void MusicWindow::totals(QWORD time)
         totalTimeLabel->setText(QString::asprintf("%03d.%03d",LOWORD(time),HIWORD(time)));
         time = LOWORD(time);
     }
-    else
+    else if (time < 3600)
     {
         totalTimeLabel->setText(QString::asprintf("%02i:%02i", static_cast<unsigned int>(time/60),
                                                   static_cast<unsigned int>(time%60)));
+    }
+    else
+    {
+        totalTimeLabel->setText(QString::asprintf("%02i:%02i:%02i",
+                                             static_cast<unsigned int>(time/3600),
+                                             static_cast<unsigned int>((time/60)%60),
+                                             static_cast<unsigned int>(time%60)));
     }
     timeSlider->setEnabled(true);
     timeSlider->setMaximum(time);
@@ -838,12 +845,20 @@ void MusicWindow::update(QWORD time, DWORD level)
         timeLabel->setText(QString::asprintf("%03d.%03d",LOWORD(time),HIWORD(time)));
         time = LOWORD(time);
     }
-    else
+    else if (time < 3600)
     {
         timeLabel->setText(QString::asprintf("%02i:%02i",
                                              static_cast<unsigned int>(time/60),
                                              static_cast<unsigned int>(time%60)));
     }
+    else
+    {
+        timeLabel->setText(QString::asprintf("%02i:%02i:%02i",
+                                             static_cast<unsigned int>(time/3600),
+                                             static_cast<unsigned int>((time/60)%60),
+                                             static_cast<unsigned int>(time%60)));
+    }
+
     timeSlider->setValue(time);
     leftChProgressBar->setValue(LOWORD(level));
     rightChProgressBar->setValue(HIWORD(level));
