@@ -125,7 +125,7 @@ public:
     int length();
     bool isEmpty();
     void setCurrentIndex(int);
-    int &getCurrentIndex();
+    int getCurrentIndex();
     QString getCurrentTitle();
     QString getCurrentFile();
     QString getRow(const int &);

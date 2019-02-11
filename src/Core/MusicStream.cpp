@@ -474,8 +474,17 @@ void MusicStream::updateTrackList()
 void MusicStream::run()
 {
     DWORD act;
+    int soundPosition = 0;
     mpause = false;
     mstop = false;
+
+
+    if (Database::value("MusicConfig", "continuePlaying").toBool()
+                      && Database::value("MusicMode", "soundPosition").toInt() > 0)
+    {
+        soundPosition = Database::value("MusicMode", "soundPosition").toInt();
+        Database::setValue("MusicMode", "soundPosition", 0);
+    }
 
     do
     {
@@ -570,11 +579,10 @@ void MusicStream::run()
 
             int fadeOut = Database::value("MusicConfig", "fadeOut", 0).toInt();
 
-            if (Database::value("MusicConfig", "continuePlaying").toBool()
-                              && Database::value("MusicMode", "soundPosition").toInt() > 0)
+            if (soundPosition > 0)
             {
-                setPosition(Database::value("MusicMode", "soundPosition").toInt());
-                Database::setValue("MusicMode", "soundPosition", 0);
+                setPosition(soundPosition);
+                soundPosition = 0;
             }
 
             if (mpause)
@@ -625,12 +633,6 @@ void MusicStream::run()
             fade = nullptr;
             stream = 0;
             emit stopTagTimer();
-
-            if (Database::value("MusicConfig", "continuePlaying").toBool()
-                              && Database::value("MusicMode", "soundPosition").toInt() > 0)
-            {
-                Database::setValue("MusicMode", "soundPosition", 0);
-            }
         }
         else if (!mstop)
         {
@@ -718,7 +720,7 @@ MusicPlaylist::MusicPlaylist(QWidget *parent, const int &_playlistMode, const in
 
     connect(this, SIGNAL(selectRowSignal(int)), this, SLOT(selectRow(int)));
     connect(this, &QTreeView::doubleClicked, [=]() {
-        getCurrentIndex() = selectionModel()->selectedRows()[0].row();
+        setCurrentIndex(selectionModel()->selectedRows()[0].row());
         emit playNewMusic(getCurrentIndex());
     });
 }
@@ -735,7 +737,7 @@ MusicPlaylist::~MusicPlaylist()
 void MusicPlaylist::play()
 {
     if (getCurrentIndex() >= proxyModel->rowCount())
-        getCurrentIndex() = 0;
+        setCurrentIndex(0);
 
     emit selectRowSignal(getCurrentIndex());
 }
@@ -744,10 +746,13 @@ void MusicPlaylist::prev()
 {
     if (mrepeat != 1 && random())
     {
-        getCurrentIndex()--;
+        int index = getCurrentIndex();
+        --index;
 
-        if (getCurrentIndex() < 0 || getCurrentIndex() >= proxyModel->rowCount())
-            getCurrentIndex() = proxyModel->rowCount() - 1;
+        if (index < 0 || index >= proxyModel->rowCount())
+            index = proxyModel->rowCount() - 1;
+
+        setCurrentIndex(index);
     }
 
     emit selectRowSignal(getCurrentIndex());
@@ -757,15 +762,18 @@ void MusicPlaylist::next()
 {
     if (mrepeat != 1 && random())
     {
-        getCurrentIndex()++;
+        int index = getCurrentIndex();
+        ++index;
 
-        if (getCurrentIndex() >= proxyModel->rowCount())
+        if (index >= proxyModel->rowCount())
         {
-            getCurrentIndex() = 0;
+            index = 0;
 
             if (mrepeat == 0)
                 mstop = true;
         }
+
+        setCurrentIndex(index);
     }
 
     emit selectRowSignal(getCurrentIndex());
@@ -806,10 +814,15 @@ bool MusicPlaylist::isEmpty()
 
 void MusicPlaylist::setCurrentIndex(int idx)
 {
-    getCurrentIndex() = idx;
+    QVector<QString> list = { "indexPlaylist", "indexMusics", "indexFavorites" };
+
+    if (!filteredText)
+        Database::setValue("MusicMode", list[playlistMode], idx);
+
+    currentIndex[filteredText ? 3 : playlistMode] = idx;
 }
 
-int &MusicPlaylist::getCurrentIndex()
+int MusicPlaylist::getCurrentIndex()
 {
     return currentIndex[filteredText ? 3 : playlistMode];
 }
@@ -857,7 +870,7 @@ void MusicPlaylist::textFilterChanged(QString arg)
     else
     {
         filteredText = true;
-        getCurrentIndex() = 0;
+        setCurrentIndex(0);
     }
 
     proxyModel->setFilterRegExp(QRegExp(arg, Qt::CaseInsensitive, QRegExp::FixedString));
@@ -888,7 +901,7 @@ bool MusicPlaylist::random()
 
                 _srand++;
             }
-            getCurrentIndex() = currentIndexRand;
+            setCurrentIndex(currentIndexRand);
             return false;
         }
     }
@@ -900,7 +913,7 @@ void MusicPlaylist::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Space || event->key() == Qt::Key_Return)
     {
-        getCurrentIndex() = selectionModel()->selectedRows()[0].row();
+        setCurrentIndex(selectionModel()->selectedRows()[0].row());
         emit playNewMusic(getCurrentIndex());
         event->accept();
     }
