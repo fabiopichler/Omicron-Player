@@ -280,8 +280,15 @@ void MusicStream::prev()
 {
     if (isRunning())
     {
-        mprev = true;
-        mplay = false;
+        if (getPosition() < 3)
+        {
+            mprev = true;
+            mplay = false;
+        }
+        else
+        {
+            setPosition(0);
+        }
     }
     else if (!playlist->isEmpty())
     {
