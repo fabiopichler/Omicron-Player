@@ -362,7 +362,7 @@ void Database::defaultConfig()
 
     query.exec("CREATE TABLE MusicConfig (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO MusicConfig VALUES "
-               "('fadeIn', '0'), "
+               "('fadeIn', '2'), "
                "('fadeOut', '2'), "
                "('notifiSysTray', 'false'), "
                "('continuePlaying', 'false'), "
@@ -372,7 +372,7 @@ void Database::defaultConfig()
 
     query.exec("CREATE TABLE RadioConfig (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO RadioConfig VALUES "
-               "('fadeIn', '2'), "
+               "('fadeIn', '3'), "
                "('fadeOut', '3'), "
                "('notifiSysTray', 'true'), "
                "('recordPath', ''), "
