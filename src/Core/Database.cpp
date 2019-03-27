@@ -367,7 +367,7 @@ void Database::defaultConfig()
                "('notifiSysTray', 'false'), "
                "('continuePlaying', 'false'), "
                "('continuePlayingTab', 'false'), "
-               "('automaticGainControl', 'false'), "
+               "('automaticGainControl', 'true'), "
                "('allowAnyFile', 'false')");
 
     query.exec("CREATE TABLE RadioConfig (id TEXT PRIMARY KEY, value TEXT)");
@@ -485,7 +485,7 @@ void Database::upgrade()
     // ---------------------------------------------------------------------
     // --- MusicConfig ---
     if (!exist("MusicConfig", "automaticGainControl"))
-        add("MusicConfig", "automaticGainControl", "false");
+        add("MusicConfig", "automaticGainControl", "true");
 
     // --- RadioConfig ---
     if (!exist("RadioConfig", "automaticGainControl"))
