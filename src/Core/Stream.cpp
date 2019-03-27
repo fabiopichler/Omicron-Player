@@ -20,6 +20,7 @@ int EncoderList::current = 0;
 Stream::Stream()
 {
     volume = 100;
+    agcFX = 0;
 }
 
 bool Stream::init()
@@ -177,6 +178,29 @@ void Stream::updateFX(int index, int value)
     }
 }
 
+void Stream::automaticGainControl(bool enable)
+{
+    if (enable && agcFX == 0)
+    {
+        BASS_BFX_DAMP damp;
+
+        damp.fTarget = 0.94f;
+        damp.fQuiet = 0.02f;
+        damp.fRate = 0.02f;
+        damp.fGain = 15.0f;
+        damp.fDelay = 1.0f;
+        damp.lChannel = BASS_BFX_CHANALL;
+
+        agcFX = BASS_ChannelSetFX(stream, BASS_FX_BFX_DAMP, 1);
+        BASS_FXSetParameters(agcFX, &damp);
+    }
+    else if (!enable && agcFX != 0)
+    {
+        BASS_ChannelRemoveFX(stream, agcFX);
+        agcFX = 0;
+    }
+}
+
 void Stream::setVolume(int volume)
 {
     this->volume = volume;
@@ -191,6 +215,11 @@ void Stream::setPosition(int arg)
 //================================================================================================================
 // protected
 //================================================================================================================
+
+void Stream::finishedStream()
+{
+    agcFX = 0;
+}
 
 void Stream::setupDSP_EQ()
 {

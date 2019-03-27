@@ -45,14 +45,16 @@ public:
 
 public slots:
     void updateFX(int, int);
+    void automaticGainControl(bool);
     void setVolume(int);
     void setPosition(int);
 
 protected:
+    void finishedStream();
     void setupDSP_EQ();
 
     HSTREAM stream;
-    DWORD fxEQ, volfx;
+    DWORD fxEQ, volfx, agcFX;
 
     bool mplay, mpause, mprev;
     bool mstop;

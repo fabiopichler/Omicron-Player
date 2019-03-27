@@ -15,8 +15,12 @@
 #include <QElapsedTimer>
 #include <QDesktopServices>
 
+RadioStream *RadioStream::self = nullptr;
+
 RadioStream::RadioStream(QWidget *parent) : Stream()
 {
+    self = this;
+
     this->parent = parent;
 
     mprev = false;
@@ -50,6 +54,8 @@ RadioStream::~RadioStream()
 
     delete statusTimer;
     delete metaTimer;
+
+    self = nullptr;
 }
 
 void RadioStream::loadPlaylist(const int &arg)
@@ -645,6 +651,7 @@ void RadioStream::run()
             updateStatus();
             doMeta();
             setupDSP_EQ();
+            automaticGainControl(Database::value("RadioConfig", "automaticGainControl").toBool());
 
             connection->fadeIn(getVolume());
 
@@ -665,6 +672,7 @@ void RadioStream::run()
             isQuickLink = false;
             musicName.clear();
 
+            finishedStream();
             emit stopMetaTimer();
             emit stopStatusTimer();
             emit threadFinished(false, !quickLink.isEmpty());

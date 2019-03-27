@@ -367,6 +367,7 @@ void Database::defaultConfig()
                "('notifiSysTray', 'false'), "
                "('continuePlaying', 'false'), "
                "('continuePlayingTab', 'false'), "
+               "('automaticGainControl', 'false'), "
                "('allowAnyFile', 'false')");
 
     query.exec("CREATE TABLE RadioConfig (id TEXT PRIMARY KEY, value TEXT)");
@@ -377,6 +378,7 @@ void Database::defaultConfig()
                "('recordPath', ''), "
                "('recordSubDir', 'true'), "
                "('reconnectionMode', '1'), "
+               "('automaticGainControl', 'true'), "
                "('net_readtimeout', '20000'), "
                "('net_timeout', '20000'), "
                "('net_proxy', '0')");
@@ -477,5 +479,16 @@ void Database::upgrade()
 
     if (!exist("RecorderMode", "mp3"))
         add("RecorderMode", "mp3", "8");
+
+    // ---------------------------------------------------------------------
+    // Version: 3.0.0
+    // ---------------------------------------------------------------------
+    // --- MusicConfig ---
+    if (!exist("MusicConfig", "automaticGainControl"))
+        add("MusicConfig", "automaticGainControl", "false");
+
+    // --- RadioConfig ---
+    if (!exist("RadioConfig", "automaticGainControl"))
+        add("RadioConfig", "automaticGainControl", "true");
 }
 

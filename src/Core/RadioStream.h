@@ -47,6 +47,8 @@ public:
         WebSearch
     };
 
+    static RadioStream *instance() { return self; }
+
     RadioStream(QWidget *);
     ~RadioStream();
     void loadPlaylist(const int &arg = 2);
@@ -96,6 +98,7 @@ public:
     RadioPlaylist *playlist;
 
 private:
+    static RadioStream *self;
     QWidget *parent;
     NetworkStream *connection;
     bool newRadio, mnext;

@@ -43,6 +43,8 @@ public:
         FileTypeLabel
     };
 
+    static MusicStream *instance() { return self; }
+
     MusicStream(QWidget *);
     ~MusicStream();
     void setupCDMode(const bool &, const int &drive = -1);
@@ -99,6 +101,7 @@ public:
     static QStringList musicPlaylist;
 
 private:
+    static MusicStream *self;
     QWidget *parent;
     QTimer *timerTag, *soundPositionTimer, *cdTimer;
     Fade *fade;

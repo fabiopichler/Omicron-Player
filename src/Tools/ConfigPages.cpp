@@ -12,6 +12,7 @@
 
 #include "ConfigPages.h"
 #include "../Core/RadioStream.h"
+#include "../Core/MusicStream.h"
 #include "../Gui/TitleBar.h"
 #include "../Core/Theme.h"
 
@@ -187,6 +188,20 @@ MusicPage::MusicPage(QWidget *parent) : MyWidget(parent)
 {
     setObjectName("configPagesWidget");
 
+    QCheckBox *agcChBox = new QCheckBox("Ativar o controle automático de ganho (AGC)");
+    agcChBox->setChecked(Database::value("MusicConfig", "automaticGainControl").toBool());
+
+    connect(agcChBox, &QCheckBox::clicked, [=](bool arg) {
+        Database::setValue("MusicConfig", "automaticGainControl", arg);
+
+        MusicStream *musicStream = MusicStream::instance();
+
+        if (musicStream)
+            musicStream->automaticGainControl(arg);
+    });
+
+    //---------------------------------------------------
+
     QCheckBox *notificationsChBox = new QCheckBox("Exibir notificações de reproduãço na bandeja do sistema");
     notificationsChBox->setChecked(Database::value("MusicConfig", "notifiSysTray").toBool());
 
@@ -226,6 +241,7 @@ MusicPage::MusicPage(QWidget *parent) : MyWidget(parent)
     //------------------------------------------------------
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(agcChBox);
     mainLayout->addWidget(notificationsChBox);
     mainLayout->addWidget(continuePlayingChBox);
     mainLayout->addWidget(allowAnyFileChBox);
@@ -241,6 +257,20 @@ MusicPage::MusicPage(QWidget *parent) : MyWidget(parent)
 WebRadioPage::WebRadioPage(QWidget *parent) : MyWidget(parent)
 {
     setObjectName("configPagesWidget");
+
+    QCheckBox *agcChBox = new QCheckBox("Ativar o controle automático de ganho (AGC)");
+    agcChBox->setChecked(Database::value("RadioConfig", "automaticGainControl").toBool());
+
+    connect(agcChBox, &QCheckBox::clicked, [=](bool arg) {
+        Database::setValue("RadioConfig", "automaticGainControl", arg);
+
+        RadioStream *radioStream = RadioStream::instance();
+
+        if (radioStream)
+            radioStream->automaticGainControl(arg);
+    });
+
+    //---------------------------------------------------
 
     QCheckBox *notificationsChBox = new QCheckBox("Exibir notificações de reproduãço na bandeja do sistema");
     notificationsChBox->setChecked(Database::value("RadioConfig", "notifiSysTray").toBool());
@@ -317,6 +347,7 @@ WebRadioPage::WebRadioPage(QWidget *parent) : MyWidget(parent)
     configGroup->setLayout(configLayout);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(agcChBox);
     mainLayout->addWidget(notificationsChBox);
     mainLayout->addLayout(modeLayout);
     mainLayout->addWidget(configGroup);

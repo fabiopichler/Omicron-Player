@@ -13,11 +13,13 @@
 #include "MusicStream.h"
 #include "iostream"
 
+MusicStream *MusicStream::self = nullptr;
 int MusicStream::currentDrive = -1;
 QStringList MusicStream::musicPlaylist;
 
 MusicStream::MusicStream(QWidget *parent) : Stream()
 {
+    self = this;
     this->parent = parent;
     mprev = false;
     isMusic = false;
@@ -76,6 +78,8 @@ MusicStream::~MusicStream()
 #ifndef Q_OS_ANDROID
     delete cdTimer;
 #endif
+
+    self = nullptr;
 }
 
 void MusicStream::setupCDMode(const bool &active, const int &drive)
@@ -565,6 +569,7 @@ void MusicStream::run()
 
             updateTag();
             setupDSP_EQ();
+            automaticGainControl(Database::value("MusicConfig", "automaticGainControl").toBool());
 
             if (timerTag->isActive())
                 emit stopTagTimer();
@@ -632,6 +637,8 @@ void MusicStream::run()
             fade->out(stream);
             fade = nullptr;
             stream = 0;
+
+            finishedStream();
             emit stopTagTimer();
         }
         else if (!mstop)
