@@ -1,4 +1,4 @@
-# Omicron Media Player 3
+# Omicron Media Player: Classic
 O Omicron Media Player é um software para a reprodução de mídias, como CDs de música, arquivos de áudio (MP3, WMA, OGG, etc.) e Web Rádios.
 
 O principal objetivo, não é fazê-lo cheio de recursos, recursos que nunca serão usados e que só deixam o programa poluído e pesado, assim como acontece com outros reprodutores de músicas, existentes por aí.
@@ -12,10 +12,17 @@ Futuramente, o player contará com novas funcionalidades úteis.
 Website oficial: http://fabiopichler.net/fpm-player/
 
 
+## Versão "clássica" (Classic)
+O Omicron Media Player foi desenvolvido entre 2015 e 2016, anteriormente conhecido como "FPM Player", porém...
+
+
+Uma nova versão do player está sendo refeita do zero, totalmente remodelada. O novo player se chamará apenas "Omicron Media Player", enquanto que a versão atual (a versão 3) deste repositório está sendo renomeada de "FPM Player" para "Omicron Media Player: Classic".
+
+
 ## Projeto para Estudos
 Este projeto, apesar de ser relativamente sério, tem uma finalidade de estudos, portanto, não aceito ajuda, de nenhum tipo, seja Pull Request ou o que for.
 
-E aceito, sem problemas, que me reportem bugs em [Issues](https://github.com/fabiopichler/Omicron-Player-3/issues) (ou de qualquer outro jeito) ou deem sugestões.
+E aceito, sem problemas, que me reportem bugs em [Issues](https://github.com/fabiopichler/Omicron-Player-Classic/issues) (ou de qualquer outro jeito) ou deem sugestões.
 
 Em outras palavras, não aceito que me enviem códigos, e que não façam por mim. Porém, caso queira implementar suas próprias funcionalidades, terá que fazer sua própria versão do programa, respeitando a licença BSD e licença das bibliotecas usadas.
 
@@ -23,7 +30,7 @@ Em outras palavras, não aceito que me enviem códigos, e que não façam por mi
 ## Baixar
 Acesse: http://fabiopichler.net/download/fpm-player/
 
-Ou: https://github.com/fabiopichler/Omicron-Player-3/releases
+Ou: https://github.com/fabiopichler/Omicron-Player-Classic/releases
 
 
 ## Web Rádios
