@@ -456,39 +456,5 @@ void Database::defaultConfig()
 void Database::upgrade()
 {
     setValue("Config", "theme", defaultTheme);
-
-    // ---------------------------------------------------------------------
-    // Version: 2.0.0
-    // ---------------------------------------------------------------------
-    // --- RecorderMode ---
-    if (!exist("RecorderMode", "device"))
-        add("RecorderMode", "device", "-1");
-
-    if (!exist("RecorderMode", "encoder"))
-        add("RecorderMode", "encoder", "0");
-
-    if (!exist("RecorderMode", "aac"))
-#ifdef Q_OS_WIN
-        add("RecorderMode", "aac", "8");
-#else
-        add("RecorderMode", "aac", "4");
-#endif
-
-    if (!exist("RecorderMode", "ogg"))
-        add("RecorderMode", "ogg", "6");
-
-    if (!exist("RecorderMode", "mp3"))
-        add("RecorderMode", "mp3", "8");
-
-    // ---------------------------------------------------------------------
-    // Version: 3.0.0
-    // ---------------------------------------------------------------------
-    // --- MusicConfig ---
-    if (!exist("MusicConfig", "automaticGainControl"))
-        add("MusicConfig", "automaticGainControl", "true");
-
-    // --- RadioConfig ---
-    if (!exist("RadioConfig", "automaticGainControl"))
-        add("RadioConfig", "automaticGainControl", "true");
 }
 
