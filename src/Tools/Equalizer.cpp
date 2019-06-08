@@ -74,13 +74,13 @@ void Equalizer::createSlider()
 {
     eq[0] = new QSlider(Qt::Horizontal);
     eq[0]->setFixedWidth(260);
-    eq[0]->setRange(-35,35);
+    eq[0]->setRange(-50,50);
     eq[0]->setSliderPosition(Global::equalizerValues[0]);
 
     for (int i = 1; i < 16; i++)
     {
         eq[i] = new QSlider(Qt::Vertical);
-        eq[i]->setRange(-15,15);
+        eq[i]->setRange(-30,30);
         eq[i]->setSliderPosition(Global::equalizerValues[i]);
     }
 }
