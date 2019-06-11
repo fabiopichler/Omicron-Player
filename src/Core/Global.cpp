@@ -135,6 +135,7 @@ QString Global::getErrorText(const QString &arg, const QString &arg2, int code)
         case 7:  text += "Invalid playback position"; break;
         case 8:  text += "BASS_Init has not been successfully called"; break;
         case 9:  text += "BASS_Start has not been successfully called"; break;
+        case 10: text += "SSL/HTTPS support isn't available"; break;
         case 12: text += "No CD in drive"; break;
         case 13: text += "Invalid track number"; break;
         case 14: text += "Already initialized/paused/whatever"; break;
