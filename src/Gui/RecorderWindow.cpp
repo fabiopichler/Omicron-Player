@@ -298,7 +298,7 @@ void RecorderWindow::update(RecorderStream::Event index, QVariant value)
 
 void RecorderWindow::update(QWORD time, DWORD level)
 {
-    timeLabel->setText(QString::asprintf("%02i:%02i:%02i",
+    timeLabel->setText(QString().sprintf("%02i:%02i:%02i",
                                          static_cast<unsigned int>(time/3600),
                                          static_cast<unsigned int>((time/60)%60),
                                          static_cast<unsigned int>(time%60)));

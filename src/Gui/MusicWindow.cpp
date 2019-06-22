@@ -186,9 +186,9 @@ void MusicWindow::createLabels()
 
     timeLabel->setText("--:--");
     totalTimeLabel->setText("--:--");
-    currentTrackLabel->setText(QString::asprintf("%03i",
+    currentTrackLabel->setText(QString().sprintf("%03i",
                                       (playlist->isEmpty() ? 0 : Database::value("MusicMode", "index", 0).toInt() + 1)));
-    totalTracksLabel->setText(QString::asprintf("%03i", playlist->length()));
+    totalTracksLabel->setText(QString().sprintf("%03i", playlist->length()));
     fileTypeLabel->setText("---");
 }
 
@@ -753,17 +753,17 @@ void MusicWindow::totals(QWORD time)
 {
     if (musicStream->isMusic)
     {
-        totalTimeLabel->setText(QString::asprintf("%03d.%03d",LOWORD(time),HIWORD(time)));
+        totalTimeLabel->setText(QString().sprintf("%03d.%03d",LOWORD(time),HIWORD(time)));
         time = LOWORD(time);
     }
     else if (time < 3600)
     {
-        totalTimeLabel->setText(QString::asprintf("%02i:%02i", static_cast<unsigned int>(time/60),
+        totalTimeLabel->setText(QString().sprintf("%02i:%02i", static_cast<unsigned int>(time/60),
                                                   static_cast<unsigned int>(time%60)));
     }
     else
     {
-        totalTimeLabel->setText(QString::asprintf("%02i:%02i:%02i",
+        totalTimeLabel->setText(QString().sprintf("%02i:%02i:%02i",
                                              static_cast<unsigned int>(time/3600),
                                              static_cast<unsigned int>((time/60)%60),
                                              static_cast<unsigned int>(time%60)));
@@ -827,10 +827,10 @@ void MusicWindow::update(MusicStream::Event index, QVariant value)
             currentTagLabel->setText(value.toString());
             break;
         case MusicStream::CurrentSound:
-            currentTrackLabel->setText(QString::asprintf("%03i", value.toInt()+1));
+            currentTrackLabel->setText(QString().sprintf("%03i", value.toInt()+1));
             break;
         case MusicStream::PlaylistLength:
-            totalTracksLabel->setText(QString::asprintf("%03i", playlist->length()));
+            totalTracksLabel->setText(QString().sprintf("%03i", playlist->length()));
             break;
         case MusicStream::FileTypeLabel:
             fileTypeLabel->setText(value.toString());
@@ -842,18 +842,18 @@ void MusicWindow::update(QWORD time, DWORD level)
 {
     if (musicStream->isMusic)
     {
-        timeLabel->setText(QString::asprintf("%03d.%03d",LOWORD(time),HIWORD(time)));
+        timeLabel->setText(QString().sprintf("%03d.%03d",LOWORD(time),HIWORD(time)));
         time = LOWORD(time);
     }
     else if (time < 3600)
     {
-        timeLabel->setText(QString::asprintf("%02i:%02i",
+        timeLabel->setText(QString().sprintf("%02i:%02i",
                                              static_cast<unsigned int>(time/60),
                                              static_cast<unsigned int>(time%60)));
     }
     else
     {
-        timeLabel->setText(QString::asprintf("%02i:%02i:%02i",
+        timeLabel->setText(QString().sprintf("%02i:%02i:%02i",
                                              static_cast<unsigned int>(time/3600),
                                              static_cast<unsigned int>((time/60)%60),
                                              static_cast<unsigned int>(time%60)));

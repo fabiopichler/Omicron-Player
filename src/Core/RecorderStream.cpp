@@ -353,7 +353,7 @@ void RecordList::addRow(QString arg)
                                                                .trimmed());
     item << new QStandardItem(Stream::getFileType(info.ctype));
 
-    item << new QStandardItem(QString::asprintf("%02i:%02i:%02i",
+    item << new QStandardItem(QString().sprintf("%02i:%02i:%02i",
                                                 static_cast<unsigned int>(time/3600),
                                                 static_cast<unsigned int>((time/60)%60),
                                                 static_cast<unsigned int>(time%60)));

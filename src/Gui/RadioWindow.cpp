@@ -619,7 +619,7 @@ void RadioWindow::update(RadioStream::Event type, QVariant value)
 
 void RadioWindow::update(QWORD time, DWORD level, DWORD progress, DWORD act)
 {
-    timeLabel->setText(QString::asprintf((radioStream->mrecord ? "REC (%02i:%02i:%02i)" : "%02i:%02i:%02i"),
+    timeLabel->setText(QString().sprintf((radioStream->mrecord ? "REC (%02i:%02i:%02i)" : "%02i:%02i:%02i"),
                                          static_cast<unsigned int>(time/3600),
                                          static_cast<unsigned int>((time/60)%60),
                                          static_cast<unsigned int>(time%60)));
