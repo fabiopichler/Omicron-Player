@@ -41,7 +41,7 @@ CONFIG(debug, debug|release) {
 OBJECTS_DIR = obj/$${BUILDDIR}
 MOC_DIR = moc/$${BUILDDIR}
 RCC_DIR = rcc/$${BUILDDIR}
-!android:DESTDIR = ../Build
+!android:DESTDIR = Build
 
 unix:INCLUDEPATH += "/mnt/projects/Frameworks/bass-linux" "/mnt/projects/MyFrameworks/C++/OmicronTK11+Lua/project/include" "/mnt/projects/MyFrameworks/C++/OmicronTK11+Qt/project/include"
 win32:INCLUDEPATH += "D:/Frameworks/bass"
@@ -89,58 +89,60 @@ contains(ANDROID_TARGET_ARCH,x86) {
 
 }
 
-win32:RC_FILE = ../rc/Win.rc
+win32:RC_FILE = rc/Win.rc
 
-SOURCES += Main.cpp \
-    Core/SingleApp.cpp \
-    Core/Update.cpp \
-    Gui/MusicUi.cpp \
-    Gui/MusicWindow.cpp \
-    Gui/RadioUi.cpp \
-    Gui/RadioWindow.cpp \
-    Gui/RecorderUi.cpp \
-    Gui/WindowBase.cpp \
-    Tools/Equalizer.cpp \
-    Core/Database.cpp \
-    Core/NetPlaylist.cpp \
-    Core/MusicStream.cpp \
-    Core/RadioStream.cpp \
-    Tools/ConfigDialog.cpp \
-    Tools/ConfigPages.cpp \
-    Core/Global.cpp \
-    Core/Windows/FileAssociation.cpp \
-    Tools/MusicPlaylistManager.cpp \
-    Tools/RadioPlaylistManager.cpp \
-    Core/Fade.cpp \
-    Core/RecorderStream.cpp \
-    Gui/RecorderWindow.cpp \
-    Core/Stream.cpp \
-    Gui/AboutDialog.cpp
+SOURCES += \
+    src/Main.cpp \
+    src/Core/SingleApp.cpp \
+    src/Core/Update.cpp \
+    src/Gui/MusicUi.cpp \
+    src/Gui/MusicWindow.cpp \
+    src/Gui/RadioUi.cpp \
+    src/Gui/RadioWindow.cpp \
+    src/Gui/RecorderUi.cpp \
+    src/Gui/WindowBase.cpp \
+    src/Tools/Equalizer.cpp \
+    src/Core/Database.cpp \
+    src/Core/NetPlaylist.cpp \
+    src/Core/MusicStream.cpp \
+    src/Core/RadioStream.cpp \
+    src/Tools/ConfigDialog.cpp \
+    src/Tools/ConfigPages.cpp \
+    src/Core/Global.cpp \
+    src/Core/Windows/FileAssociation.cpp \
+    src/Tools/MusicPlaylistManager.cpp \
+    src/Tools/RadioPlaylistManager.cpp \
+    src/Core/Fade.cpp \
+    src/Core/RecorderStream.cpp \
+    src/Gui/RecorderWindow.cpp \
+    src/Core/Stream.cpp \
+    src/Gui/AboutDialog.cpp
 
-HEADERS += Main.h \
-    Gui/MusicUi.h \
-    Gui/RadioUi.hpp \
-    Gui/RecorderUi.hpp \
-    Gui/WindowBase.h \
-    Version.h \
-    Core/SingleApp.h \
-    Core/Update.h \
-    Gui/MusicWindow.h \
-    Gui/RadioWindow.h \
-    Tools/Equalizer.h \
-    Core/Database.h \
-    Core/NetPlaylist.h \
-    Core/MusicStream.h \
-    Core/RadioStream.h \
-    Tools/ConfigDialog.h \
-    Tools/ConfigPages.h \
-    Core/Global.h \
-    Core/Windows/FileAssociation.h \
-    Tools/MusicPlaylistManager.h \
-    Tools/RadioPlaylistManager.h \
-    Core/Fade.h \
-    Core/RecorderStream.h \
-    Gui/RecorderWindow.h \
-    Core/Stream.h \
-    Gui/AboutDialog.hpp
+HEADERS += \
+    src/Main.h \
+    src/Gui/MusicUi.h \
+    src/Gui/RadioUi.hpp \
+    src/Gui/RecorderUi.hpp \
+    src/Gui/WindowBase.h \
+    src/Version.h \
+    src/Core/SingleApp.h \
+    src/Core/Update.h \
+    src/Gui/MusicWindow.h \
+    src/Gui/RadioWindow.h \
+    src/Tools/Equalizer.h \
+    src/Core/Database.h \
+    src/Core/NetPlaylist.h \
+    src/Core/MusicStream.h \
+    src/Core/RadioStream.h \
+    src/Tools/ConfigDialog.h \
+    src/Tools/ConfigPages.h \
+    src/Core/Global.h \
+    src/Core/Windows/FileAssociation.h \
+    src/Tools/MusicPlaylistManager.h \
+    src/Tools/RadioPlaylistManager.h \
+    src/Core/Fade.h \
+    src/Core/RecorderStream.h \
+    src/Gui/RecorderWindow.h \
+    src/Core/Stream.h \
+    src/Gui/AboutDialog.hpp
 
