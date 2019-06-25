@@ -37,6 +37,11 @@ MusicWindow::MusicWindow(QObject *parentMain)
         return;
     }
 
+    setAcceptDrops(true);
+    setFileNameFilter(FileNameFilter);
+    setPlaylistExt(PlaylistExt);
+    setAllowAnyFile(Database::value("MusicConfig", "allowAnyFile", "true").toInt());
+
     createWidgets();
     createLabels();
     createButtons();

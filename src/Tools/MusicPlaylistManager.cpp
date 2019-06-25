@@ -11,6 +11,7 @@
 *******************************************************************************/
 
 #include "MusicPlaylistManager.h"
+#include "../Core/Global.h"
 
 #include <OmicronTK11/Qt/DirectoryDialog.hpp>
 
@@ -118,6 +119,10 @@ void MusicPlaylistManager::updatePlaylistStyle(bool arg)
 void MusicPlaylistManager::createWidgets()
 {
     dropArea = new OTKQT::DropArea(this);
+    dropArea->setAcceptDrops(true);
+    dropArea->setFileNameFilter(FileNameFilter);
+    dropArea->setPlaylistExt(PlaylistExt);
+    dropArea->setAllowAnyFile(Database::value("MusicConfig", "allowAnyFile", "true").toInt());
 
     topWidget = new OTKQT::Widget;
     topWidget->setObjectName("topWidgetDialog");
