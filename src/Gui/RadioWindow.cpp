@@ -15,6 +15,7 @@
 
 #include <OmicronTK11/Qt/ErrorWindow.hpp>
 #include <OmicronTK11/Qt/Label.hpp>
+#include <OmicronTK11/Qt/AppInfo.hpp>
 
 using namespace OmicronTK11;
 
@@ -261,7 +262,7 @@ void RadioWindow::changeEvent(QEvent* e)
         if (m_ui.m_loaderMovie->state() == QMovie::Running)
         {
             m_ui.m_loaderMovie->stop();
-            m_ui.m_loaderMovie->setFileName(Global::getThemePath("images/ajax-loader.gif"));
+            m_ui.m_loaderMovie->setFileName(OTKQT::AppInfo::themePath()+"images/ajax-loader.gif");
             m_ui.m_loaderMovie->start();
         }
     }
@@ -498,7 +499,7 @@ void RadioWindow::update(RadioStream::Event type, QVariant value)
         if (value.toBool())
         {
             m_ui.m_loaderMovie->stop();
-            m_ui.m_loaderMovie->setFileName(Global::getThemePath("images/ajax-loader.gif"));
+            m_ui.m_loaderMovie->setFileName(OTKQT::AppInfo::themePath()+"images/ajax-loader.gif");
             m_ui.m_streamTitleLabel->clear();
             m_ui.m_streamTitleLabel->setMovie(m_ui.m_loaderMovie);
             m_ui.m_loaderMovie->start();

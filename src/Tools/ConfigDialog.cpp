@@ -12,6 +12,8 @@
 
 #include "ConfigDialog.h"
 
+#include <OmicronTK11/Qt/AppInfo.hpp>
+
 #include <QtWidgets>
 
 using namespace OmicronTK11;
@@ -140,7 +142,7 @@ void ConfigDialog::createIcons()
     for (int i = 0; i < len; i++)
     {
         QListWidgetItem *configButton = new QListWidgetItem(contentsListWidget);
-        configButton->setIcon(QIcon(Global::getThemePath("images/config/"+images[i])));
+        configButton->setIcon(QIcon(OTKQT::AppInfo::themePath()+QString("images/config/")+images[i]));
         configButton->setText(titles[i]);
         configButton->setTextAlignment(Qt::AlignHCenter);
         configButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);

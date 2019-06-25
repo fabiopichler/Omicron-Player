@@ -93,7 +93,6 @@ public:
     static QString getAppPath(const QString &arg = QString());
     static QString getQrcPath(const QString &arg = QString());
     static QString getRadiolistPath();
-    static QString getThemePath(const QString &arg = QString());
     static QString getErrorHtml(const QString &arg = QString(), const QString &arg2 = QString(), int = -2);
     static QString getErrorText(const QString &arg = QString(), const QString &arg2 = QString(), int = -2);
 
@@ -101,7 +100,6 @@ public:
     static QString cStrToQString(const char *);
 
     static void setRadiolistName(const QString &);
-    static void setThemePath(const QString &);
 
     static int argc;
     static bool inDevelopment;
@@ -109,5 +107,5 @@ public:
     static QList<QStringList> supportedFiles;
 
 private:
-    static QString configPath, appPath, qrcPath, themePath, radiolistPath;
+    static QString configPath, appPath, qrcPath, radiolistPath;
 };

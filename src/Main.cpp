@@ -480,26 +480,26 @@ void Main::updateTrayIconMenu()
     trayIconMenu->addSeparator();
 
     // Play
-    connect(trayIconMenu->addAction(QIcon(Global::getThemePath("images/media_playback_start.png")),titles[0]),
+    connect(trayIconMenu->addAction(QIcon(OTKQT::AppInfo::themePath()+"images/media_playback_start.png"),titles[0]),
             SIGNAL(triggered()), this, SIGNAL(playStream()));
 
     if (window->currentMode() == "Music")
     {
         // Pause
-        connect(trayIconMenu->addAction(QIcon(Global::getThemePath("images/media_playback_pause.png")),titles[1]),
+        connect(trayIconMenu->addAction(QIcon(OTKQT::AppInfo::themePath()+"images/media_playback_pause.png"),titles[1]),
                 SIGNAL(triggered()), this, SIGNAL(pauseStream()));
     }
 
     // Stop
-    connect(trayIconMenu->addAction(QIcon(Global::getThemePath("images/media_playback_stop.png")),titles[2]),
+    connect(trayIconMenu->addAction(QIcon(OTKQT::AppInfo::themePath()+"images/media_playback_stop.png"),titles[2]),
             SIGNAL(triggered()), this, SIGNAL(stopStream()));
 
     // Faixa anterior
-    connect(trayIconMenu->addAction(QIcon(Global::getThemePath("images/media_skip_backward.png")),titles[3]),
+    connect(trayIconMenu->addAction(QIcon(OTKQT::AppInfo::themePath()+"images/media_skip_backward.png"),titles[3]),
             SIGNAL(triggered()), this, SIGNAL(prevStream()));
 
     // Próxima faixa
-    connect(trayIconMenu->addAction(QIcon(Global::getThemePath("images/media_skip_forward.png")),titles[4]),
+    connect(trayIconMenu->addAction(QIcon(OTKQT::AppInfo::themePath()+"images/media_skip_forward.png"),titles[4]),
             SIGNAL(triggered()), this, SIGNAL(nextStream()));
 
     trayIconMenu->addSeparator();

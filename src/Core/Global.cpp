@@ -23,7 +23,6 @@ QList<QStringList> Global::supportedFiles;
 QString Global::configPath;
 QString Global::appPath;
 QString Global::qrcPath;
-QString Global::themePath;
 QString Global::radiolistPath;
 
 bool Global::init(const int &_argc)
@@ -94,11 +93,6 @@ QString Global::getQrcPath(const QString &arg)
 QString Global::getRadiolistPath()
 {
     return radiolistPath;
-}
-
-QString Global::getThemePath(const QString &arg)
-{
-    return themePath + arg;
 }
 
 QString Global::getErrorHtml(const QString &arg, const QString &arg2, int code)
@@ -200,9 +194,4 @@ QString Global::cStrToQString(const char *cStr)
 void Global::setRadiolistName(const QString &arg)
 {
     radiolistPath = configPath+arg;
-}
-
-void Global::setThemePath(const QString &path)
-{
-    themePath = path;
 }
