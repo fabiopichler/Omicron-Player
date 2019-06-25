@@ -28,10 +28,10 @@
 #define PRODUCT_VERSION 3,0,0,0
 
 ;// Versão do Produto em string
-#define PRODUCT_VERSION_STR "3.0.0"
+#define PRODUCT_VERSION_STR "3.0-RC1"
 
 ;// Versão do arquivo
-#define FILE_VERSION "3.0.0"
+#define FILE_VERSION "3.0-RC1"
 
 ;// Data de lançamento atual
 #define CURRENT_RELEASE_DATE "06/11/2016"
