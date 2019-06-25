@@ -406,7 +406,7 @@ RadioPlaylistTreeView::RadioPlaylistTreeView(QWidget *parent) : QTreeView(parent
     setSelectionMode(SingleSelection);
     setSelectionBehavior(SelectRows);
     setIndentation(0);
-    setFixedHeight(245);
+    setFixedHeight(246);
     setSortingEnabled(true);
     setModel(model);
 

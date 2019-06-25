@@ -496,7 +496,7 @@ MusicPlaylistTreeView::MusicPlaylistTreeView(QWidget *parent) : QTreeView(parent
     setSelectionMode(ExtendedSelection);
     setSelectionBehavior(SelectRows);
     setIndentation(0);
-    setFixedHeight(245);
+    setFixedHeight(246);
 
     //setDragEnabled(true);
     //setAcceptDrops(true);
