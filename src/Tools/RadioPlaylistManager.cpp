@@ -13,7 +13,14 @@
 #include "RadioPlaylistManager.h"
 #include <QHeaderView>
 
-RadioPlaylistManager::RadioPlaylistManager(QWidget *parent) : DialogBase(parent)
+#include <QLabel>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QKeyEvent>
+
+using namespace OmicronTK11;
+
+RadioPlaylistManager::RadioPlaylistManager(QWidget *parent) : OTKQT::Dialog(parent)
 {
     this->parent = parent;
     playlistChanged = false;
@@ -40,14 +47,14 @@ RadioPlaylistManager::~RadioPlaylistManager()
 
 void RadioPlaylistManager::createWidgets()
 {
-    topWidget = new MyWidget;
+    topWidget = new OTKQT::Widget;
     topWidget->setObjectName("topWidgetDialog");
     topTitle = new QLabel("Web Rádios");
     topTitle->setObjectName("topTitle");
     topDesc = new QLabel("» Adicione, edite ou remova suas Web Rádios personalizadas.");
     topDesc->setObjectName("topDesc");
 
-    selectPlWidget = new MyWidget;
+    selectPlWidget = new OTKQT::Widget;
     selectPlWidget->setObjectName("selectPlWidget");
 }
 
@@ -531,7 +538,7 @@ void RadioPlaylistTreeView::keyPressEvent(QKeyEvent *event)
 // class EditRadio
 //================================================================================================================
 
-EditRadio::EditRadio(QWidget *parent, const QStringList &radio) : DialogBase(parent)
+EditRadio::EditRadio(QWidget *parent, const QStringList &radio) : OTKQT::Dialog(parent)
 {
     QStringList labelQStringList;
     labelQStringList << "Título" << "Descrição" << "Gênero" << "País" << "Link 1" << "Link 2" << "Link 3" << "Link 4" << "Link 5";

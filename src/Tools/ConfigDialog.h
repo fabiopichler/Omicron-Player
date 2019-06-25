@@ -12,13 +12,14 @@
 
 #pragma once
 
-#include "../Gui/DialogBase.h"
 #include "ConfigPages.h"
+
+#include <OmicronTK11/Qt/Dialog.hpp>
 
 #include <QListWidgetItem>
 #include <QStackedWidget>
 
-class ConfigDialog : public DialogBase
+class ConfigDialog : public OmicronTK11::OTKQT::Dialog
 {
     Q_OBJECT
 
@@ -40,7 +41,7 @@ signals:
 private:
     QObject *parentMain;
     QWidget *parent;
-    MyWidget *contentsWidget;
+    OmicronTK11::OTKQT::Widget *contentsWidget;
     QListWidget *contentsListWidget;
     QStackedWidget *pagesWidget;
     QLabel *contentsTitle;

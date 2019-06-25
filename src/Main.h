@@ -23,8 +23,6 @@
 #include "Core/SingleApp.h"
 #include "Core/Global.h"
 #include "Core/Update.h"
-#include "Core/Theme.h"
-#include "Gui/MainWindow.h"
 
 #include <QApplication>
 #include <QDir>
@@ -41,6 +39,8 @@
  * Também é responsável pelo processamento principal e por finalizar o programa.
  */
 
+class WindowBase;
+
 class Main : public QObject
 {
     Q_OBJECT
@@ -54,14 +54,9 @@ public slots:
     void startMusicMode();
     void startRadioMode();
     void startRecorderMode();
-    void startServerMode();
     void setWindowTitle(QString);
     void showError(QString);
     void showNotification(QString);
-    void openSite();
-    void openFacebook();
-    void about();
-    void initConfigDialog();
     void restart();
 
 private:
@@ -72,15 +67,15 @@ private slots:
 
     void trayIconActivated(QSystemTrayIcon::ActivationReason);
     void checkUpdate();
-    void receiveMessage(QStringList);
+    void receiveMessage(QVector<QString>);
     void defaultConfig();
 
 signals:
     //! Abrir músicas no "modo música"
-    void openMusic(QStringList);
+    void openMusic(QVector<QString>);
 
     //! Adiciona músicas ao playlist do "modo músicas"
-    void addMusic(QStringList);
+    void addMusic(QVector<QString>);
 
     //! Reproduzir o stream.
     void playStream();
@@ -104,5 +99,5 @@ public:
 private:
     QSystemTrayIcon *trayIcon;
     QSettings *iniSettings;
-    MainWindow *window;
+    WindowBase *window;
 };

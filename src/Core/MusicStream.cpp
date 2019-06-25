@@ -13,6 +13,8 @@
 #include "MusicStream.h"
 #include "iostream"
 
+#include <QKeyEvent>
+
 MusicStream *MusicStream::self = nullptr;
 int MusicStream::currentDrive = -1;
 QStringList MusicStream::musicPlaylist;
@@ -727,7 +729,7 @@ MusicPlaylist::MusicPlaylist(QWidget *parent, const int &_playlistMode, const in
     setSelectionMode(SingleSelection);
     setSelectionBehavior(SelectRows);
     setIndentation(0);
-    setFixedHeight(165);
+    setFixedHeight(158);
     setContextMenuPolicy(Qt::CustomContextMenu);
     setModel(proxyModel);
     setColumnHidden(1,true);

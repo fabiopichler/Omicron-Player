@@ -11,30 +11,31 @@
 *******************************************************************************/
 
 #include "RadioWindow.h"
-#include "../Core/Theme.h"
 #include <QDesktopServices>
 
-RadioWindow::RadioWindow(QObject *parentMain, QWidget *parent) : MyWidget(parent)
+#include <OmicronTK11/Qt/ErrorWindow.hpp>
+#include <OmicronTK11/Qt/Label.hpp>
+
+using namespace OmicronTK11;
+
+RadioWindow::RadioWindow(QObject *parentMain)
+    : WindowBase(parentMain),
+      m_ui(this)
 {
     this->parentMain = parentMain;
-    this->parent = parent;
     showLoader = false;
     mode = "Radio";
-    errorWindow = new ErrorWindow(this);
     radioStream = new RadioStream(this);
     playlist = radioStream->playlist;
 
-    if (!(uiWidget = Theme::loadUi("RadioWindow.xml", this)))
+    if (!m_ui.init(radioStream))
     {
-        throw "Ops! Algo deu errado...\nHouve um erro ao carregar o arquivo \"RadioWindow.xml\" do tema atual.";
-        return;
+        throw "31: if (!m_ui.init(radioStream))";
     }
 
-    createMenuBar();
     createWidgets();
     createLabels();
     createButtons();
-    createLayouts();
     createEvents();
     changePlaylist(-1);
 
@@ -44,166 +45,94 @@ RadioWindow::RadioWindow(QObject *parentMain, QWidget *parent) : MyWidget(parent
 
 RadioWindow::~RadioWindow()
 {
-    Database::setValue("Current", "volume", volumeControl->volume());
+    Database::setValue("Current", "volume", m_ui.m_volumeControl->volume());
 
     delete radioStream;
-    delete errorWindow;
+    delete m_errorWindow;
+}
+
+bool RadioWindow::init()
+{
+    return true;
 }
 
 //================================================================================================================
 // private
 //================================================================================================================
 
-void RadioWindow::createMenuBar()
-{
-    QMenu *fileMenu = new QMenu("Arquivo");
-    openLinkAction = fileMenu->addAction("Abrir Link Rapidamente");
-    displayRecordingsAction = fileMenu->addAction("Exibir pasta com Gravações");
-    fileMenu->addSeparator();
-    exitAction = fileMenu->addAction("Sair");
-    exitAction->setShortcut(QString("Ctrl+Q"));
-
-    QMenu *modeMenu = new QMenu("Modo");
-    musicModeAction = modeMenu->addAction("Modo Músicas");
-    QAction *currentAction = modeMenu->addAction("Modo Web Rádio");
-    recorderModeAction = modeMenu->addAction("Modo Gravador");
-    //modeMenu->addSeparator();
-    //serverModeAction = modeMenu->addAction("Modo Servidor");
-
-    currentAction->setCheckable(true);
-    currentAction->setChecked(true);
-    currentAction->setDisabled(true);
-
-    QMenu *toolsMenu = new QMenu("Ferramentas");
-    playlistManagerAction = toolsMenu->addAction("Gerenciador de Rádios");
-    equalizerAction = toolsMenu->addAction("Equalizador");
-    toolsMenu->addSeparator();
-    configAction = toolsMenu->addAction("Configurações");
-
-    QMenu *aboutMenu = new QMenu("Ajuda");
-    checkUpdateAction = aboutMenu->addAction("Verificar por Atualizações");
-    aboutMenu->addSeparator();
-    websiteAction = aboutMenu->addAction("Visitar o Website Oficial");
-    facebookAction = aboutMenu->addAction("Curtir a Página no Facebook");
-    aboutMenu->addSeparator();
-    aboutAction = aboutMenu->addAction("Sobre");
-
-    QMenuBar *menuBar = uiWidget->findChild<QMenuBar *>("menuBar");
-    menuBar->addMenu(fileMenu);
-    menuBar->addMenu(modeMenu);
-    menuBar->addMenu(toolsMenu);
-    menuBar->addMenu(aboutMenu);
-}
-
 void RadioWindow::createWidgets()
 {
     int volume = Database::value("Current", "volume", 100).toInt();
 
-    volumeControl = new VolumeControl(this);
-    volumeControl->setVolume(volume);
+    m_ui.m_volumeControl->setVolume(volume);
     radioStream->setVolume(volume);
 
-    loaderMovie = new QMovie;
+    m_ui.m_searchLineEdit->setClearButtonEnabled(true);
+    m_ui.m_searchLineEdit->setPlaceholderText("Pesquisa rápida");
 
-    searchLineEdit = uiWidget->findChild<QLineEdit *>("searchLineEdit");
-    searchLineEdit->setClearButtonEnabled(true);
-    searchLineEdit->setPlaceholderText("Pesquisa rápida");
+    m_ui.m_leftChProgressBar->setObjectName("channelsProgressBar");
+    m_ui.m_leftChProgressBar->setRange(0,32768);
+    m_ui.m_leftChProgressBar->setTextVisible(false);
 
-    leftChProgressBar = uiWidget->findChild<QProgressBar *>("leftChProgressBar");
-    leftChProgressBar->setObjectName("channelsProgressBar");
-    leftChProgressBar->setRange(0,32768);
-    leftChProgressBar->setTextVisible(false);
+    m_ui.m_rightChProgressBar->setObjectName("channelsProgressBar");
+    m_ui.m_rightChProgressBar->setRange(0,32768);
+    m_ui.m_rightChProgressBar->setTextVisible(false);
 
-    rightChProgressBar = uiWidget->findChild<QProgressBar *>("rightChProgressBar");
-    rightChProgressBar->setObjectName("channelsProgressBar");
-    rightChProgressBar->setRange(0,32768);
-    rightChProgressBar->setTextVisible(false);
-
-    bufferProgressBar = uiWidget->findChild<QProgressBar *>("bufferProgressBar");
-    bufferProgressBar->setRange(0,100);
-    bufferProgressBar->setToolTip("Buffer");
+    m_ui.m_bufferProgressBar->setRange(0,100);
+    m_ui.m_bufferProgressBar->setToolTip("Buffer");
 }
 
 void RadioWindow::createLabels()
 {
-    timeLabel = uiWidget->findChild<QLabel *>("timeLabel");
-    statusLabel = uiWidget->findChild<QLabel *>("statusLabel");
-    nameLabel = uiWidget->findChild<QLabel *>("radioTitleLabel");
-    streamTitleLabel = uiWidget->findChild<QLabel *>("musicTitleLabel");
+    m_ui.m_timeLabel->setText("--:--:--");
+    m_ui.m_statusLabel->setText("---");
 
-    timeLabel->setText("--:--:--");
-    statusLabel->setText("---");
+    m_ui.m_timeLabel->setTextFormat(Qt::PlainText);
+    m_ui.m_statusLabel->setTextFormat(Qt::PlainText);
+    m_ui.m_nameLabel->setTextFormat(Qt::RichText);
+    m_ui.m_streamTitleLabel->setTextFormat(Qt::PlainText);
 
-    timeLabel->setTextFormat(Qt::PlainText);
-    statusLabel->setTextFormat(Qt::PlainText);
-    nameLabel->setTextFormat(Qt::RichText);
-    streamTitleLabel->setTextFormat(Qt::PlainText);
+    m_ui.m_nameLabel->setObjectName("radioTitleLabel");
+    m_ui.m_nameLabel->setOpenExternalLinks(true);
 
-    nameLabel->setObjectName("radioTitleLabel");
-    nameLabel->setOpenExternalLinks(true);
-
-    streamTitleLabel->setObjectName("radioTitleLabel");
-    streamTitleLabel->setFixedHeight(21);
+    m_ui.m_streamTitleLabel->setObjectName("radioTitleLabel");
+    m_ui.m_streamTitleLabel->setFixedHeight(21);
 
     int hour = QTime::currentTime().hour();
 
     if (hour > 5 && hour < 12)
-        streamTitleLabel->setText("Bom Dia");
+        m_ui.m_streamTitleLabel->setText("Bom Dia");
     else if (hour > 11 && hour < 18)
-        streamTitleLabel->setText("Boa Tarde");
+        m_ui.m_streamTitleLabel->setText("Boa Tarde");
     else
-        streamTitleLabel->setText("Boa Noite");
+        m_ui.m_streamTitleLabel->setText("Boa Noite");
 }
 
 void RadioWindow::createButtons()
 {
-    playButton = uiWidget->findChild<QPushButton *>("play");
-    stopButton = uiWidget->findChild<QPushButton *>("stop");
-    prevButton = uiWidget->findChild<QPushButton *>("prev");
-    nextButton = uiWidget->findChild<QPushButton *>("next");
-    recordButton = uiWidget->findChild<QPushButton *>("record");
-    changeFavoriteButton = uiWidget->findChild<QPushButton *>("changeFavorite");
-    openLinkButton = uiWidget->findChild<QPushButton *>("openLink");
-    playlistButton = uiWidget->findChild<QPushButton *>("radioPlaylist");
-    allPlaylistsButton = uiWidget->findChild<QPushButton *>("allPlaylists");
-    customPlaylistButton = uiWidget->findChild<QPushButton *>("customPlaylist");
-    favoriteButton = uiWidget->findChild<QPushButton *>("favorite");
+    m_ui.m_allPlaylistsModeButton->setText("Todos");
+    m_ui.m_customPlaylistModeButton->setText("Personalizados");
+    m_ui.m_favoriteModeButton->setText("Favoritos");
 
-    allPlaylistsButton->setText("Todos");
-    customPlaylistButton->setText("Personalizados");
-    favoriteButton->setText("Favoritos");
+    m_ui.m_playButton->setToolTip("Reproduzir");
+    m_ui.m_stopButton->setToolTip("Parar");
+    m_ui.m_prevButton->setToolTip("Rádio anterior");
+    m_ui.m_nextButton->setToolTip("Próxima rádio");
+    m_ui.m_recordButton->setToolTip("Gravar");
+    m_ui.m_openLinkButton->setToolTip("Abrir Link Rapidamente");
+    m_ui.m_radioPlaylistButton->setToolTip("Editar Lista de Rádios");
 
-    playButton->setToolTip("Reproduzir");
-    stopButton->setToolTip("Parar");
-    prevButton->setToolTip("Rádio anterior");
-    nextButton->setToolTip("Próxima rádio");
-    recordButton->setToolTip("Gravar");
-    openLinkButton->setToolTip("Abrir Link Rapidamente");
-    playlistButton->setToolTip("Editar Lista de Rádios");
+    m_ui.m_allPlaylistsModeButton->setObjectName("tabStyle");
+    m_ui.m_customPlaylistModeButton->setObjectName("tabStyle");
+    m_ui.m_favoriteModeButton->setObjectName("tabStyleLast");
 
-    allPlaylistsButton->setObjectName("tabStyle");
-    customPlaylistButton->setObjectName("tabStyle");
-    favoriteButton->setObjectName("tabStyleLast");
-
-    stopButton->setEnabled(false);
-}
-
-void RadioWindow::createLayouts()
-{
-    uiWidget->findChild<QVBoxLayout *>("playlistLayout")->addWidget(playlist);
-    uiWidget->findChild<QHBoxLayout *>("bottomLayout")->addWidget(volumeControl);
-
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget(uiWidget);
-    layout->setMargin(0);
-    layout->setSpacing(0);
-    setLayout(layout);
+    m_ui.m_stopButton->setEnabled(false);
 }
 
 void RadioWindow::createEvents()
 {
-    connect(errorWindow, SIGNAL(stopStream()), radioStream, SLOT(stop()));
-    connect(volumeControl, &VolumeControl::volumeChanged, radioStream, &RadioStream::setVolume);
+    connect(m_errorWindow, SIGNAL(stopStream()), radioStream, SLOT(stop()));
+    connect(m_ui.m_volumeControl, &OTKQT::VolumeControl::volumeChanged, radioStream, &RadioStream::setVolume);
 
     connect(this, SIGNAL(showNotification(QString)), parentMain, SLOT(showNotification(QString)));
     connect(this, SIGNAL(showError(QString)), parentMain, SLOT(showError(QString)));
@@ -211,44 +140,44 @@ void RadioWindow::createEvents()
     connect(radioStream, SIGNAL(showError(QString)), parentMain, SLOT(showError(QString)));
     connect(radioStream, SIGNAL(showErrorDlg(QString)), this, SLOT(displayError(QString)));
 
-    connect(openLinkAction, SIGNAL(triggered()), this, SLOT(openLink()));
-    connect(displayRecordingsAction, SIGNAL(triggered()), this, SLOT(displayRecordings()));
-    connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
-    connect(musicModeAction, SIGNAL(triggered()), parentMain, SLOT(startMusicMode()));
-    connect(recorderModeAction, SIGNAL(triggered()), parentMain, SLOT(startRecorderMode()));
+    connect(m_ui.m_openLinkAction, SIGNAL(triggered()), this, SLOT(openLink()));
+    connect(m_ui.m_displayRecordingsAction, SIGNAL(triggered()), this, SLOT(displayRecordings()));
+    connect(m_ui.m_exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+    connect(m_ui.m_musicModeAction, SIGNAL(triggered()), parentMain, SLOT(startMusicMode()));
+    connect(m_ui.m_recorderModeAction, SIGNAL(triggered()), parentMain, SLOT(startRecorderMode()));
     //connect(serverModeAction, SIGNAL(triggered()), parentMain, SLOT(startServerMode()));
-    connect(playlistManagerAction, SIGNAL(triggered()), this, SLOT(initPlaylist()));
-    connect(equalizerAction, SIGNAL(triggered()), this, SLOT(initEqualizer()));
-    connect(configAction, SIGNAL(triggered()), parentMain, SLOT(initConfigDialog()));
-    connect(checkUpdateAction, SIGNAL(triggered()), parentMain, SLOT(checkUpdate()));
-    connect(websiteAction, SIGNAL(triggered()), parentMain, SLOT(openSite()));
-    connect(facebookAction, SIGNAL(triggered()), parentMain, SLOT(openFacebook()));
-    connect(aboutAction, SIGNAL(triggered()), parentMain, SLOT(about()));
+    connect(m_ui.m_playlistManagerAction, SIGNAL(triggered()), this, SLOT(initPlaylist()));
+    connect(m_ui.m_equalizerAction, SIGNAL(triggered()), this, SLOT(initEqualizer()));
+    connect(m_ui.m_configAction, SIGNAL(triggered()), this, SLOT(initConfigDialog()));
+    connect(m_ui.m_checkUpdateAction, SIGNAL(triggered()), parentMain, SLOT(checkUpdate()));
+    connect(m_ui.m_websiteAction, SIGNAL(triggered()), this, SLOT(openSite()));
+    connect(m_ui.m_facebookAction, SIGNAL(triggered()), this, SLOT(openFacebook()));
+    connect(m_ui.m_aboutAction, SIGNAL(triggered()), this, SLOT(about()));
 
-    connect(streamTitleLabel, SIGNAL(clicked()), radioStream, SLOT(webSearch()));
-    connect(searchLineEdit, SIGNAL(textChanged(QString)), playlist, SLOT(textFilterChanged(QString)));
+    connect(m_ui.m_streamTitleLabel, SIGNAL(clicked()), radioStream, SLOT(webSearch()));
+    connect(m_ui.m_searchLineEdit, SIGNAL(textChanged(QString)), playlist, SLOT(textFilterChanged(QString)));
 
     connect(parentMain, SIGNAL(playStream()), radioStream, SLOT(play()));
     connect(parentMain, SIGNAL(stopStream()), radioStream, SLOT(stop()));
     connect(parentMain, SIGNAL(prevStream()), radioStream, SLOT(prev()));
     connect(parentMain, SIGNAL(nextStream()), radioStream, SLOT(next()));
 
-    connect(playButton, SIGNAL(clicked()), radioStream, SLOT(play()));
-    connect(stopButton, SIGNAL(clicked()), radioStream, SLOT(stop()));
-    connect(prevButton, SIGNAL(clicked()), radioStream, SLOT(prev()));
-    connect(nextButton, SIGNAL(clicked()), radioStream, SLOT(next()));
-    connect(changeFavoriteButton, SIGNAL(clicked()), this, SLOT(changeFavorite()));
-    connect(openLinkButton, SIGNAL(clicked()), this, SLOT(openLink()));
-    connect(playlistButton, SIGNAL(clicked()), this, SLOT(initPlaylist()));
-    connect(recordButton, SIGNAL(clicked()), radioStream, SLOT(record()));
+    connect(m_ui.m_playButton, SIGNAL(clicked()), radioStream, SLOT(play()));
+    connect(m_ui.m_stopButton, SIGNAL(clicked()), radioStream, SLOT(stop()));
+    connect(m_ui.m_prevButton, SIGNAL(clicked()), radioStream, SLOT(prev()));
+    connect(m_ui.m_nextButton, SIGNAL(clicked()), radioStream, SLOT(next()));
+    connect(m_ui.m_changeFavoriteButton, SIGNAL(clicked()), this, SLOT(changeFavorite()));
+    connect(m_ui.m_openLinkButton, SIGNAL(clicked()), this, SLOT(openLink()));
+    connect(m_ui.m_radioPlaylistButton, SIGNAL(clicked()), this, SLOT(initPlaylist()));
+    connect(m_ui.m_recordButton, SIGNAL(clicked()), radioStream, SLOT(record()));
 
-    connect(allPlaylistsButton, &QPushButton::clicked, [=]() { changePlaylist(0); });
-    connect(customPlaylistButton, &QPushButton::clicked, [=]() { changePlaylist(1); });
-    connect(favoriteButton, &QPushButton::clicked, [=]() { changePlaylist(2); });
+    connect(m_ui.m_allPlaylistsModeButton, &QPushButton::clicked, [=]() { changePlaylist(0); });
+    connect(m_ui.m_customPlaylistModeButton, &QPushButton::clicked, [=]() { changePlaylist(1); });
+    connect(m_ui.m_favoriteModeButton, &QPushButton::clicked, [=]() { changePlaylist(2); });
 
-    connect(radioStream, SIGNAL(playButtonEnabled(bool)), playButton, SLOT(setEnabled(bool)));
-    connect(radioStream, SIGNAL(recordButtonEnabled(bool)), recordButton, SLOT(setEnabled(bool)));
-    connect(radioStream, SIGNAL(stopButtonEnabled(bool)), stopButton, SLOT(setEnabled(bool)));
+    connect(radioStream, SIGNAL(playButtonEnabled(bool)), m_ui.m_playButton, SLOT(setEnabled(bool)));
+    connect(radioStream, SIGNAL(recordButtonEnabled(bool)), m_ui.m_recordButton, SLOT(setEnabled(bool)));
+    connect(radioStream, SIGNAL(stopButtonEnabled(bool)), m_ui.m_stopButton, SLOT(setEnabled(bool)));
     connect(radioStream, SIGNAL(updateInfo(QWORD, DWORD, DWORD, DWORD)),
             this, SLOT(update(QWORD, DWORD, DWORD, DWORD)));
     connect(radioStream, SIGNAL(updateValue(RadioStream::Event, QVariant)),
@@ -275,41 +204,41 @@ void RadioWindow::changePlaylist(int plMode)
 
     if (playlistMode == 2)
     {
-        changeFavoriteButton->setProperty("remove", true);
-        changeFavoriteButton->setToolTip("Remover dos Favoritos");
+        m_ui.m_changeFavoriteButton->setProperty("remove", true);
+        m_ui.m_changeFavoriteButton->setToolTip("Remover dos Favoritos");
     }
     else
     {
-        changeFavoriteButton->setProperty("remove", false);
-        changeFavoriteButton->setToolTip("Adicionar aos Favoritos");
+        m_ui.m_changeFavoriteButton->setProperty("remove", false);
+        m_ui.m_changeFavoriteButton->setToolTip("Adicionar aos Favoritos");
     }
 
     if (playlistMode == 0)
     {
-        allPlaylistsButton->setProperty("tabStyle", true);
-        customPlaylistButton->setProperty("tabStyle", false);
-        favoriteButton->setProperty("tabStyle", false);
+        m_ui.m_allPlaylistsModeButton->setProperty("tabStyle", true);
+        m_ui.m_customPlaylistModeButton->setProperty("tabStyle", false);
+        m_ui.m_favoriteModeButton->setProperty("tabStyle", false);
         radioStream->loadPlaylist(2);
     }
     else if (playlistMode == 1)
     {
-        allPlaylistsButton->setProperty("tabStyle", false);
-        customPlaylistButton->setProperty("tabStyle", true);
-        favoriteButton->setProperty("tabStyle", false);
+        m_ui.m_allPlaylistsModeButton->setProperty("tabStyle", false);
+        m_ui.m_customPlaylistModeButton->setProperty("tabStyle", true);
+        m_ui.m_favoriteModeButton->setProperty("tabStyle", false);
         radioStream->loadPlaylist(1);
     }
     else if (playlistMode == 2)
     {
-        allPlaylistsButton->setProperty("tabStyle", false);
-        customPlaylistButton->setProperty("tabStyle", false);
-        favoriteButton->setProperty("tabStyle", true);
+        m_ui.m_allPlaylistsModeButton->setProperty("tabStyle", false);
+        m_ui.m_customPlaylistModeButton->setProperty("tabStyle", false);
+        m_ui.m_favoriteModeButton->setProperty("tabStyle", true);
         radioStream->loadPlaylist(0);
     }
 
-    MyWidget::updateStyle(changeFavoriteButton);
-    MyWidget::updateStyle(allPlaylistsButton);
-    MyWidget::updateStyle(customPlaylistButton);
-    MyWidget::updateStyle(favoriteButton);
+    OTKQT::Widget::updateStyle(m_ui.m_changeFavoriteButton);
+    OTKQT::Widget::updateStyle(m_ui.m_allPlaylistsModeButton);
+    OTKQT::Widget::updateStyle(m_ui.m_customPlaylistModeButton);
+    OTKQT::Widget::updateStyle(m_ui.m_favoriteModeButton);
 
     radioStream->playlistMode = playlistMode;
 
@@ -329,11 +258,11 @@ void RadioWindow::changeEvent(QEvent* e)
 {
     if (e->type() == QEvent::StyleChange)
     {
-        if (loaderMovie->state() == QMovie::Running)
+        if (m_ui.m_loaderMovie->state() == QMovie::Running)
         {
-            loaderMovie->stop();
-            loaderMovie->setFileName(Global::getThemePath("images/ajax-loader.gif"));
-            loaderMovie->start();
+            m_ui.m_loaderMovie->stop();
+            m_ui.m_loaderMovie->setFileName(Global::getThemePath("images/ajax-loader.gif"));
+            m_ui.m_loaderMovie->start();
         }
     }
 
@@ -346,7 +275,7 @@ void RadioWindow::changeEvent(QEvent* e)
 
 void RadioWindow::initEqualizer()
 {
-    Equalizer *eq = new Equalizer(this);
+    Equalizer *eq = new Equalizer(this, Global::equalizerValues);
     connect(eq, SIGNAL(updateEqualizer(int,int)), radioStream, SLOT(updateFX(int,int)));
     eq->exec();
     delete eq;
@@ -360,7 +289,7 @@ void RadioWindow::initPlaylist()
 
 void RadioWindow::openLink()
 {
-    DialogBase *ol = new DialogBase(this);
+    OTKQT::Dialog *ol = new OTKQT::Dialog(this);
     QLabel *lb = new QLabel("Insira um link para uma Web Rádio");
     QLineEdit *lineEdit = new QLineEdit;
     QPushButton *btOk = new QPushButton("Reproduzir");
@@ -374,7 +303,7 @@ void RadioWindow::openLink()
 
         if (!link.isEmpty())
         {
-            nameLabel->setText("Link rápido");
+            m_ui.m_nameLabel->setText("Link rápido");
             radioStream->openLink(link);
         }
 
@@ -524,7 +453,7 @@ void RadioWindow::updatePlaylistStyle()
     if (playlist->isEmpty())
     {
         if (!radioStream->isRunning())
-            nameLabel->setText(AppName + " (<a href=\"" + OfficialSite + "\">" + OfficialSite + "</a>)");
+            m_ui.m_nameLabel->setText(AppName + " (<a href=\"" + OfficialSite + "\">" + OfficialSite + "</a>)");
         playlist->hideColumn(0);
         playlist->hideColumn(1);
         playlist->hideColumn(2);
@@ -541,7 +470,7 @@ void RadioWindow::updatePlaylistStyle()
         playlist->setProperty("playlistStyle", false);
     }
 
-    MyWidget::updateStyle(playlist);
+    OTKQT::Widget::updateStyle(playlist);
 }
 
 void RadioWindow::update(RadioStream::Event type, QVariant value)
@@ -549,84 +478,84 @@ void RadioWindow::update(RadioStream::Event type, QVariant value)
     switch (type)
     {
     case RadioStream::StatusLabel:
-        statusLabel->setText(value.toString());
+        m_ui.m_statusLabel->setText(value.toString());
         break;
 
     case RadioStream::NameLabel:
-        nameLabel->setText(value.toString());
+        m_ui.m_nameLabel->setText(value.toString());
         break;
 
     case RadioStream::StreamTitleLabel:
         if (!showLoader)
-            streamTitleLabel->setText(value.toString());
+            m_ui.m_streamTitleLabel->setText(value.toString());
         break;
 
     case RadioStream::BufferProgressBar:
-        bufferProgressBar->setValue(value.toInt());
+        m_ui.m_bufferProgressBar->setValue(value.toInt());
         break;
 
     case RadioStream::ShowLoaderMovie:
         if (value.toBool())
         {
-            loaderMovie->stop();
-            loaderMovie->setFileName(Global::getThemePath("images/ajax-loader.gif"));
-            streamTitleLabel->clear();
-            streamTitleLabel->setMovie(loaderMovie);
-            loaderMovie->start();
+            m_ui.m_loaderMovie->stop();
+            m_ui.m_loaderMovie->setFileName(Global::getThemePath("images/ajax-loader.gif"));
+            m_ui.m_streamTitleLabel->clear();
+            m_ui.m_streamTitleLabel->setMovie(m_ui.m_loaderMovie);
+            m_ui.m_loaderMovie->start();
         }
         else
         {
-            streamTitleLabel->clear();
-            loaderMovie->stop();
+            m_ui.m_streamTitleLabel->clear();
+            m_ui.m_loaderMovie->stop();
         }
         break;
 
     case RadioStream::RadioName:
         if (!radioStream->isRunning())
-            nameLabel->setText(playlist->getRadioName(value.toInt()));
+            m_ui.m_nameLabel->setText(playlist->getRadioName(value.toInt()));
         break;
 
     case RadioStream::Recording:
         if (value.toBool())
         {
-            timeLabel->setProperty("recording", true);
-            timeLabel->setText("Aguarde...");
+            m_ui.m_timeLabel->setProperty("recording", true);
+            m_ui.m_timeLabel->setText("Aguarde...");
         }
         else
         {
-            timeLabel->setProperty("recording", false);
+            m_ui.m_timeLabel->setProperty("recording", false);
         }
-        MyWidget::updateStyle(timeLabel);
+        OTKQT::Widget::updateStyle(m_ui.m_timeLabel);
         break;
 
     case RadioStream::WebSearch:
         if (value.toBool())
         {
-            streamTitleLabel->setToolTip("Clique para pesquisar no Google");
-            streamTitleLabel->setProperty("searchHover", true);
-            streamTitleLabel->setCursor(Qt::PointingHandCursor);
+            m_ui.m_streamTitleLabel->setToolTip("Clique para pesquisar no Google");
+            m_ui.m_streamTitleLabel->setProperty("searchHover", true);
+            m_ui.m_streamTitleLabel->setCursor(Qt::PointingHandCursor);
         }
         else
         {
-            streamTitleLabel->setToolTip("");
-            streamTitleLabel->setProperty("searchHover", false);
-            streamTitleLabel->setCursor(Qt::ArrowCursor);
+            m_ui.m_streamTitleLabel->setToolTip("");
+            m_ui.m_streamTitleLabel->setProperty("searchHover", false);
+            m_ui.m_streamTitleLabel->setCursor(Qt::ArrowCursor);
         }
-        MyWidget::updateStyle(streamTitleLabel);
+        OTKQT::Widget::updateStyle(m_ui.m_streamTitleLabel);
         break;
     }
 }
 
 void RadioWindow::update(QWORD time, DWORD level, DWORD progress, DWORD act)
 {
-    timeLabel->setText(QString().sprintf((radioStream->mrecord ? "REC (%02i:%02i:%02i)" : "%02i:%02i:%02i"),
+    m_ui.m_timeLabel->setText(QString().sprintf((radioStream->mrecord ? "REC (%02i:%02i:%02i)" : "%02i:%02i:%02i"),
                                          static_cast<unsigned int>(time/3600),
                                          static_cast<unsigned int>((time/60)%60),
                                          static_cast<unsigned int>(time%60)));
-    leftChProgressBar->setValue(LOWORD(level));
-    rightChProgressBar->setValue(HIWORD(level));
-    bufferProgressBar->setValue(progress);
-    bufferProgressBar->setToolTip(QString("Buffer: %1%").arg(progress));
+    m_ui.m_leftChProgressBar->setValue(LOWORD(level));
+    m_ui.m_rightChProgressBar->setValue(HIWORD(level));
+    m_ui.m_bufferProgressBar->setValue(progress);
+    m_ui.m_bufferProgressBar->setToolTip(QString("Buffer: %1%").arg(progress));
 
     if (act == 2)
     {
@@ -646,28 +575,28 @@ void RadioWindow::update(QWORD time, DWORD level, DWORD progress, DWORD act)
 
 void RadioWindow::threadFinished(bool stop, bool isQuickLink)
 {
-    leftChProgressBar->setValue(0);
-    rightChProgressBar->setValue(0);
-    bufferProgressBar->setValue(0);
-    bufferProgressBar->setToolTip("Buffer");
-    timeLabel->setText("--:--:--");
-    statusLabel->setText("---");
-    streamTitleLabel->setText("Parado");
-    loaderMovie->stop();
-    recordButton->setEnabled(true);
+    m_ui.m_leftChProgressBar->setValue(0);
+    m_ui.m_rightChProgressBar->setValue(0);
+    m_ui.m_bufferProgressBar->setValue(0);
+    m_ui.m_bufferProgressBar->setToolTip("Buffer");
+    m_ui.m_timeLabel->setText("--:--:--");
+    m_ui.m_statusLabel->setText("---");
+    m_ui.m_streamTitleLabel->setText("Parado");
+    m_ui.m_loaderMovie->stop();
+    m_ui.m_recordButton->setEnabled(true);
     update(RadioStream::WebSearch, false);
 
     if (isQuickLink)
-        nameLabel->setText("Link Rápido");
+        m_ui.m_nameLabel->setText("Link Rápido");
     else if (stop && playlist->isEmpty())
-        nameLabel->setText(AppName + " (<a href=\"" + OfficialSite + "\">" + OfficialSite + "</a>)");
+        m_ui.m_nameLabel->setText(AppName + " (<a href=\"" + OfficialSite + "\">" + OfficialSite + "</a>)");
     else
-        nameLabel->setText(playlist->getCurrentTitle());
+        m_ui.m_nameLabel->setText(playlist->getCurrentTitle());
 
     if (stop)
     {
-        playButton->setEnabled(true);
-        stopButton->setEnabled(false);
+        m_ui.m_playButton->setEnabled(true);
+        m_ui.m_stopButton->setEnabled(false);
     }
 }
 
@@ -679,15 +608,15 @@ void RadioWindow::displayRecordings()
 
 void RadioWindow::displayError(QString arg)
 {
-    errorWindow->addError(arg);
-    errorWindow->show();
+    m_errorWindow->addError(arg);
+    m_errorWindow->show();
 }
 
 //================================================================================================================
 // class ShowRadioInfo
 //================================================================================================================
 
-ShowRadioInfo::ShowRadioInfo(QWidget *parent, QStringList radio) : DialogBase(parent)
+ShowRadioInfo::ShowRadioInfo(QWidget *parent, QStringList radio) : OTKQT::Dialog(parent)
 {
     QStringList labelQStringList;
     labelQStringList << "Título" << "Descrição" << "Gênero" << "País" << "Link 1" << "Link 2" << "Link 3" << "Link 4" << "Link 5";

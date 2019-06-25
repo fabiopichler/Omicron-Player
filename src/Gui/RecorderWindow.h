@@ -15,8 +15,12 @@
 #include "../Core/RecorderStream.h"
 #include "../Core/Global.h"
 #include "../Tools/Equalizer.h"
-#include "Widgets/MySlider.h"
-#include "ErrorWindow.h"
+
+#include <OmicronTK11/Qt/Slider.hpp>
+#include <OmicronTK11/Qt/Widget.hpp>
+
+#include "WindowBase.h"
+#include "RecorderUi.hpp"
 
 #include <QPushButton>
 #include <QHBoxLayout>
@@ -30,13 +34,17 @@
 #include <QMenuBar>
 #include <QProgressBar>
 
-class RecorderWindow : public MyWidget
+class QComboBox;
+
+class RecorderWindow : public WindowBase
 {
     Q_OBJECT
 
 public:
-    RecorderWindow(QObject *, QWidget *);
+    RecorderWindow(QObject *);
     ~RecorderWindow();
+
+    bool init();
 
 private:
     void createMenuBar();
@@ -44,7 +52,6 @@ private:
     void createComboBox();
     void createLabels();
     void createButtons();
-    void createLayouts();
     void createEvents();
 
 private slots:
@@ -65,15 +72,7 @@ signals:
 
 private:
     QObject *parentMain;
-    QWidget *uiWidget;
     RecorderStream *recorderStream;
     RecordList *recordList;
-    QAction *displayRecordingsAction,*exitAction,*radioModeAction,*serverModeAction,*musicModeAction,
-        *equalizerAction,*checkUpdateAction,*websiteAction, *facebookAction, *aboutAction, *configAction;
-    ErrorWindow *errorWindow;
-    QProgressBar *leftChProgressBar, *rightChProgressBar;
-    QLabel *timeLabel, *statusLabel;
-    QPushButton *recordButton, *stopButton, *playButton, *deleteButton;
-    QComboBox *deviceComboBox, *encoderComboBox, *bitrateComboBox;
-    QSlider *timeSlider;
+    RecorderUi m_ui;
 };

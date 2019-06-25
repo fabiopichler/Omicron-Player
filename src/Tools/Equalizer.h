@@ -1,65 +1,23 @@
-/*******************************************************************************
-  Omicron Media Player
-
-  Copyright (c) 2015-2019, Fábio Pichler
-  All rights reserved.
-
-  License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
-  Author: Fábio Pichler
-  Website: http://fabiopichler.net
-
-*******************************************************************************/
-
 #pragma once
 
-#include "../Core/Database.h"
-#include "../Gui/DialogBase.h"
 #include "../Core/Global.h"
-#include "../Gui/Widgets/MyComboBox.h"
+#include <OmicronTK11/Qt/Equalizer.hpp>
 
-#include <QDebug>
-#include <QPushButton>
-#include <QSlider>
-#include <QGroupBox>
-
-class Equalizer : public DialogBase
+class Equalizer : public OmicronTK11::OTKQT::Equalizer
 {
-    Q_OBJECT
-
 public:
-    Equalizer(QWidget *);
-    ~Equalizer();
+    Equalizer(QWidget *, std::vector<int> &values);
 
-private:
-    void createLabels();
-    void createButtons();
-    void createSlider();
-    void createBoxLayout();
-    void createEvents();
-    void loadPresetIndex();
+    static void loadValues(std::vector<int> &val);
 
-private slots:
-    void ok();
-    void close() Q_DECL_OVERRIDE;
-    void defaultEqualizer();
-    void indexChanged();
-    void equalizerChanged(int,int);
-    void newPreset();
-    void editPreset();
-    void savePreset();
-    void deletePreset();
-    void loadPreset();
+    int getCurrentPresetIndex() override;
+    void setCurrentPresetIndex(int) override;
+    void removeById(const std::string &) override;
 
-signals:
-    void updateEqualizer(int, int);
+    bool addEqualizerPreset(const std::string &, const std::vector<int> &) override;
+    bool setEqualizerValues(const std::string &) override;
+    bool setEqualizerPreset(int, const std::string &, const std::vector<int> &) override;
 
-private:
-    QPushButton *okButton, *cancelButton, *defaultButton, *saveButton, *newButton, *deleteButton, *editButton;
-    QLabel *eqFr[16];
-    QLabel *eqDb[16];
-    QSlider *eq[16];
-    QList<int> oldValues;
-    MyComboBox *presetCombo;
-    bool isNewPreset, presetComboUpdate;
-    int lastId, currentIndex;
+    std::vector<int> getEqualizerPreset(int) override;
+    int getEqualizerPresets(std::vector<int> &, std::vector<std::string> &) override;
 };

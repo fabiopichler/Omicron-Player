@@ -16,9 +16,12 @@
 #include "../Core/Global.h"
 #include "../Tools/MusicPlaylistManager.h"
 #include "../Tools/Equalizer.h"
-#include "DropArea.h"
-#include "ErrorWindow.h"
-#include "VolumeControl.h"
+#include "MusicUi.h"
+
+#include "WindowBase.h"
+
+#include <OmicronTK11/Qt/DropArea.hpp>
+#include <OmicronTK11/Qt/VolumeControl.hpp>
 
 #include <QPushButton>
 #include <QHBoxLayout>
@@ -32,20 +35,20 @@
 #include <QMenuBar>
 #include <QProgressBar>
 
-class MusicWindow : public DropArea
+class MusicWindow : public WindowBase
 {
     Q_OBJECT
 
 public:
-    MusicWindow(QObject *, QWidget *);
+    MusicWindow(QObject *);
     ~MusicWindow();
 
+    bool init();
+
 private:
-    void createMenuBar();
     void createWidgets();
     void createLabels();
     void createButtons();
-    void createLayouts();
     void createEvents();
     void changeRepeatStyle(const short &);
     void changeRandomStyle(const bool &);
@@ -78,22 +81,9 @@ signals:
 
 private:
     QObject *parentMain;
-    QWidget *uiWidget;
+    MusicUi m_ui;
     MusicStream *musicStream;
     MusicPlaylist *playlist;
-    QAction *openMusicAction,*addMusicAction,*openDirAction,*addDirAction,*openCDAction,*openPlaylistAction,
-        *clearPlaylistAction,*exitAction,*radioModeAction,*recorderModeAction,*serverModeAction,
-        *playlistAction,*equalizerAction,*checkUpdateAction,*websiteAction, *facebookAction, *aboutAction,
-        *configAction;
-    QPushButton *playButton,*pauseButton,*stopButton,*prevButton,*nextButton,*repeatButton,*randomButton,
-        *playlistButton,*playlistModeButton,*musicModeButton,*favoriteButton, *changeFavoriteButton;
-    QLabel *timeLabel,*totalTimeLabel,*currentTrackLabel,*totalTracksLabel,*currentTagLabel,
-        *fileTypeLabel;
-    QSlider *timeSlider;
-    QProgressBar *leftChProgressBar, *rightChProgressBar;
-    QLineEdit *searchLineEdit;
-    VolumeControl *volumeControl;
-    ErrorWindow *errorWindow;
     bool notDisableButtons, updateListStyle;
 };
 

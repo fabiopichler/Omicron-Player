@@ -13,8 +13,9 @@
 #pragma once
 
 #include "../Core/Database.h"
-#include "../Gui/DialogBase.h"
-#include "../Gui/DropArea.h"
+
+#include <OmicronTK11/Qt/DropArea.hpp>
+#include <OmicronTK11/Qt/Dialog.hpp>
 
 #include <qdialog.h>
 #include <QTreeView>
@@ -28,7 +29,7 @@
 #include <QInputDialog>
 
 class MusicPlaylistTreeView;
-class MusicPlaylistManager : public DialogBase
+class MusicPlaylistManager : public OmicronTK11::OTKQT::Dialog
 {
     Q_OBJECT
 
@@ -67,8 +68,8 @@ public:
 
 private:
     QWidget *parent;
-    MyWidget *topWidget, *selectPlWidget;
-    DropArea *dropArea;
+    OmicronTK11::OTKQT::Widget *topWidget, *selectPlWidget;
+    OmicronTK11::OTKQT::DropArea *dropArea;
     QMenu *menu;
     QLabel *plSelectedLabel, *topTitle, *topDesc;
     QPushButton *menuButton, *openPlButton, *okButton, *applyButton, *cancelButton;

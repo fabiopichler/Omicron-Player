@@ -11,9 +11,17 @@
 *******************************************************************************/
 
 #include "MusicPlaylistManager.h"
-#include "../Core/Directory.h"
 
-MusicPlaylistManager::MusicPlaylistManager(QWidget *parent) : DialogBase(parent)
+#include <OmicronTK11/Qt/DirectoryDialog.hpp>
+
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QKeyEvent>
+#include <QLabel>
+
+using namespace OmicronTK11;
+
+MusicPlaylistManager::MusicPlaylistManager(QWidget *parent) : OTKQT::Dialog(parent)
 {
     this->parent = parent;
     playlist = new MusicPlaylistTreeView;
@@ -100,7 +108,7 @@ void MusicPlaylistManager::updatePlaylistStyle(bool arg)
         playlist->setProperty("playlistStyle", false);
     }
 
-    MyWidget::updateStyle(playlist);
+    OTKQT::Widget::updateStyle(playlist);
 }
 
 //================================================================================================================
@@ -109,16 +117,16 @@ void MusicPlaylistManager::updatePlaylistStyle(bool arg)
 
 void MusicPlaylistManager::createWidgets()
 {
-    dropArea = new DropArea(this);
+    dropArea = new OTKQT::DropArea(this);
 
-    topWidget = new MyWidget;
+    topWidget = new OTKQT::Widget;
     topWidget->setObjectName("topWidgetDialog");
     topTitle = new QLabel("Playlist");
     topTitle->setObjectName("topTitle");
     topDesc = new QLabel("» Aqui você pode criar, editar ou remover seus playlists.");
     topDesc->setObjectName("topDesc");
 
-    selectPlWidget = new MyWidget;
+    selectPlWidget = new OTKQT::Widget;
     selectPlWidget->setObjectName("selectPlWidget");
 }
 
@@ -303,7 +311,7 @@ void MusicPlaylistManager::addDirectory()
     {
         Database::setValue("Current", "fileDialogDir", dirName);
 
-        Directory *dir = new Directory(this);
+        OTKQT::DirectoryDialog *dir = new OTKQT::DirectoryDialog(this);
 
         dir->getAllFiles(dirName, [&](QFileInfo &fileInfo) {
             playlist->addRow(fileInfo.filePath());

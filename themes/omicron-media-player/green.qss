@@ -1,0 +1,58 @@
+/*******************************************************************************
+  FPM Player
+
+  Copyright (c) 2016, Fábio Pichler
+  All rights reserved.
+
+  License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
+  Author: Fábio Pichler
+  Website: http://fabiopichler.net
+
+*******************************************************************************/
+
+/* QWidget
+--------------------------------------------------------- */
+QWidget {
+    background: #131;
+}
+QWidget#titleBar {
+    background: #020;
+}
+QWidget#window {
+    border: 1px solid #010;
+}
+QWidget#topWidgetDialog {
+    background: #020;
+    border-bottom: 1px solid #001d00;
+}
+QWidget#selectPlWidget {
+    background: #020;
+    border: 1px solid #001d00;
+}
+QWidget#configContent {
+    border: 1px solid #001d00;
+}
+QWidget#radioInfoWidget {
+    background: #020;
+    border-top: 1px solid #001d00;
+    border-bottom: 1px solid #204220;
+}
+QWidget#statusWidget,
+QWidget#tracksWidget {
+    background: #020;
+    border: 1px solid #001d00;
+}
+
+/* QMenuBar
+--------------------------------------------------------- */
+QMenuBar {
+    background: #020;
+    border-bottom: 1px solid #001d00;
+}
+
+
+
+
+
+
+

@@ -168,7 +168,7 @@ void Stream::updateFX(int index, int value)
         p.fVolume = static_cast<float>(pow(10.0, static_cast<double>(value) / 20.0));
         BASS_FXSetParameters(volfx, &p);
     }
-    else if (index < 16)
+    else if (index < 19)
     {
         BASS_BFX_PEAKEQ eq;
         eq.lBand = index;
@@ -225,8 +225,8 @@ void Stream::setupDSP_EQ()
 {
     BASS_BFX_PEAKEQ eq;
     int i;
-    float allBands[] = {50.0f, 75.0f, 100.0f, 156.0f, 220.0f, 440.0f, 620.0f, 880.0f,
-                        1000.0f, 3000.0f, 5000.0f, 7000.0f, 10000.0f, 13000.0f, 16000.0f};
+    float allBands[] = {35.0f, 50.0f, 75.0f, 100.0f, 150.0f, 200.0f, 400.0f, 600.0f, 800.0f,
+                        1000.0f, 2500.0f, 4000.0f, 6000.0f, 8000.0f, 10000.0f, 12000.0f, 14000.0f, 16000.0f};
 
     fxEQ = BASS_ChannelSetFX(stream, BASS_FX_BFX_PEAKEQ, 0);
     volfx = BASS_ChannelSetFX(stream, BASS_FX_BFX_VOLUME, 0);
@@ -236,14 +236,14 @@ void Stream::setupDSP_EQ()
     eq.fBandwidth = 1.5f;
     eq.lChannel = BASS_BFX_CHANALL;
 
-    for (i = 1; i < 16; i++)
+    for (i = 1; i < 19; i++)
     {
         eq.lBand = i;
         eq.fCenter = allBands[i-1];
         BASS_FXSetParameters(fxEQ, &eq);
     }
 
-    for (i = 0; i < 16; i++)
+    for (i = 0; i < 19; i++)
         updateFX(i, Global::equalizerValues[i]);
 
     setVolume(volume);

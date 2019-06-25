@@ -16,7 +16,7 @@
 #
 #-------------------------------------------------
 
-QT = core widgets gui network sql xml uitools
+QT = core widgets gui network sql xml
 TEMPLATE = app
 CONFIG += c++11
 
@@ -43,7 +43,7 @@ MOC_DIR = moc/$${BUILDDIR}
 RCC_DIR = rcc/$${BUILDDIR}
 !android:DESTDIR = ../Build
 
-unix:INCLUDEPATH += "/mnt/projects/Frameworks/bass-linux"
+unix:INCLUDEPATH += "/mnt/projects/Frameworks/bass-linux" "/mnt/projects/MyFrameworks/C++/OmicronTK11+Lua/project/include" "/mnt/projects/MyFrameworks/C++/OmicronTK11+Qt/project/include"
 win32:INCLUDEPATH += "D:/Frameworks/bass"
 
 contains(QMAKE_HOST.arch, x86_64) {
@@ -52,7 +52,11 @@ contains(QMAKE_HOST.arch, x86_64) {
 
     linux:!android {
         LIBS += -L"/mnt/projects/Frameworks/bass-linux/x64" -lbass -lbass_fx -lbasscd -lbassenc -ltags
-       LIBS += -Wl,-rpath=./lib -Wl,-rpath="/mnt/projects/Frameworks/bass-linux/x64"
+        LIBS += -Wl,-rpath=./lib -Wl,-rpath="/mnt/projects/Frameworks/bass-linux/x64"
+
+        LIBS += -L"/mnt/projects/MyFrameworks/C++/OmicronTK11+Lua/linux64/build" -lOmicronTK11_Lua-d
+        LIBS += -L"/mnt/projects/MyFrameworks/C++/OmicronTK11+Qt/linux64/build" -lOmicronTK11+Qt-d -lOmicronTK11+Qt_Lua-d
+        LIBS += -L"/mnt/projects/MyFrameworks/C++/OmicronTK11/linux64/build" -L"/mnt/projects/MyFrameworks/C++/OmicronTK11+SQLite/linux64/build"
     }
 
 } else {
@@ -90,69 +94,53 @@ win32:RC_FILE = ../rc/Win.rc
 SOURCES += Main.cpp \
     Core/SingleApp.cpp \
     Core/Update.cpp \
+    Gui/MusicUi.cpp \
     Gui/MusicWindow.cpp \
+    Gui/RadioUi.cpp \
     Gui/RadioWindow.cpp \
-    Gui/TitleBar.cpp \
+    Gui/RecorderUi.cpp \
+    Gui/WindowBase.cpp \
     Tools/Equalizer.cpp \
     Core/Database.cpp \
     Core/NetPlaylist.cpp \
     Core/MusicStream.cpp \
     Core/RadioStream.cpp \
-    Gui/DialogBase.cpp \
-    Gui/DropArea.cpp \
     Tools/ConfigDialog.cpp \
     Tools/ConfigPages.cpp \
     Core/Global.cpp \
-    Gui/ErrorWindow.cpp \
     Core/Windows/FileAssociation.cpp \
     Tools/MusicPlaylistManager.cpp \
     Tools/RadioPlaylistManager.cpp \
-    Core/Theme.cpp \
-    Gui/MainWindow.cpp \
-    Gui/VolumeControl.cpp \
     Core/Fade.cpp \
-    Core/Directory.cpp \
     Core/RecorderStream.cpp \
     Gui/RecorderWindow.cpp \
     Core/Stream.cpp \
-    Gui/Widgets/MyWidget.cpp \
-    Gui/Widgets/MyComboBox.cpp \
-    Gui/Widgets/MySlider.cpp \
-    Gui/Widgets/MyLabel.cpp \
     Gui/AboutDialog.cpp
 
 HEADERS += Main.h \
+    Gui/MusicUi.h \
+    Gui/RadioUi.hpp \
+    Gui/RecorderUi.hpp \
+    Gui/WindowBase.h \
     Version.h \
     Core/SingleApp.h \
     Core/Update.h \
     Gui/MusicWindow.h \
     Gui/RadioWindow.h \
-    Gui/TitleBar.h \
     Tools/Equalizer.h \
     Core/Database.h \
     Core/NetPlaylist.h \
     Core/MusicStream.h \
     Core/RadioStream.h \
-    Gui/DialogBase.h \
-    Gui/DropArea.h \
     Tools/ConfigDialog.h \
     Tools/ConfigPages.h \
     Core/Global.h \
-    Gui/ErrorWindow.h \
     Core/Windows/FileAssociation.h \
     Tools/MusicPlaylistManager.h \
     Tools/RadioPlaylistManager.h \
-    Core/Theme.h \
-    Gui/MainWindow.h \
-    Gui/VolumeControl.h \
     Core/Fade.h \
-    Core/Directory.h \
     Core/RecorderStream.h \
     Gui/RecorderWindow.h \
     Core/Stream.h \
-    Gui/Widgets/MyWidget.h \
-    Gui/Widgets/MyComboBox.h \
-    Gui/Widgets/MySlider.h \
-    Gui/Widgets/MyLabel.h \
     Gui/AboutDialog.hpp
 

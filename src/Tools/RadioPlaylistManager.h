@@ -13,7 +13,9 @@
 #pragma once
 
 #include "../Core/Database.h"
-#include "../Gui/DialogBase.h"
+
+#include <OmicronTK11/Qt/Widget.hpp>
+#include <OmicronTK11/Qt/Dialog.hpp>
 
 #include <qdialog.h>
 #include <QTreeView>
@@ -27,7 +29,7 @@
 #include <QInputDialog>
 
 class RadioPlaylistTreeView;
-class RadioPlaylistManager : public DialogBase
+class RadioPlaylistManager : public OmicronTK11::OTKQT::Dialog
 {
     Q_OBJECT
 
@@ -60,7 +62,7 @@ public:
 
 private:
     QWidget *parent;
-    MyWidget *topWidget, *selectPlWidget;
+    OmicronTK11::OTKQT::Widget *topWidget, *selectPlWidget;
     QMenu *menu;
     QLabel *plSelectedLabel, *topTitle, *topDesc;
     QPushButton *menuButton, *openPlButton, *okButton, *applyButton, *cancelButton;
@@ -93,7 +95,7 @@ private:
     int getAllRowsCount;
 };
 
-class EditRadio : public DialogBase
+class EditRadio : public OmicronTK11::OTKQT::Dialog
 {
     Q_OBJECT
 

@@ -16,6 +16,8 @@
 
 #include <QtSql>
 
+#include <vector>
+
 class Database : public QObject
 {
     Q_OBJECT
@@ -45,11 +47,11 @@ public:
     static QList<QStringList> getRadioFavorites();
 
     // Equalizer
-    static bool addEqualizerPreset(const QString &, const QList<int> &);
+    static bool addEqualizerPreset(const QString &, const std::vector<int> &);
     static bool setEqualizerValues(const QString &);
-    static bool setEqualizerPreset(const int &, const QString &, const QList<int> &);
-    static QList<int> getEqualizerPreset(const int &);
-    static int getEqualizerPresets(QList<int> &, QStringList &);
+    static bool setEqualizerPreset(const int &, const QString &, const std::vector<int> &);
+    static std::vector<int> getEqualizerPreset(const int &);
+    static int getEqualizerPresets(std::vector<int> &, std::vector<std::string> &);
 
     // Others
     static void defaultConfig();

@@ -14,9 +14,11 @@
 
 #include <QtWidgets>
 
+using namespace OmicronTK11;
+
 int ConfigDialog::lastPage = 0;
 
-ConfigDialog::ConfigDialog(QObject *parentMain, QWidget *parent) : DialogBase(parent)
+ConfigDialog::ConfigDialog(QObject *parentMain, QWidget *parent) : OTKQT::Dialog(parent)
 {
     this->parent = parent;
     this->parentMain = parentMain;
@@ -75,7 +77,7 @@ void ConfigDialog::createWidgets()
     contentsTitle = new QLabel;
     contentsTitle->setObjectName("contentsTitle");
 
-    contentsWidget = new MyWidget;
+    contentsWidget = new OTKQT::Widget;
     contentsWidget->setObjectName("configContent");
 
     defaultsButton = new QPushButton("Definir configurações padrão");

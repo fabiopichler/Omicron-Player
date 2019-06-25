@@ -6,10 +6,12 @@
 #include <QBoxLayout>
 #include <QDebug>
 
+using namespace OmicronTK11;
+
 int AboutDialog::s_rand = -1;
 
 AboutDialog::AboutDialog(QWidget *parent)
-    : DialogBase(parent)
+    : OTKQT::Dialog(parent)
 {
     QString imagePath = Global::getQrcPath("Omicron-Player.png");
 

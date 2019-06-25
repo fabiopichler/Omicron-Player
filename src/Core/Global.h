@@ -78,7 +78,7 @@ const QString AppName = APP_NAME,
               bassopus = "",
 #endif // Q_OS_WIN
 
-              CheckUpdate = "http://software.fabiopichler.net/updates/omicron-player/check/",
+              CheckUpdate = "http://software.fabiopichler.net/updates/omicron-player-classic/check/",
               OfficialSite = OFFICIAL_WEBSITE,
               PageOnFacebook = "https://www.facebook.com/fabiopichler.net",
               DownloadUpdate = "https://fabiopichler.net/download/omicron-player/";
@@ -105,7 +105,7 @@ public:
 
     static int argc;
     static bool inDevelopment;
-    static QList<int> equalizerValues;
+    static std::vector<int> equalizerValues;
     static QList<QStringList> supportedFiles;
 
 private:

@@ -1,0 +1,100 @@
+/*******************************************************************************
+  FPM Player
+
+  Copyright (c) 2016, Fábio Pichler
+  All rights reserved.
+
+  License: BSD 3-Clause License (http://fabiopichler.net/bsd-3-license/)
+  Author: Fábio Pichler
+  Website: http://fabiopichler.net
+
+*******************************************************************************/
+
+/* QLabel
+--------------------------------------------------------- */
+QLabel#windowIcon {
+    qproperty-pixmap: url("{theme_path}images/titlebar/icon.png");
+}
+
+/* QPushButton
+--------------------------------------------------------- */
+QPushButton#minimizeButton {
+    qproperty-icon: url("{theme_path}images/Arrowhead-Down.png");
+    qproperty-iconSize: 10px 10px;
+}
+QPushButton#minimizeTrayButton {
+    qproperty-icon: url("{theme_path}images/Data-Collapse.png");
+    qproperty-iconSize: 12px 12px;
+}
+QPushButton#closeButton {
+    qproperty-icon: url("{theme_path}images/Close.png");
+    qproperty-iconSize: 12px 12px;
+}
+QPushButton#playButton {
+    qproperty-icon: url("{theme_path}images/Media-Play.png");
+    qproperty-iconSize: 20px 20px;
+}
+QPushButton#pauseButton {
+    qproperty-icon: url("{theme_path}images/Media-Pause.png");
+    qproperty-iconSize: 18px 18px;
+}
+QPushButton#stopButton {
+    qproperty-icon: url("{theme_path}images/Media-Stop.png");
+    qproperty-iconSize: 18px 18px;
+}
+QPushButton#prevButton {
+    qproperty-icon: url("{theme_path}images/Media-Back.png");
+    qproperty-iconSize: 18px 18px;
+}
+QPushButton#nextButton {
+    qproperty-icon: url("{theme_path}images/Media-Next.png");
+    qproperty-iconSize: 18px 18px;
+}
+QPushButton#recordButton {
+    qproperty-icon: url("{theme_path}images/Recorded-Media.png");
+    qproperty-iconSize: 20px 20px;
+}
+QPushButton#repeatButton {
+    qproperty-icon: url("{theme_path}images/No-Repeat.png");
+    qproperty-iconSize: 24px 24px;
+}
+QPushButton#repeatButton[style="one"] {
+    qproperty-icon: url("{theme_path}images/Repeat-One.png");
+}
+QPushButton#repeatButton[style="all"] {
+    qproperty-icon: url("{theme_path}images/Repeat-All.png");
+}
+QPushButton#randomButton {
+    qproperty-icon: url("{theme_path}images/Shuffle.png");
+    qproperty-iconSize: 24px 24px;
+}
+QPushButton#randomButton[active="true"] {
+    qproperty-icon: url("{theme_path}images/Shuffle2.png");
+}
+QPushButton#playlistButton {
+    qproperty-icon: url("{theme_path}images/Document-Music.png");
+    qproperty-iconSize: 24px 24px;
+}
+QPushButton#changeFavoriteButton {
+    qproperty-icon: url("{theme_path}images/Favorites-Add.png");
+    qproperty-iconSize: 24px 24px;
+}
+QPushButton#changeFavoriteButton[remove="true"] {
+    qproperty-icon: url("{theme_path}images/Favorites-Remove.png");
+}
+QPushButton#openLinkButton {
+    qproperty-icon: url("{theme_path}images/Link.png");
+    qproperty-iconSize: 24px 24px;
+}
+QPushButton#radioPlaylistButton {
+    qproperty-icon: url("{theme_path}images/Document.png");
+    qproperty-iconSize: 24px 24px;
+}
+QPushButton#volumeButton {
+    qproperty-icon: url("{theme_path}images/Volume.png");
+    qproperty-iconSize: 24px 24px;
+}
+QPushButton#volumeButton[mute="true"] {
+    qproperty-icon: url("{theme_path}images/Volume-Mute.png");
+}
+

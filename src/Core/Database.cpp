@@ -11,7 +11,7 @@
 *******************************************************************************/
 
 #include "Database.h"
-#include "Theme.h"
+
 #include <iostream>
 
 QSqlDatabase *Database::db = nullptr;
@@ -251,7 +251,7 @@ QList<QStringList> Database::getRadioFavorites()
 // Equalizer
 //================================================================================================================
 
-bool Database::addEqualizerPreset(const QString &title, const QList<int> &values)
+bool Database::addEqualizerPreset(const QString &title, const std::vector<int> &values)
 {
     if (!db) return false;
 
@@ -279,7 +279,7 @@ bool Database::setEqualizerValues(const QString &values)
     return query.exec("INSERT INTO CurrentEqualizer VALUES " + values);
 }
 
-bool Database::setEqualizerPreset(const int &id, const QString &title, const QList<int> &values)
+bool Database::setEqualizerPreset(const int &id, const QString &title, const std::vector<int> &values)
 {
     if (!db) return false;
 
@@ -298,25 +298,25 @@ bool Database::setEqualizerPreset(const int &id, const QString &title, const QLi
     return query.exec();
 }
 
-QList<int> Database::getEqualizerPreset(const int &id)
+std::vector<int> Database::getEqualizerPreset(const int &id)
 {
-    if (!db) return QList<int>();
+    if (!db) return std::vector<int>();
 
     QSqlQuery query(*db);
-    QList<int> list;
+    std::vector<int> list;
 
     query.exec(QString("SELECT * FROM EqualizerPreset WHERE id = %1").arg(id));
 
     if (query.next())
     {
         for (int i = 2; i < 18; i++)
-            list << query.value(i).toInt();
+            list.push_back(query.value(i).toInt());
     }
 
     return list;
 }
 
-int Database::getEqualizerPresets(QList<int> &ids, QStringList &titles)
+int Database::getEqualizerPresets(std::vector<int> &ids, std::vector<std::string> &titles)
 {
     if (!db) return 0;
 
@@ -327,8 +327,8 @@ int Database::getEqualizerPresets(QList<int> &ids, QStringList &titles)
 
     while (query.next())
     {
-        ids << query.value(0).toInt();
-        titles << query.value(1).toString();
+        ids.push_back(query.value(0).toInt());
+        titles.push_back(query.value(1).toString().toStdString());
         count++;
     }
 
@@ -353,12 +353,12 @@ void Database::defaultConfig()
 
     query.exec("CREATE TABLE Config (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO Config VALUES "
-               "('theme', '" + defaultTheme + "'), "
+               "('theme', ''), "
                "('style', 'default'), "
                "('device', '-1'), "
                "('autoDlRadioList', 'true'), "
                "('autoPlay', 'false'), "
-               "('errorNotification', 'systray')");
+               "('errorNotification', 'dialog')");
 
     query.exec("CREATE TABLE MusicConfig (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO MusicConfig VALUES "
@@ -386,11 +386,11 @@ void Database::defaultConfig()
     query.exec("CREATE TABLE Current (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO Current VALUES "
                "('mode', 'Music'), "
+               "('windowPosition', ''), "
                "('fileDialog', ''), "
                "('fileDialogDir', ''), "
                "('fileDialogPl', ''), "
-               "('volume', '100'), "
-               "('EqualizerPreset', '0')");
+               "('volume', '100')");
 
     query.exec("CREATE TABLE MusicMode (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO MusicMode VALUES "
@@ -429,7 +429,11 @@ void Database::defaultConfig()
     query.exec("CREATE TABLE RadioFavorites (title TEXT PRIMARY KEY, genre TEXT, contry TEXT, "
                "url1 TEXT, url2 TEXT, url3 TEXT, url4 TEXT, url5 TEXT)");
 
-    query.exec("CREATE TABLE EqualizerPreset (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, "
+    query.exec("CREATE TABLE IF NOT EXISTS EqualizerConfig (id TEXT PRIMARY KEY, value TEXT)");
+    query.exec("INSERT INTO EqualizerConfig VALUES "
+               "('EqualizerPreset', '0')");
+
+    query.exec("CREATE TABLE IF NOT EXISTS EqualizerPreset (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, "
                "eq0 INTEGER, eq1 INTEGER, eq2 INTEGER, eq3 INTEGER, eq4 INTEGER, eq5 INTEGER, eq6 INTEGER, eq7 INTEGER, "
                "eq8 INTEGER, eq9 INTEGER, eq10 INTEGER, eq11 INTEGER, eq12 INTEGER, eq13 INTEGER, eq14 INTEGER, eq15 INTEGER)");
 
@@ -450,11 +454,13 @@ void Database::defaultConfig()
                "(12, 0), "
                "(13, 0), "
                "(14, 0), "
-               "(15, 0)");
+               "(15, 0), "
+               "(16, 0), "
+               "(17, 0), "
+               "(18, 0)");
 }
 
 void Database::upgrade()
 {
-    setValue("Config", "theme", defaultTheme);
 }
 

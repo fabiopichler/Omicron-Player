@@ -17,7 +17,7 @@
 
 int Global::argc;
 bool Global::inDevelopment = true;
-QList<int> Global::equalizerValues;
+std::vector<int> Global::equalizerValues;
 QList<QStringList> Global::supportedFiles;
 
 QString Global::configPath;

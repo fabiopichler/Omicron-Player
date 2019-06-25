@@ -13,10 +13,22 @@
 #include "Main.h"
 #include "Tools/ConfigDialog.h"
 #include "Core/Windows/FileAssociation.h"
+#include "Gui/WindowBase.h"
+#include "Gui/MusicWindow.h"
+#include "Gui/RadioWindow.h"
+#include "Gui/RecorderWindow.h"
+
+
 #include <iostream>
 #include <QProxyStyle>
+#include <QMenu>
 
 #include "Gui/AboutDialog.hpp"
+
+#include <OmicronTK11/Qt/AppInfo.hpp>
+#include <OmicronTK11/Qt/Theme.hpp>
+
+using namespace OmicronTK11;
 
 // Classe responsável por retirar o efeito de "foco" do QTreeView.
 class ProxyStyle : public QProxyStyle
@@ -210,7 +222,7 @@ Main::~Main()
     delete window;
     delete iniSettings;
 
-    Theme::free();
+    OTKQT::Theme::free();
     Database::free();
     Stream::free();
     QFontDatabase::removeAllApplicationFonts();
@@ -234,6 +246,9 @@ bool Main::init(const int &argc)
     // Criar o diretório pros temas instalados pelo usuário, caso não exista.
     if (!QDir().exists(Global::getConfigPath("themes")))
         QDir().mkpath(Global::getConfigPath("themes"));
+
+    OTKQT::AppInfo::setSharePath("/mnt/projects/Desktop/C++/omicron-player-classic/project");
+    OTKQT::AppInfo::setConfigPath(Global::getConfigPath().toStdString().c_str());
 
     // Carregar as fontes pro programa.
     QFontDatabase::addApplicationFont(Global::getQrcPath("fonts/verdana.ttf"));
@@ -280,18 +295,23 @@ bool Main::init(const int &argc)
     setupRadiolist();
 
     // Inicializar a classe responsável pelo tema visual do programa.
-    Theme::init();
+    OTKQT::Theme::s_setThemeValue = [](const QString &name) { return Database::setValue("Config", "theme", name); };
+    OTKQT::Theme::s_setStyleValue = [](const QString &name) { return Database::setValue("Config", "style", name); };
+    OTKQT::Theme::s_themeValue = [] { return Database::value("Config", "theme").toString(); };
+    OTKQT::Theme::s_styleValue = [] { return Database::value("Config", "style").toString(); };
+
+    if (!OTKQT::Theme::init("app:omicron-media-player"))
+        return false;
 
     // Carregar o tema visual do programa. Caso houver algum erro no processo, retornará false.
-    if (!Theme::load())
+    if (!OTKQT::Theme::load())
         return false;
 
     // Instanciar a classe para conectar à internet e verificar se existem novas versões do programa.
     updateApp = new UpdateApp(this, iniSettings);
 
     // Carrega o equalizador do banco de dados para Global::equalizerValues.
-    for (int i = 0; i < 16; i++)
-        Global::equalizerValues << Database::value("CurrentEqualizer", QString::number(i)).toInt();
+    Equalizer::loadValues(Global::equalizerValues);
 
     // Configura o diretório de gravações no banco de dados, caso não esteja configurado.
     if (Database::value("RadioConfig", "recordPath").toString().isEmpty())
@@ -313,9 +333,6 @@ bool Main::init(const int &argc)
         else if (mode == "Recorder" && argc < 2)
             startRecorderMode();
 
-        else if (mode == "Server" && argc < 2)
-            startServerMode();
-
         else
             startMusicMode();
     }
@@ -336,9 +353,9 @@ bool Main::init(const int &argc)
 void Main::startMusicMode()
 {
     delete window;
-    window = new MainWindow(this, iniSettings);
-    window->initWindow(new MusicWindow(this, window));
+    window = new MusicWindow(this);
     window->setWindowTitle("Músicas » "+AppName);
+    window->show();
     trayIcon->setToolTip(AppName+" » Modo Músicas");
     updateTrayIconMenu();
 }
@@ -347,9 +364,9 @@ void Main::startMusicMode()
 void Main::startRadioMode()
 {
     delete window;
-    window = new MainWindow(this, iniSettings);
-    window->initWindow(new RadioWindow(this, window));
+    window = new RadioWindow(this);
     window->setWindowTitle("Rádio » "+AppName);
+    window->show();
     trayIcon->setToolTip(AppName+" » Modo Web Rádio");
     updateTrayIconMenu();
 }
@@ -358,25 +375,11 @@ void Main::startRadioMode()
 void Main::startRecorderMode()
 {
     delete window;
-    window = new MainWindow(this, iniSettings);
-    window->initWindow(new RecorderWindow(this, window));
+    window = new RecorderWindow(this);
     window->setWindowTitle("Gravador » "+AppName);
+    window->show();
     trayIcon->setToolTip(AppName+" » Modo Gravador");
     updateTrayIconMenu();
-}
-
-//! Inicia o Modo Servidor.
-void Main::startServerMode()
-{
-    /*delete window;
-    window = new MainWindow(this, iniSettings);
-    window->initWindow(new ServerWindow(this, window));
-    window->setWindowTitle("Servidor » "+AppName);
-    trayIcon->setToolTip(AppName+" » Modo Servidor");
-    updateTrayIconMenu();*/
-
-    QMessageBox::information(window, "Servidor", "O desenvolvimento do \"Modo Servidor\" não foi concluído...\n"
-                             "Estará disponível na próxima versão (versão 2.2).");
 }
 
 //! Define o título da janela do programa.
@@ -404,30 +407,6 @@ void Main::showError(QString msg)
 void Main::showNotification(QString msg)
 {
     trayIcon->showMessage(AppName, msg);
-}
-
-//! Abre o site oficial no navegador padrão do usuário.
-void Main::openSite()
-{
-    QDesktopServices::openUrl(QUrl(OfficialSite));
-}
-
-//! Abre a página oficial do Facebook no navegador padrão do usuário.
-void Main::openFacebook()
-{
-    QDesktopServices::openUrl(QUrl(PageOnFacebook));
-}
-
-//! Exibe um diálogo com o "sobre o programa".
-void Main::about()
-{
-    AboutDialog(window).exec();
-}
-
-//! Inicializa um diálogo contendo as configurações do programa.
-void Main::initConfigDialog()
-{
-    ConfigDialog(this, window).exec();
 }
 
 //! Reinicia o programa.
@@ -572,7 +551,7 @@ void Main::checkUpdate()
 /*!
   \param arg Lista de argumentos.
 */
-void Main::receiveMessage(QStringList arg)
+void Main::receiveMessage(QVector<QString> arg)
 {
     // Se o parâmentro --empty foi passado, apenas ativar a janela do programa.
     if (!arg.isEmpty() && arg[0] == "--empty")

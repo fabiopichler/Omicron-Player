@@ -11,31 +11,35 @@
 *******************************************************************************/
 
 #include "MusicWindow.h"
-#include "../Core/Theme.h"
-#include "../Core/Directory.h"
 
-MusicWindow::MusicWindow(QObject *parentMain, QWidget *parent) : DropArea(parent)
+#include <OmicronTK11/Qt/DirectoryDialog.hpp>
+#include <OmicronTK11/Qt/ComboBox.hpp>
+#include <OmicronTK11/Qt/ErrorWindow.hpp>
+#include <OmicronTK11/Qt/Slider.hpp>
+
+using namespace OmicronTK11;
+
+MusicWindow::MusicWindow(QObject *parentMain)
+    : WindowBase(parentMain),
+      m_ui(this)
 {
     this->parentMain = parentMain;
     notDisableButtons = false;
     updateListStyle = true;
     mode = "Music";
-    errorWindow = new ErrorWindow(this);
     musicStream = new MusicStream(this);
     playlist = musicStream->playlist;
     static bool initialized = true;
 
-    if (!(uiWidget = Theme::loadUi("MusicWindow.xml", this)))
+    if (!m_ui.init(musicStream))
     {
-        throw "Ops! Algo deu errado...\nHouve um erro ao carregar o arquivo \"MusicWindow.xml\" do tema atual.";
+        throw "36: if (!m_ui.init(musicStream))";
         return;
     }
 
-    createMenuBar();
     createWidgets();
     createLabels();
     createButtons();
-    createLayouts();
     createEvents();
     loadPlaylist((initialized && Global::argc > 1) ? 1 : -1);
     updatePlaylistStyle();
@@ -60,185 +64,102 @@ MusicWindow::MusicWindow(QObject *parentMain, QWidget *parent) : DropArea(parent
 
 MusicWindow::~MusicWindow()
 {
-    Database::setValue("Current", "volume", volumeControl->volume());
+    Database::setValue("Current", "volume", m_ui.m_volumeControl->volume());
 
     delete musicStream;
-    delete errorWindow;
+    delete m_errorWindow;
+}
+
+bool MusicWindow::init()
+{
+    return true;
 }
 
 //================================================================================================================
 // private
 //================================================================================================================
 
-void MusicWindow::createMenuBar()
-{
-    QMenu *fileMenu = new QMenu("Arquivo");
-#ifndef Q_OS_ANDROID
-    openCDAction = fileMenu->addAction("Abrir CD de Áudio");
-    fileMenu->addSeparator();
-#endif
-    openMusicAction = fileMenu->addAction("Abrir Músicas");
-    addMusicAction = fileMenu->addAction("Adicionar Músicas");
-    fileMenu->addSeparator();
-    openDirAction = fileMenu->addAction("Abrir Pasta com Músicas");
-    addDirAction = fileMenu->addAction("Adicionar Pasta com Músicas");
-    fileMenu->addSeparator();
-    openPlaylistAction = fileMenu->addAction("Abrir Playlist");
-    clearPlaylistAction = fileMenu->addAction("Limpar a Lista de Reprodução");
-    fileMenu->addSeparator();
-    exitAction = fileMenu->addAction("Sair");
-    exitAction->setShortcut(QString("Ctrl+Q"));
-
-    QMenu *modeMenu = new QMenu("Modo");
-    QAction *currentAction = modeMenu->addAction("Modo Músicas");
-    radioModeAction = modeMenu->addAction("Modo Web Rádio");
-    recorderModeAction = modeMenu->addAction("Modo Gravador");
-    //modeMenu->addSeparator();
-    //serverModeAction = modeMenu->addAction("Modo Servidor");
-
-    currentAction->setCheckable(true);
-    currentAction->setChecked(true);
-    currentAction->setDisabled(true);
-
-    QMenu *toolsMenu = new QMenu("Ferramentas");
-    playlistAction = toolsMenu->addAction("Gerenciador de Playlist");
-    equalizerAction = toolsMenu->addAction("Equalizador");
-    toolsMenu->addSeparator();
-    configAction = toolsMenu->addAction("Configurações");
-
-    QMenu *aboutMenu = new QMenu("Ajuda");
-    checkUpdateAction = aboutMenu->addAction("Verificar por Atualizações");
-    aboutMenu->addSeparator();
-    websiteAction = aboutMenu->addAction("Visitar o Website Oficial");
-    facebookAction = aboutMenu->addAction("Curtir a Página no Facebook");
-    aboutMenu->addSeparator();
-    aboutAction = aboutMenu->addAction("Sobre");
-
-    QMenuBar *menuBar = uiWidget->findChild<QMenuBar *>("menuBar");
-    menuBar->addMenu(fileMenu);
-    menuBar->addMenu(modeMenu);
-    menuBar->addMenu(toolsMenu);
-    menuBar->addMenu(aboutMenu);
-}
-
 void MusicWindow::createWidgets()
 {
     int volume = Database::value("Current", "volume", 100).toInt();
 
-    volumeControl = new VolumeControl(this);
-    volumeControl->setVolume(volume);
+    m_ui.m_volumeControl->setVolume(volume);
     musicStream->setVolume(volume);
 
-    timeSlider = uiWidget->findChild<QSlider *>("timeSlider");
-    timeSlider->setEnabled(false);
-    timeSlider->setMaximum(0);
+    m_ui.m_timeSlider->setEnabled(false);
+    m_ui.m_timeSlider->setMaximum(0);
 
-    searchLineEdit = uiWidget->findChild<QLineEdit *>("searchLineEdit");
-    searchLineEdit->setClearButtonEnabled(true);
-    searchLineEdit->setPlaceholderText("Pesquisa rápida");
+    m_ui.m_searchLineEdit->setClearButtonEnabled(true);
+    m_ui.m_searchLineEdit->setPlaceholderText("Pesquisa rápida");
 
-    leftChProgressBar = uiWidget->findChild<QProgressBar *>("leftChProgressBar");
-    leftChProgressBar->setObjectName("channelsProgressBar");
-    leftChProgressBar->setRange(0,32768);
-    leftChProgressBar->setTextVisible(false);
+    m_ui.m_leftChProgressBar->setObjectName("channelsProgressBar");
+    m_ui.m_leftChProgressBar->setRange(0,32768);
+    m_ui.m_leftChProgressBar->setTextVisible(false);
 
-    rightChProgressBar = uiWidget->findChild<QProgressBar *>("rightChProgressBar");
-    rightChProgressBar->setObjectName("channelsProgressBar");
-    rightChProgressBar->setRange(0,32768);
-    rightChProgressBar->setTextVisible(false);
+    m_ui.m_rightChProgressBar->setObjectName("channelsProgressBar");
+    m_ui.m_rightChProgressBar->setRange(0,32768);
+    m_ui.m_rightChProgressBar->setTextVisible(false);
 }
 
 void MusicWindow::createLabels()
 {
-    currentTrackLabel = uiWidget->findChild<QLabel *>("currentTrackLabel");
-    totalTracksLabel = uiWidget->findChild<QLabel *>("totalTracksLabel");
-    currentTagLabel = uiWidget->findChild<QLabel *>("currentTagLabel");
-    totalTimeLabel = uiWidget->findChild<QLabel *>("totalTimeLabel");
-    fileTypeLabel = uiWidget->findChild<QLabel *>("fileTypeLabel");
-    timeLabel = uiWidget->findChild<QLabel *>("timeLabel");
+    m_ui.m_currentTrackLabel->setTextFormat(Qt::PlainText);
+    m_ui.m_totalTracksLabel->setTextFormat(Qt::PlainText);
+    m_ui.m_currentTagLabel->setTextFormat(Qt::PlainText);
+    m_ui.m_totalTimeLabel->setTextFormat(Qt::PlainText);
+    m_ui.m_fileTypeLabel->setTextFormat(Qt::PlainText);
+    m_ui.m_timeLabel->setTextFormat(Qt::PlainText);
 
-    currentTrackLabel->setTextFormat(Qt::PlainText);
-    totalTracksLabel->setTextFormat(Qt::PlainText);
-    currentTagLabel->setTextFormat(Qt::PlainText);
-    totalTimeLabel->setTextFormat(Qt::PlainText);
-    fileTypeLabel->setTextFormat(Qt::PlainText);
-    timeLabel->setTextFormat(Qt::PlainText);
+    m_ui.m_currentTrackLabel->setToolTip("Faixa atual");
+    m_ui.m_totalTracksLabel->setToolTip("Total de faixas");
 
-    currentTrackLabel->setToolTip("Faixa atual");
-    totalTracksLabel->setToolTip("Total de faixas");
+    m_ui.m_currentTagLabel->setFixedHeight(20);
 
-    currentTagLabel->setFixedHeight(20);
-
-    currentTagLabel->setObjectName("radioTitleLabel");
-    totalTimeLabel->setObjectName("radioTitleLabel");
-    currentTrackLabel->setObjectName("trackLabel");
-    totalTracksLabel->setObjectName("trackLabel");
-    timeLabel->setObjectName("radioTitleLabel");
+    m_ui.m_currentTagLabel->setObjectName("radioTitleLabel");
+    m_ui.m_totalTimeLabel->setObjectName("radioTitleLabel");
+    m_ui.m_currentTrackLabel->setObjectName("trackLabel");
+    m_ui.m_totalTracksLabel->setObjectName("trackLabel");
+    m_ui.m_timeLabel->setObjectName("radioTitleLabel");
 
     int hour = QTime::currentTime().hour();
 
     if (hour > 5 && hour < 12)
-        currentTagLabel->setText("Bom Dia");
+        m_ui.m_currentTagLabel->setText("Bom Dia");
     else if (hour > 11 && hour < 18)
-        currentTagLabel->setText("Boa Tarde");
+        m_ui.m_currentTagLabel->setText("Boa Tarde");
     else
-        currentTagLabel->setText("Boa Noite");
+        m_ui.m_currentTagLabel->setText("Boa Noite");
 
-    timeLabel->setText("--:--");
-    totalTimeLabel->setText("--:--");
-    currentTrackLabel->setText(QString().sprintf("%03i",
+    m_ui.m_timeLabel->setText("--:--");
+    m_ui.m_totalTimeLabel->setText("--:--");
+    m_ui.m_currentTrackLabel->setText(QString().sprintf("%03i",
                                       (playlist->isEmpty() ? 0 : Database::value("MusicMode", "index", 0).toInt() + 1)));
-    totalTracksLabel->setText(QString().sprintf("%03i", playlist->length()));
-    fileTypeLabel->setText("---");
+    m_ui.m_totalTracksLabel->setText(QString().sprintf("%03i", playlist->length()));
+    m_ui.m_fileTypeLabel->setText("---");
 }
 
 void MusicWindow::createButtons()
 {
-    playButton = uiWidget->findChild<QPushButton *>("play");
-    pauseButton = uiWidget->findChild<QPushButton *>("pause");
-    stopButton = uiWidget->findChild<QPushButton *>("stop");
-    prevButton = uiWidget->findChild<QPushButton *>("prev");
-    nextButton = uiWidget->findChild<QPushButton *>("next");
-    changeFavoriteButton = uiWidget->findChild<QPushButton *>("changeFavorite");
-    repeatButton = uiWidget->findChild<QPushButton *>("repeat");
-    randomButton = uiWidget->findChild<QPushButton *>("random");
-    playlistButton = uiWidget->findChild<QPushButton *>("musicPlaylist");
-    playlistModeButton = uiWidget->findChild<QPushButton *>("playlistMode");
-    musicModeButton = uiWidget->findChild<QPushButton *>("musicMode");
-    favoriteButton = uiWidget->findChild<QPushButton *>("favorite");
+    m_ui.m_playlistTabButton->setText("Playlist");
+    m_ui.m_musicTabButton->setText("Músicas/CD");
+    m_ui.m_favoritesTabButton->setText("Favoritos");
 
-    playlistModeButton->setText("Playlist");
-    musicModeButton->setText("Músicas/CD");
-    favoriteButton->setText("Favoritos");
+    m_ui.m_playButton->setToolTip("Reproduzir");
+    m_ui.m_pauseButton->setToolTip("Pausar");
+    m_ui.m_stopButton->setToolTip("Parar");
+    m_ui.m_prevButton->setToolTip("Faixa anterior");
+    m_ui.m_nextButton->setToolTip("Próxima faixa");
+    m_ui.m_playlistManagerButton->setToolTip("Editar Playlist");
 
-    playButton->setToolTip("Reproduzir");
-    pauseButton->setToolTip("Pausar");
-    stopButton->setToolTip("Parar");
-    prevButton->setToolTip("Faixa anterior");
-    nextButton->setToolTip("Próxima faixa");
-    playlistButton->setToolTip("Editar Playlist");
+    m_ui.m_playlistTabButton->setObjectName("tabStyle");
+    m_ui.m_musicTabButton->setObjectName("tabStyle");
+    m_ui.m_favoritesTabButton->setObjectName("tabStyleLast");
 
-    playlistModeButton->setObjectName("tabStyle");
-    musicModeButton->setObjectName("tabStyle");
-    favoriteButton->setObjectName("tabStyleLast");
-
-    pauseButton->setEnabled(false);
-    stopButton->setEnabled(false);
+    m_ui.m_pauseButton->setEnabled(false);
+    m_ui.m_stopButton->setEnabled(false);
 
     changeRepeatStyle(Database::value("MusicMode", "repeat", 0).toInt());
     changeRandomStyle(Database::value("MusicMode", "random", false).toBool());
-}
-
-void MusicWindow::createLayouts()
-{
-    uiWidget->findChild<QVBoxLayout *>("playlistLayout")->addWidget(playlist);
-    uiWidget->findChild<QHBoxLayout *>("bottomLayout")->addWidget(volumeControl);
-
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget(uiWidget);
-    layout->setMargin(0);
-    layout->setSpacing(0);
-    setLayout(layout);
 }
 
 void MusicWindow::createEvents()
@@ -250,7 +171,7 @@ void MusicWindow::createEvents()
 
     connect(parentMain, SIGNAL(openMusic(QStringList)), this, SLOT(openMusic(QStringList)));
     connect(parentMain, SIGNAL(addMusic(QStringList)), this, SLOT(addMusic(QStringList)));
-    connect(this, SIGNAL(filesFromDropArea(QStringList)), parentMain, SLOT(receiveMessage(QStringList)));
+    connect(this, SIGNAL(filesFromDropArea(QVector<QString>)), parentMain, SLOT(receiveMessage(QVector<QString>)));
 
     connect(this, SIGNAL(showNotification(QString)), parentMain, SLOT(showNotification(QString)));
     connect(this, SIGNAL(showError(QString)), parentMain, SLOT(showError(QString)));
@@ -260,32 +181,32 @@ void MusicWindow::createEvents()
 
     connect(musicStream, SIGNAL(updatePlaylistStyle()), this, SLOT(updatePlaylistStyle()));
     connect(this, SIGNAL(dragAndDrop(bool)), this, SLOT(updatePlaylistStyle(bool)));
-    connect(errorWindow, SIGNAL(stopStream()), musicStream, SLOT(stop()));
+    connect(m_errorWindow, SIGNAL(stopStream()), musicStream, SLOT(stop()));
 
-    connect(volumeControl, &VolumeControl::volumeChanged, musicStream, &MusicStream::setVolume);
+    connect(m_ui.m_volumeControl, &OTKQT::VolumeControl::volumeChanged, musicStream, &MusicStream::setVolume);
 
-    connect(openMusicAction, SIGNAL(triggered()), this, SLOT(openMusic()));
-    connect(addMusicAction, SIGNAL(triggered()), this, SLOT(addMusic()));
-    connect(openDirAction, SIGNAL(triggered()), this, SLOT(openDirectory()));
-    connect(addDirAction, SIGNAL(triggered()), this, SLOT(addDirectory()));
+    connect(m_ui.m_openMusicAction, SIGNAL(triggered()), this, SLOT(openMusic()));
+    connect(m_ui.m_addMusicAction, SIGNAL(triggered()), this, SLOT(addMusic()));
+    connect(m_ui.m_openDirAction, SIGNAL(triggered()), this, SLOT(openDirectory()));
+    connect(m_ui.m_addDirAction, SIGNAL(triggered()), this, SLOT(addDirectory()));
 #ifndef Q_OS_ANDROID
-    connect(openCDAction, SIGNAL(triggered()), this, SLOT(openCD()));
+    connect(m_ui.m_openCDAction, SIGNAL(triggered()), this, SLOT(openCD()));
 #endif
-    connect(openPlaylistAction, SIGNAL(triggered()), this, SLOT(initPlaylist()));
-    connect(clearPlaylistAction, SIGNAL(triggered()), this, SLOT(clearPlaylist()));
-    connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
-    connect(radioModeAction, SIGNAL(triggered()), parentMain, SLOT(startRadioMode()));
-    connect(recorderModeAction, SIGNAL(triggered()), parentMain, SLOT(startRecorderMode()));
+    connect(m_ui.m_openPlaylistAction, SIGNAL(triggered()), this, SLOT(initPlaylist()));
+    connect(m_ui.m_clearPlaylistAction, SIGNAL(triggered()), this, SLOT(clearPlaylist()));
+    connect(m_ui.m_exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+    connect(m_ui.m_radioModeAction, SIGNAL(triggered()), parentMain, SLOT(startRadioMode()));
+    connect(m_ui.m_recorderModeAction, SIGNAL(triggered()), parentMain, SLOT(startRecorderMode()));
     //connect(serverModeAction, SIGNAL(triggered()), parentMain, SLOT(startServerMode()));
-    connect(playlistAction, SIGNAL(triggered()), this, SLOT(initPlaylist()));
-    connect(equalizerAction, SIGNAL(triggered()), this, SLOT(initEqualizer()));
-    connect(configAction, SIGNAL(triggered()), parentMain, SLOT(initConfigDialog()));
-    connect(checkUpdateAction, SIGNAL(triggered()), parentMain, SLOT(checkUpdate()));
-    connect(websiteAction, SIGNAL(triggered()), parentMain, SLOT(openSite()));
-    connect(facebookAction, SIGNAL(triggered()), parentMain, SLOT(openFacebook()));
-    connect(aboutAction, SIGNAL(triggered()), parentMain, SLOT(about()));
+    connect(m_ui.m_playlistAction, SIGNAL(triggered()), this, SLOT(initPlaylist()));
+    connect(m_ui.m_equalizerAction, SIGNAL(triggered()), this, SLOT(initEqualizer()));
+    connect(m_ui.m_configAction, SIGNAL(triggered()), this, SLOT(initConfigDialog()));
+    connect(m_ui.m_checkUpdateAction, SIGNAL(triggered()), parentMain, SLOT(checkUpdate()));
+    connect(m_ui.m_websiteAction, SIGNAL(triggered()), this, SLOT(openSite()));
+    connect(m_ui.m_facebookAction, SIGNAL(triggered()), this, SLOT(openFacebook()));
+    connect(m_ui.m_aboutAction, SIGNAL(triggered()), this, SLOT(about()));
 
-    connect(searchLineEdit, SIGNAL(textChanged(QString)), playlist, SLOT(textFilterChanged(QString)));
+    connect(m_ui.m_searchLineEdit, SIGNAL(textChanged(QString)), playlist, SLOT(textFilterChanged(QString)));
 
     connect(parentMain, SIGNAL(playStream()), musicStream, SLOT(play()));
     connect(parentMain, SIGNAL(pauseStream()), musicStream, SLOT(pause()));
@@ -293,23 +214,23 @@ void MusicWindow::createEvents()
     connect(parentMain, SIGNAL(prevStream()), musicStream, SLOT(prev()));
     connect(parentMain, SIGNAL(nextStream()), musicStream, SLOT(next()));
 
-    connect(playButton, SIGNAL(clicked()), musicStream, SLOT(play()));
-    connect(pauseButton, SIGNAL(clicked()), musicStream, SLOT(pause()));
-    connect(stopButton, SIGNAL(clicked()), musicStream, SLOT(stop()));
-    connect(prevButton, SIGNAL(clicked()), musicStream, SLOT(prev()));
-    connect(nextButton, SIGNAL(clicked()), musicStream, SLOT(next()));
-    connect(changeFavoriteButton, SIGNAL(clicked()), this, SLOT(changeFavorite()));
-    connect(playlistButton, SIGNAL(clicked()), this, SLOT(initPlaylist()));
+    connect(m_ui.m_playButton, SIGNAL(clicked()), musicStream, SLOT(play()));
+    connect(m_ui.m_pauseButton, SIGNAL(clicked()), musicStream, SLOT(pause()));
+    connect(m_ui.m_stopButton, SIGNAL(clicked()), musicStream, SLOT(stop()));
+    connect(m_ui.m_prevButton, SIGNAL(clicked()), musicStream, SLOT(prev()));
+    connect(m_ui.m_nextButton, SIGNAL(clicked()), musicStream, SLOT(next()));
+    connect(m_ui.m_changeFavoriteButton, SIGNAL(clicked()), this, SLOT(changeFavorite()));
+    connect(m_ui.m_playlistManagerButton, SIGNAL(clicked()), this, SLOT(initPlaylist()));
 
-    connect(repeatButton, &QPushButton::clicked, [=]() { changeRepeatStyle(musicStream->changeRepeat()); });
-    connect(randomButton, &QPushButton::clicked, [=]() { changeRandomStyle(musicStream->changeRandom()); });
-    connect(playlistModeButton, &QPushButton::clicked, [=]() { loadPlaylist(0); updatePlaylistStyle(); });
-    connect(musicModeButton, &QPushButton::clicked, [=]() { loadPlaylist(1); updatePlaylistStyle(); });
-    connect(favoriteButton, &QPushButton::clicked, [=]() { loadPlaylist(2); updatePlaylistStyle(); });
+    connect(m_ui.m_repeatButton, &QPushButton::clicked, [=]() { changeRepeatStyle(musicStream->changeRepeat()); });
+    connect(m_ui.m_randomButton, &QPushButton::clicked, [=]() { changeRandomStyle(musicStream->changeRandom()); });
+    connect(m_ui.m_playlistTabButton, &QPushButton::clicked, [=]() { loadPlaylist(0); updatePlaylistStyle(); });
+    connect(m_ui.m_musicTabButton, &QPushButton::clicked, [=]() { loadPlaylist(1); updatePlaylistStyle(); });
+    connect(m_ui.m_favoritesTabButton, &QPushButton::clicked, [=]() { loadPlaylist(2); updatePlaylistStyle(); });
 
-    connect(musicStream, SIGNAL(playButtonEnabled(bool)), playButton, SLOT(setEnabled(bool)));
-    connect(musicStream, SIGNAL(pauseButtonEnabled(bool)), pauseButton, SLOT(setEnabled(bool)));
-    connect(musicStream, SIGNAL(stopButtonEnabled(bool)), stopButton, SLOT(setEnabled(bool)));
+    connect(musicStream, SIGNAL(playButtonEnabled(bool)), m_ui.m_playButton, SLOT(setEnabled(bool)));
+    connect(musicStream, SIGNAL(pauseButtonEnabled(bool)), m_ui.m_pauseButton, SLOT(setEnabled(bool)));
+    connect(musicStream, SIGNAL(stopButtonEnabled(bool)), m_ui.m_stopButton, SLOT(setEnabled(bool)));
     connect(musicStream, SIGNAL(initPlaylist(bool)), this, SLOT(initPlaylist(bool)));
     connect(musicStream, SIGNAL(playNewMusic(QStringList)), this, SLOT(playNewMusic(QStringList)));
     connect(musicStream, SIGNAL(setTotals(QWORD)), this, SLOT(totals(QWORD)));
@@ -317,7 +238,7 @@ void MusicWindow::createEvents()
     connect(musicStream, SIGNAL(updateInfo(QWORD, DWORD)), this, SLOT(update(QWORD, DWORD)));
     connect(musicStream, SIGNAL(threadFinished()), this, SLOT(threadFinished()));
 
-    connect(timeSlider, SIGNAL(sliderMoved(int)), musicStream, SLOT(setPosition(int)));
+    connect(m_ui.m_timeSlider, SIGNAL(sliderMoved(int)), musicStream, SLOT(setPosition(int)));
 }
 
 void MusicWindow::changeRepeatStyle(const short &arg)
@@ -325,36 +246,36 @@ void MusicWindow::changeRepeatStyle(const short &arg)
     switch (arg)
     {
     case 0:
-        repeatButton->setProperty("style", false);
-        repeatButton->setToolTip("Repetir: Desativado");
+        m_ui.m_repeatButton->setProperty("style", false);
+        m_ui.m_repeatButton->setToolTip("Repetir: Desativado");
         break;
     case 1:
-        repeatButton->setProperty("style", "one");
-        repeatButton->setToolTip("Repetir uma faixa");
+        m_ui.m_repeatButton->setProperty("style", "one");
+        m_ui.m_repeatButton->setToolTip("Repetir uma faixa");
         break;
     case 2:
-        repeatButton->setProperty("style", "all");
-        repeatButton->setToolTip("Repetir todas as faixas");
+        m_ui.m_repeatButton->setProperty("style", "all");
+        m_ui.m_repeatButton->setToolTip("Repetir todas as faixas");
         break;
     }
 
-    MyWidget::updateStyle(repeatButton);
+    OTKQT::Widget::updateStyle(m_ui.m_repeatButton);
 }
 
 void MusicWindow::changeRandomStyle(const bool &arg)
 {
     if (arg)
     {
-        randomButton->setProperty("active", true);
-        randomButton->setToolTip("Modo Aleatório Ativado");
+        m_ui.m_randomButton->setProperty("active", true);
+        m_ui.m_randomButton->setToolTip("Modo Aleatório Ativado");
     }
     else
     {
-        randomButton->setProperty("active", false);
-        randomButton->setToolTip("Modo Aleatório Desativado");
+        m_ui.m_randomButton->setProperty("active", false);
+        m_ui.m_randomButton->setToolTip("Modo Aleatório Desativado");
     }
 
-    MyWidget::updateStyle(randomButton);
+    OTKQT::Widget::updateStyle(m_ui.m_randomButton);
 }
 
 void MusicWindow::loadPlaylist(int plMode, const bool &disableCdMode, const bool &load,
@@ -369,38 +290,38 @@ void MusicWindow::loadPlaylist(int plMode, const bool &disableCdMode, const bool
 
     if (playlistMode == 2)
     {
-        changeFavoriteButton->setProperty("remove", true);
-        changeFavoriteButton->setToolTip("Remover dos Favoritos");
+        m_ui.m_changeFavoriteButton->setProperty("remove", true);
+        m_ui.m_changeFavoriteButton->setToolTip("Remover dos Favoritos");
     }
     else
     {
-        changeFavoriteButton->setProperty("remove", false);
-        changeFavoriteButton->setToolTip("Adicionar aos Favoritos");
+        m_ui.m_changeFavoriteButton->setProperty("remove", false);
+        m_ui.m_changeFavoriteButton->setToolTip("Adicionar aos Favoritos");
     }
 
     if (playlistMode == 0)
     {
-        playlistModeButton->setProperty("tabStyle", true);
-        musicModeButton->setProperty("tabStyle", false);
-        favoriteButton->setProperty("tabStyle", false);
+        m_ui.m_playlistTabButton->setProperty("tabStyle", true);
+        m_ui.m_musicTabButton->setProperty("tabStyle", false);
+        m_ui.m_favoritesTabButton->setProperty("tabStyle", false);
     }
     else if (playlistMode == 1)
     {
-        playlistModeButton->setProperty("tabStyle", false);
-        musicModeButton->setProperty("tabStyle", true);
-        favoriteButton->setProperty("tabStyle", false);
+        m_ui.m_playlistTabButton->setProperty("tabStyle", false);
+        m_ui.m_musicTabButton->setProperty("tabStyle", true);
+        m_ui.m_favoritesTabButton->setProperty("tabStyle", false);
     }
     else if (playlistMode == 2)
     {
-        playlistModeButton->setProperty("tabStyle", false);
-        musicModeButton->setProperty("tabStyle", false);
-        favoriteButton->setProperty("tabStyle", true);
+        m_ui.m_playlistTabButton->setProperty("tabStyle", false);
+        m_ui.m_musicTabButton->setProperty("tabStyle", false);
+        m_ui.m_favoritesTabButton->setProperty("tabStyle", true);
     }
 
-    MyWidget::updateStyle(changeFavoriteButton);
-    MyWidget::updateStyle(playlistModeButton);
-    MyWidget::updateStyle(musicModeButton);
-    MyWidget::updateStyle(favoriteButton);
+    OTKQT::Widget::updateStyle(m_ui.m_changeFavoriteButton);
+    OTKQT::Widget::updateStyle(m_ui.m_playlistTabButton);
+    OTKQT::Widget::updateStyle(m_ui.m_musicTabButton);
+    OTKQT::Widget::updateStyle(m_ui.m_favoritesTabButton);
 
     musicStream->loadPlaylist(playlistMode, disableCdMode, load, stop, playlistName);
 
@@ -431,7 +352,7 @@ QStringList MusicWindow::fileDialog()
 
 void MusicWindow::initEqualizer()
 {
-    Equalizer eq(this);
+    Equalizer eq(this, Global::equalizerValues);
     connect(&eq, SIGNAL(updateEqualizer(int,int)), musicStream, SLOT(updateFX(int,int)));
     eq.exec();
     disconnect(&eq, SIGNAL(updateEqualizer(int,int)), musicStream, SLOT(updateFX(int,int)));
@@ -466,9 +387,9 @@ void MusicWindow::initPlaylist(bool play)
         }
         else if (play)
         {
-            playButton->setEnabled(true);
-            pauseButton->setEnabled(false);
-            stopButton->setEnabled(false);
+            m_ui.m_playButton->setEnabled(true);
+            m_ui.m_pauseButton->setEnabled(false);
+            m_ui.m_stopButton->setEnabled(false);
         }
     }
 }
@@ -552,7 +473,7 @@ void MusicWindow::addDirectory(bool isOpenMode)
             loadPlaylist(1, true, true, false);
 
         firstRun = true;
-        Directory *dir = new Directory(this);
+        OTKQT::DirectoryDialog *dir = new OTKQT::DirectoryDialog(this);
 
         dir->getAllFiles(dirName, [=](QFileInfo &fileInfo) {
             if (firstRun && isOpenMode)
@@ -580,7 +501,7 @@ void MusicWindow::addDirectory(bool isOpenMode)
 void MusicWindow::openCD()
 {
 #ifndef Q_OS_ANDROID
-    MyComboBox *actionCombo = new MyComboBox;
+    OTKQT::ComboBox *actionCombo = new OTKQT::ComboBox;
     int a = 0;
     static int curdrive = 0;
     bool playCD = false;
@@ -604,7 +525,7 @@ void MusicWindow::openCD()
     if (curdrive < a)
         actionCombo->setCurrentIndex(curdrive);
 
-    DialogBase *displayMsg = new DialogBase(this);
+    OTKQT::Dialog *displayMsg = new OTKQT::Dialog(this);
     displayMsg->setMinimumSize(400, 80);
 
     QLabel *label = new QLabel("Abrir um CD de Áudio.\n\nEscolha a unidade de DVD/CD-ROM:");
@@ -745,7 +666,7 @@ void MusicWindow::clearPlaylist()
         musicStream->setupCDMode(false);
 
     playlist->clear();
-    currentTagLabel->setText("Parado");
+    m_ui.m_currentTagLabel->setText("Parado");
     updatePlaylistStyle();
 }
 
@@ -753,23 +674,23 @@ void MusicWindow::totals(QWORD time)
 {
     if (musicStream->isMusic)
     {
-        totalTimeLabel->setText(QString().sprintf("%03d.%03d",LOWORD(time),HIWORD(time)));
+        m_ui.m_totalTimeLabel->setText(QString().sprintf("%03d.%03d",LOWORD(time),HIWORD(time)));
         time = LOWORD(time);
     }
     else if (time < 3600)
     {
-        totalTimeLabel->setText(QString().sprintf("%02i:%02i", static_cast<unsigned int>(time/60),
+        m_ui.m_totalTimeLabel->setText(QString().sprintf("%02i:%02i", static_cast<unsigned int>(time/60),
                                                   static_cast<unsigned int>(time%60)));
     }
     else
     {
-        totalTimeLabel->setText(QString().sprintf("%02i:%02i:%02i",
+        m_ui.m_totalTimeLabel->setText(QString().sprintf("%02i:%02i:%02i",
                                              static_cast<unsigned int>(time/3600),
                                              static_cast<unsigned int>((time/60)%60),
                                              static_cast<unsigned int>(time%60)));
     }
-    timeSlider->setEnabled(true);
-    timeSlider->setMaximum(time);
+    m_ui.m_timeSlider->setEnabled(true);
+    m_ui.m_timeSlider->setMaximum(time);
 }
 
 void MusicWindow::updatePlaylistStyle(bool arg)
@@ -796,7 +717,7 @@ void MusicWindow::updatePlaylistStyle(bool arg)
         playlist->setProperty("playlistStyle", false);
     }
 
-    MyWidget::updateStyle(playlist);
+    OTKQT::Widget::updateStyle(playlist);
 
     if (playlist->isEmpty())
     {
@@ -824,16 +745,16 @@ void MusicWindow::update(MusicStream::Event index, QVariant value)
     switch (index)
     {
         case MusicStream::CurrentTag:
-            currentTagLabel->setText(value.toString());
+            m_ui.m_currentTagLabel->setText(value.toString());
             break;
         case MusicStream::CurrentSound:
-            currentTrackLabel->setText(QString().sprintf("%03i", value.toInt()+1));
+            m_ui.m_currentTrackLabel->setText(QString().sprintf("%03i", value.toInt()+1));
             break;
         case MusicStream::PlaylistLength:
-            totalTracksLabel->setText(QString().sprintf("%03i", playlist->length()));
+            m_ui.m_totalTracksLabel->setText(QString().sprintf("%03i", playlist->length()));
             break;
         case MusicStream::FileTypeLabel:
-            fileTypeLabel->setText(value.toString());
+            m_ui.m_fileTypeLabel->setText(value.toString());
             break;
     }
 }
@@ -842,49 +763,49 @@ void MusicWindow::update(QWORD time, DWORD level)
 {
     if (musicStream->isMusic)
     {
-        timeLabel->setText(QString().sprintf("%03d.%03d",LOWORD(time),HIWORD(time)));
+        m_ui.m_timeLabel->setText(QString().sprintf("%03d.%03d",LOWORD(time),HIWORD(time)));
         time = LOWORD(time);
     }
     else if (time < 3600)
     {
-        timeLabel->setText(QString().sprintf("%02i:%02i",
+        m_ui.m_timeLabel->setText(QString().sprintf("%02i:%02i",
                                              static_cast<unsigned int>(time/60),
                                              static_cast<unsigned int>(time%60)));
     }
     else
     {
-        timeLabel->setText(QString().sprintf("%02i:%02i:%02i",
+        m_ui.m_timeLabel->setText(QString().sprintf("%02i:%02i:%02i",
                                              static_cast<unsigned int>(time/3600),
                                              static_cast<unsigned int>((time/60)%60),
                                              static_cast<unsigned int>(time%60)));
     }
 
-    timeSlider->setValue(time);
-    leftChProgressBar->setValue(LOWORD(level));
-    rightChProgressBar->setValue(HIWORD(level));
+    m_ui.m_timeSlider->setValue(time);
+    m_ui.m_leftChProgressBar->setValue(LOWORD(level));
+    m_ui.m_rightChProgressBar->setValue(HIWORD(level));
 }
 
 void MusicWindow::threadFinished()
 {
-    timeLabel->setText("--:--");
-    totalTimeLabel->setText("--:--");
-    currentTagLabel->setText(musicStream->isCDMode ? "Modo CD de Áudio" : "Parado");
-    leftChProgressBar->setValue(0);
-    rightChProgressBar->setValue(0);
-    timeSlider->setMaximum(1);
-    timeSlider->setValue(0);
-    timeSlider->setEnabled(false);
+    m_ui.m_timeLabel->setText("--:--");
+    m_ui.m_totalTimeLabel->setText("--:--");
+    m_ui.m_currentTagLabel->setText(musicStream->isCDMode ? "Modo CD de Áudio" : "Parado");
+    m_ui.m_leftChProgressBar->setValue(0);
+    m_ui.m_rightChProgressBar->setValue(0);
+    m_ui.m_timeSlider->setMaximum(1);
+    m_ui.m_timeSlider->setValue(0);
+    m_ui.m_timeSlider->setEnabled(false);
 
     if (!notDisableButtons)
     {
-        playButton->setEnabled(true);
-        pauseButton->setEnabled(false);
-        stopButton->setEnabled(false);
+        m_ui.m_playButton->setEnabled(true);
+        m_ui.m_pauseButton->setEnabled(false);
+        m_ui.m_stopButton->setEnabled(false);
     }
 }
 
 void MusicWindow::displayError(QString arg)
 {
-    errorWindow->addError(arg);
-    errorWindow->show();
+    m_errorWindow->addError(arg);
+    m_errorWindow->show();
 }

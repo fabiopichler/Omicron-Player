@@ -314,7 +314,7 @@ RecordList::RecordList(QWidget *parent) : QTreeView(parent)
     setSelectionMode(SingleSelection);
     setSelectionBehavior(SelectRows);
     setIndentation(0);
-    setFixedHeight(165);
+    setFixedHeight(180);
     setSortingEnabled(true);
     sortByColumn(0, Qt::DescendingOrder);
     setContextMenuPolicy(Qt::CustomContextMenu);

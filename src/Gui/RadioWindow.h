@@ -15,10 +15,13 @@
 #include "../Core/Database.h"
 #include "../Core/RadioStream.h"
 #include "../Core/Global.h"
-#include "../Gui/DialogBase.h"
 #include "../Tools/RadioPlaylistManager.h"
-#include "ErrorWindow.h"
-#include "VolumeControl.h"
+
+#include "WindowBase.h"
+#include "RadioUi.hpp"
+
+#include <OmicronTK11/Qt/Dialog.hpp>
+#include <OmicronTK11/Qt/VolumeControl.hpp>
 
 #include <QPushButton>
 #include <QHBoxLayout>
@@ -34,20 +37,20 @@
 #include <QProgressBar>
 #include <QMovie>
 
-class RadioWindow : public MyWidget
+class RadioWindow : public WindowBase
 {
     Q_OBJECT
 
 public:
-    RadioWindow(QObject *, QWidget *);
+    RadioWindow(QObject *);
     ~RadioWindow();
 
+    bool init();
+
 private:
-    void createMenuBar();
     void createWidgets();
     void createLabels();
     void createButtons();
-    void createLayouts();
     void createEvents();
     void changePlaylist(int);
     void changeEvent(QEvent *);
@@ -72,24 +75,13 @@ signals:
 private:
     friend class RadioStream;
     QObject *parentMain;
-    QWidget *parent, *uiWidget;
     RadioStream *radioStream;
     RadioPlaylist *playlist;
-    QAction *openLinkAction, *displayRecordingsAction, *exitAction, *musicModeAction, *recorderModeAction,
-        *serverModeAction, *playlistManagerAction, *equalizerAction, *configAction, *checkUpdateAction,
-        *websiteAction, *facebookAction, *aboutAction;
-    QPushButton *playButton, *stopButton, *prevButton, *nextButton, *recordButton, *openLinkButton, *playlistButton,
-        *changeFavoriteButton, *allPlaylistsButton, *customPlaylistButton, *favoriteButton;
-    QLabel *timeLabel, *statusLabel, *nameLabel, *streamTitleLabel, *loaderLabel;
-    QMovie *loaderMovie;
-    QProgressBar *leftChProgressBar, *rightChProgressBar, *bufferProgressBar;
-    QLineEdit *searchLineEdit;
-    VolumeControl *volumeControl;
-    ErrorWindow *errorWindow;
+    RadioUi m_ui;
     bool showLoader;
 };
 
-class ShowRadioInfo : public DialogBase
+class ShowRadioInfo : public OmicronTK11::OTKQT::Dialog
 {
     Q_OBJECT
 

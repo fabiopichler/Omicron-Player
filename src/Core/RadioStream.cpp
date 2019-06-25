@@ -11,9 +11,12 @@
 *******************************************************************************/
 
 #include "RadioStream.h"
+#include "Database.h"
+
 #include <iostream>
 #include <QElapsedTimer>
 #include <QDesktopServices>
+#include <QKeyEvent>
 
 RadioStream *RadioStream::self = nullptr;
 
@@ -914,7 +917,7 @@ RadioPlaylist::RadioPlaylist(QWidget *parent, const int &_playlistMode) : QTreeV
     setSelectionMode(SingleSelection);
     setSelectionBehavior(SelectRows);
     setIndentation(0);
-    setFixedHeight(165);
+    setFixedHeight(158);
     setSortingEnabled(true);
     sortByColumn(0, Qt::AscendingOrder);
     setContextMenuPolicy(Qt::CustomContextMenu);

@@ -13,16 +13,20 @@
 #include "ConfigPages.h"
 #include "../Core/RadioStream.h"
 #include "../Core/MusicStream.h"
-#include "../Gui/TitleBar.h"
-#include "../Core/Theme.h"
+
+#include <OmicronTK11/Qt/TitleBar.hpp>
+
+#include <OmicronTK11/Qt/Theme.hpp>
 
 #include <QtWidgets>
 #include <bass.h>
 
+using namespace OmicronTK11;
+
 //================================================================================================================
 // GeneralPage
 //================================================================================================================
-GeneralPage::GeneralPage(QWidget *parent) : MyWidget(parent)
+GeneralPage::GeneralPage(QWidget *parent) : OTKQT::Widget(parent)
 {
     setObjectName("configPagesWidget");
 
@@ -31,7 +35,7 @@ GeneralPage::GeneralPage(QWidget *parent) : MyWidget(parent)
 
     //---------------------------------------
     QLabel *errorLabel = new QLabel("Notificar erros de reprodução:");
-    errorCombo = new MyComboBox;
+    errorCombo = new OTKQT::ComboBox;
     QString current = Database::value("Config", "errorNotification").toString();
     const char *list[] = {"dialog", "systray", "false"};
 
@@ -69,13 +73,13 @@ void GeneralPage::changeError(int index)
 //================================================================================================================
 // InterfacePage
 //================================================================================================================
-InterfacePage::InterfacePage(QWidget *parent) : MyWidget(parent)
+InterfacePage::InterfacePage(QWidget *parent) : OTKQT::Widget(parent)
 {
     setObjectName("configPagesWidget");
     currentTheme = 0;
 
     QLabel *themeLabel = new QLabel("Tema:");
-    themeCombo = new MyComboBox;
+    themeCombo = new OTKQT::ComboBox;
 
     updateThemeList();
 
@@ -85,7 +89,7 @@ InterfacePage::InterfacePage(QWidget *parent) : MyWidget(parent)
 
     //--------------------------------------------
     QLabel *styleLabel = new QLabel("Estilo:");
-    styleCombo = new MyComboBox;
+    styleCombo = new OTKQT::ComboBox;
 
     updateStyleList();
 
@@ -146,12 +150,12 @@ void InterfacePage::changeTheme(int index)
 void InterfacePage::changeStyle(int index)
 {
     Database::setValue("Config", "style", styleCombo->itemData(index));
-    Theme::load();
+    OTKQT::Theme::load();
 }
 
 void InterfacePage::updateThemeList()
 {
-    QList<QStringList> themes = Theme::themes();
+    QVector<QVector<QString>> themes = OTKQT::Theme::themes();
     QString current = Database::value("Config", "theme").toString();
     themeCombo->clear();
 
@@ -169,7 +173,7 @@ void InterfacePage::updateThemeList()
 
 void InterfacePage::updateStyleList()
 {
-    QList<QStringList> styles = Theme::styles();
+    QVector<QVector<QString>> styles = OTKQT::Theme::styles();
     QString current = Database::value("Config", "style").toString();
     styleCombo->clear();
 
@@ -184,7 +188,7 @@ void InterfacePage::updateStyleList()
 //================================================================================================================
 // MusicPage
 //================================================================================================================
-MusicPage::MusicPage(QWidget *parent) : MyWidget(parent)
+MusicPage::MusicPage(QWidget *parent) : OTKQT::Widget(parent)
 {
     setObjectName("configPagesWidget");
 
@@ -254,7 +258,7 @@ MusicPage::MusicPage(QWidget *parent) : MyWidget(parent)
 //================================================================================================================
 // WebRadioPage
 //================================================================================================================
-WebRadioPage::WebRadioPage(QWidget *parent) : MyWidget(parent)
+WebRadioPage::WebRadioPage(QWidget *parent) : OTKQT::Widget(parent)
 {
     setObjectName("configPagesWidget");
 
@@ -283,7 +287,7 @@ WebRadioPage::WebRadioPage(QWidget *parent) : MyWidget(parent)
 
     QLabel *readtimeoutLabel = new QLabel("Tempo limite ao reconectar:");
 
-    readtimeoutCombo = new MyComboBox;
+    readtimeoutCombo = new OTKQT::ComboBox;
     readtimeoutCombo->addItem("5 segundos", 5000);
     readtimeoutCombo->addItem("10 segundos", 10000);
     readtimeoutCombo->addItem("20 segundos (padrão)", 20000);
@@ -297,7 +301,7 @@ WebRadioPage::WebRadioPage(QWidget *parent) : MyWidget(parent)
 
     QLabel *timeoutLabel = new QLabel("Tempo limite ao conectar:");
 
-    timeoutCombo = new MyComboBox;
+    timeoutCombo = new OTKQT::ComboBox;
     timeoutCombo->addItem("5 segundos", 5000);
     timeoutCombo->addItem("10 segundos", 10000);
     timeoutCombo->addItem("20 segundos (padrão)", 20000);
@@ -311,7 +315,7 @@ WebRadioPage::WebRadioPage(QWidget *parent) : MyWidget(parent)
 
     QLabel *modeLabel = new QLabel("Se a conexão cair:");
 
-    modeCombo = new MyComboBox;
+    modeCombo = new OTKQT::ComboBox;
     modeCombo->addItem("Parar a reprodução");
     modeCombo->addItem("Tentar reproduzir, novamente");
     modeCombo->addItem("Reproduzir a próxima estação da lista");
@@ -526,14 +530,14 @@ void FileTypePage::associateFiles()
 //================================================================================================================
 // AudioPage
 //================================================================================================================
-AudioPage::AudioPage(QObject *parentMain, QWidget *parent) : MyWidget(parent)
+AudioPage::AudioPage(QObject *parentMain, QWidget *parent) : OTKQT::Widget(parent)
 {
     this->parentMain = parentMain;
     setObjectName("configPagesWidget");
 
     QGroupBox *configGroup = new QGroupBox("Dispositivo de saída de áudio");
 
-    MyComboBox *deviceCombo = new MyComboBox;
+    OTKQT::ComboBox *deviceCombo = new OTKQT::ComboBox;
     deviceCombo->addItem("Padrão do Sistema");
 
     int device = Database::value("Config", "device").toInt();
@@ -585,7 +589,7 @@ void AudioPage::changeDevice(int arg)
 //================================================================================================================
 // RecordingsPage
 //================================================================================================================
-RecordingsPage::RecordingsPage(QWidget *parent) : MyWidget(parent)
+RecordingsPage::RecordingsPage(QWidget *parent) : OTKQT::Widget(parent)
 {
     setObjectName("configPagesWidget");  
 
@@ -649,7 +653,7 @@ void RecordingsPage::searchDir()
 //================================================================================================================
 // NetworkPage
 //================================================================================================================
-NetworkPage::NetworkPage(QWidget *parent) : MyWidget(parent)
+NetworkPage::NetworkPage(QWidget *parent) : OTKQT::Widget(parent)
 {
     setObjectName("configPagesWidget");
 
@@ -682,7 +686,7 @@ NetworkPage::NetworkPage(QWidget *parent) : MyWidget(parent)
 //================================================================================================================
 // UpdatePage
 //================================================================================================================
-UpdatePage::UpdatePage(QWidget *parent) : MyWidget(parent)
+UpdatePage::UpdatePage(QWidget *parent) : OTKQT::Widget(parent)
 {
     setObjectName("configPagesWidget");
 
@@ -691,7 +695,7 @@ UpdatePage::UpdatePage(QWidget *parent) : MyWidget(parent)
                                    "<li>Atualize a base de estações de rádio (lista padrão),<br>caso exista uma nova atualização disponível.</li></ul>");
     QLabel *updateLabel = new QLabel("Verificar a cada:");
 
-    MyComboBox *updateCombo = new MyComboBox;
+    OTKQT::ComboBox *updateCombo = new OTKQT::ComboBox;
     updateCombo->addItem("Desativado");
     updateCombo->addItem("1 dia");
     updateCombo->addItem("1 semana");
