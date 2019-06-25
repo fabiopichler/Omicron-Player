@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Omicron Media Player
+  Omicron Player Classic
 
   Copyright (c) 2016, Fábio Pichler
   All rights reserved.

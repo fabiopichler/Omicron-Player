@@ -3,11 +3,11 @@
 
 #include "..\..\src\Version.h"
 
-#define MyAppName "Omicron Media Player"
+#define MyAppName "Omicron Player Classic"
 #define MyAppVersion PRODUCT_VERSION_STR
 #define MyAppPublisher "Fábio Pichler"
 #define MyAppURL OFFICIAL_WEBSITE
-#define MyAppExeName "Omicron-Player-3.exe"
+#define MyAppExeName "Omicron-Player-Classic.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -26,7 +26,7 @@ DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 LicenseFile=LICENSE.txt
 OutputDir=output
-OutputBaseFilename=Omicron-Player-3-{#PRODUCT_VERSION_STR}-setup-Windows-win32
+OutputBaseFilename=Omicron-Player-Classic-{#PRODUCT_VERSION_STR}-setup-Windows-win32
 Compression=lzma2
 SolidCompression=yes
 
@@ -40,7 +40,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "files-x86\Omicron-Player-3.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "files-x86\Omicron-Player-Classic.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "files-x86\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 

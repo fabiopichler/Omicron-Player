@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #*******************************************************************************
-#  Omicron Media Player Installer
+#  Omicron Player Classic Installer
 #
 #  Copyright (c) 2015-2019, Fábio Pichler
 #  All rights reserved.
@@ -13,7 +13,7 @@
 #*******************************************************************************
 
 echo
-echo "Omicron Media Player 3.0.0 (Instalação)"
+echo "Omicron Player Classic 3.0.0 (Instalação)"
 echo "Copyright (c) 2015-2019, Fábio Pichler, Todos os direitos Reservados"
 echo
 
@@ -25,13 +25,13 @@ then
     exit
 fi
 
-if [ -e "/opt/Omicron-Player-3/uninstall" ]
+if [ -e "/opt/omicron-player-classic/uninstall" ]
 then
     echo "Desinstalando a versão antiga do programa... Aguarde..."
     echo
     echo "--------------------------------------------------------"
     
-    /opt/Omicron-Player-3/uninstall
+    /opt/omicron-player-classic/uninstall
     
     echo "--------------------------------------------------------"
     echo
@@ -41,7 +41,7 @@ echo "Iniciando o programa de instalação..."
 echo
 
 INSTALL_PATH="/opt/"
-INSTALL_DIR="Omicron-Player-3/"
+INSTALL_DIR="omicron-player-classic/"
 CURRENT_PATH=`echo $0|sed 's/install//'`
 count=0
 
@@ -57,11 +57,11 @@ then
     echo
     echo "Instalando arquivos necessários..."
 
-    chmod +x "${INSTALL_PATH}${INSTALL_DIR}Omicron-Player-3"
+    chmod +x "${INSTALL_PATH}${INSTALL_DIR}omicron-player-classic"
     chmod +x "${INSTALL_PATH}${INSTALL_DIR}uninstall"
     chmod +x "${INSTALL_PATH}${INSTALL_DIR}7zr"
 
-    if mv -f "${INSTALL_PATH}${INSTALL_DIR}Omicron-Player-3.desktop" "/usr/share/applications/" $1 > /dev/null 2> /dev/null
+    if mv -f "${INSTALL_PATH}${INSTALL_DIR}omicron-player-classic.desktop" "/usr/share/applications/" $1 > /dev/null 2> /dev/null
     then
         let count++
         echo "Arquivos instalados... Ok"
@@ -76,12 +76,12 @@ echo
 
 if [ $count -eq 2 ]
 then
-    echo "O Omicron Media Player foi instalado com sucesso"
+    echo "O Omicron Player Classic foi instalado com sucesso"
     echo
     echo "Caso queira desinstalá-lo, execute este comando como administrador (root):"
-    echo "/opt/Omicron-Player-3/uninstall"
+    echo "/opt/omicron-player-classic/uninstall"
 else
-    echo "ERRO! Não foi possível instalar o Omicron Media Player"
+    echo "ERRO! Não foi possível instalar o Omicron Player Classic"
 fi
 
 echo

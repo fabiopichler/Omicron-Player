@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Omicron Media Player
+  Omicron Player Classic
 
   Copyright (c) 2015-2019, Fábio Pichler
   All rights reserved.
@@ -44,8 +44,8 @@ const QString AppName = APP_NAME,
               FileRadiolist = FILE_RADIOLIST,
               FileRadiolistDate = FILE_RADIOLIST_DATE,
               PathAudioPlugins = "plugins/audio/",
-              AppConfigDir = "Omicron-Player-3",
-              AppNameId = "Omicron-Player-3",
+              AppConfigDir = "Omicron-Player-Classic",
+              AppNameId = "Omicron-Player-Classic",
               PlaylistExt = "fpmp",
               RadioPlaylistExt = "fprp",
 

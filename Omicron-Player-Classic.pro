@@ -1,5 +1,5 @@
 #*******************************************************************************
-#  Omicron Media Player
+#  Omicron Player Classic
 #
 #  Copyright (c) 2015-2019, Fábio Pichler
 #  All rights reserved.
@@ -26,13 +26,13 @@ MOBILITY =
 CONFIG(debug, debug|release) {
 
     BUILDDIR = Debug
-    TARGET = "Omicron-Player-3-Debug"
+    TARGET = "omicron-player-classic-d"
     unix:MAKEFILE = Makefile.debug
 
 } else {
 
     BUILDDIR = Release
-    TARGET = "Omicron-Player-3"
+    TARGET = "omicron-player-classic"
     unix:MAKEFILE = Makefile.release
     RESOURCES += ../qrc/Files.qrc
 

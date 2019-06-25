@@ -1,22 +1,22 @@
-# Omicron Media Player: Classic
-O Omicron Media Player é um software para a reprodução de mídias, como CDs de música, arquivos de áudio (MP3, WMA, OGG, etc.) e Web Rádios.
+# Omicron Player Classic
+O Omicron Player Classic é um software para a reprodução de mídias, como CDs de música, arquivos de áudio (MP3, WMA, OGG, etc.) e Web Rádios.
 
 O principal objetivo, não é fazê-lo cheio de recursos, recursos que nunca serão usados e que só deixam o programa poluído e pesado, assim como acontece com outros reprodutores de músicas, existentes por aí.
 
-A ideia do Omicron Media Player, é que seja um programa mais simples, objetivo, e que reproduza inúmeros formatos de arquivos de áudio, Web Rádios, CDs de música e etc.
+A ideia do Omicron Player Classic, é que seja um programa mais simples, objetivo, e que reproduza inúmeros formatos de arquivos de áudio, Web Rádios, CDs de música e etc.
 
-O Omicron Media Player é um software de código aberto (open source) e está licenciado sobre a BSD 3-Clause License.
+O Omicron Player Classic é um software de código aberto (open source) e está licenciado sobre a BSD 3-Clause License.
 
 Futuramente, o player contará com novas funcionalidades úteis.
 
 Website oficial: http://fabiopichler.net/fpm-player/
 
 
-## Versão "clássica" (Classic)
-O Omicron Media Player foi desenvolvido entre 2015 e 2016, anteriormente conhecido como "FPM Player", porém...
+## Versão "clássica"
+O Omicron Player Classic foi desenvolvido entre 2015 e 2016, anteriormente conhecido como "FPM Player", porém...
 
 
-Uma nova versão do player está sendo refeita do zero, totalmente remodelada. O novo player se chamará apenas "Omicron Media Player", enquanto que a versão atual (a versão 3) deste repositório está sendo renomeada de "FPM Player" para "Omicron Media Player: Classic".
+Uma nova versão do player está sendo refeita do zero, totalmente remodelada. O novo player se chamará "Omicron Media Player", enquanto que a versão atual deste repositório está sendo renomeada de "FPM Player" para "Omicron Player Classic".
 
 
 ## Projeto para Estudos
@@ -54,4 +54,4 @@ Veja uma galeria com imagens do programa: http://software.fabiopichler.net/fpm-p
 
 
 ## Créditos
-Créditos a [Fábio Pichler](http://fabiopichler.net), por criar e disponibilizar o Omicron Media Player para Windows e Linux.
+Créditos a [Fábio Pichler](http://fabiopichler.net), por criar e disponibilizar o Omicron Player Classic para Windows e Linux.

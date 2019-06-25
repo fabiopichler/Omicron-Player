@@ -1,5 +1,5 @@
 ;/*******************************************************************************
-;  Omicron Media Player
+;  Omicron Player Classic
 ;
 ;  Copyright (c) 2015-2019, Fábio Pichler
 ;  All rights reserved.
@@ -13,13 +13,13 @@
 #pragma once
 
 ;// Nome do Aplicativo
-#define APP_NAME "Omicron Media Player"
+#define APP_NAME "Omicron Player Classic"
 
 ;// Nome da Conpanhia/Autor
 #define COMPANY_NAME "Fábio Pichler"
 
 ;// Nome original do arquivo
-#define ORIGINAL_FILENAME "Omicron-Player-3"
+#define ORIGINAL_FILENAME "omicron-player-classic"
 
 ;// Website oficial
 #define OFFICIAL_WEBSITE "https://fabiopichler.net/omicron-player/"
