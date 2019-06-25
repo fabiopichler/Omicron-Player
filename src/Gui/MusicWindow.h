@@ -54,14 +54,14 @@ private:
     void changeRandomStyle(const bool &);
     void loadPlaylist(int plMode, const bool &disableCdMode = false, const bool &load = true,
                         const bool &stop = true, const QString &playlistName = QString());
-    QStringList fileDialog();
+    QVector<QString> fileDialog();
 
 private slots:
     void initEqualizer();
     void initPlaylist(bool play = false);
-    void playNewMusic(QStringList);
-    void openMusic(QStringList list = QStringList());
-    void addMusic(QStringList list = QStringList());
+    void playNewMusic(QVector<QString>);
+    void openMusic(QVector<QString> list = QVector<QString>());
+    void addMusic(QVector<QString> list = QVector<QString>());
     void openDirectory();
     void addDirectory(bool clearPl = false);
     void openCD();

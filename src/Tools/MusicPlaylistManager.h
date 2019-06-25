@@ -60,7 +60,7 @@ private slots:
     void savePlaylistAs();
     void closeDefaultPlaylist();
     void shuffle();
-    void receiveMessage(QStringList);
+    void receiveMessage(QVector<QString>);
 
 public:
     MusicPlaylistTreeView *playlist;

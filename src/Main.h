@@ -20,7 +20,6 @@
 #pragma once
 
 #include "Core/Database.h"
-#include "Core/SingleApp.h"
 #include "Core/Global.h"
 #include "Core/Update.h"
 

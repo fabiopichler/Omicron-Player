@@ -258,7 +258,7 @@ void MusicPlaylistManager::createEvents()
     connect(playlist, SIGNAL(updatePlaylistStyle()), this, SLOT(updatePlaylistStyle()));
 
     connect(dropArea, SIGNAL(dragAndDrop(bool)), this, SLOT(updatePlaylistStyle(bool)));
-    connect(dropArea, SIGNAL(filesFromDropArea(QStringList)), this, SLOT(receiveMessage(QStringList)));
+    connect(dropArea, SIGNAL(filesFromDropArea(QVector<QString>)), this, SLOT(receiveMessage(QVector<QString>)));
 }
 
 bool MusicPlaylistManager::eventFilter(QObject * obj, QEvent *event)
@@ -469,7 +469,7 @@ void MusicPlaylistManager::shuffle()
     }
 }
 
-void MusicPlaylistManager::receiveMessage(QStringList list)
+void MusicPlaylistManager::receiveMessage(QVector<QString> list)
 {
     if (!list.isEmpty() && list[0] == "--nohide")
         list.removeAt(0);

@@ -82,7 +82,7 @@ signals:
     void pauseButtonEnabled(bool);
     void stopButtonEnabled(bool);
     void initPlaylist(bool);
-    void playNewMusic(QStringList);
+    void playNewMusic(QVector<QString>);
     void startTagTimer(int);
     void stopTagTimer();
     void startSoundPositionTimer(int);

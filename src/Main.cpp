@@ -27,6 +27,8 @@
 
 #include <OmicronTK11/Qt/AppInfo.hpp>
 #include <OmicronTK11/Qt/Theme.hpp>
+#include <OmicronTK11/Qt/Network/LocalServer.hpp>
+#include <OmicronTK11/Qt/Network/LocalSocket.hpp>
 
 using namespace OmicronTK11;
 
@@ -47,8 +49,9 @@ public:
 int main(int argc, char **argv)
 {
     int code = EXIT_SUCCESS;
-    SingleApplication *app = nullptr;
-    Main *appMain = nullptr;
+    QApplication *qApplication = nullptr;
+    OTKQT::LocalServer *localServer = nullptr;
+    Main *app = nullptr;
     QStringList libraryPaths;
 
     // Se estiver em desenvolvimento, acrescentar a pasta de plugins do sistema.
@@ -92,22 +95,67 @@ int main(int argc, char **argv)
     do
     {
         // Deletar os objetos das classes SingleApplication e Main, caso reinicie o programa.
-        delete appMain;
+        delete localServer;
         delete app;
+        delete qApplication;
+
+        qApplication = new QApplication(argc, argv);
 
 #ifdef QT_NO_DEBUG // RELEASE
         stdCout("\n"+AppName+" "+CurrentVersion+" (Ver. " FILE_VERSION ")\n");
 
-        app = new SingleApplication(argc, argv, AppNameId+"-d2sj406hav164hdbc8s9264g");
+        localServer = new OTKQT::LocalServer(1000, AppNameId + "-f52ha94hd601nsdg628r16");
 #else // DEBUG
-        app = new SingleApplication(argc, argv, AppNameId+"-debug-676fgm5m5l5a4x31bc");
+        localServer = new OTKQT::LocalServer(1000, AppNameId + "-debug-an50xg24ng64lnv7");
 #endif // QT_NO_DEBUG
 
         // Se executar o programa, e ele já estiver executando (outro processo),
         // verificar se existem os argumentos --open-file ou --add-file, caso existam,
         // enviar uma mensagem para o processo principal, informando se deve abrir
         // um novo arquivo ou apenas adicionar o arquivo no playlist.
-        if (app->isRunning() && argc > 2 && (strcmp(argv[1], "--open-file") == 0 || strcmp(argv[1], "--add-file") == 0))
+        if (localServer->isRunning())
+        {
+            OTKQT::LocalSocket localSocket(*localServer);
+
+            if (argc > 2 && (strcmp(argv[1], "--open-file") == 0 || strcmp(argv[1], "--add-file") == 0))
+            {
+                localSocket.sendMessage(argv[1]);
+                localSocket.sendMessage(argv[2]);
+            }
+            else if (argc < 2)
+            {
+                localSocket.sendMessage("--empty");
+            }
+            else
+            {
+                for (int i = 1; i < argc; i++)
+                    localSocket.sendMessage(argv[i]);
+            }
+
+            if (localSocket.sendMessage("--end-arguments"))
+                code = EXIT_SUCCESS;
+            else
+                code = EXIT_FAILURE;
+
+            delete localServer;
+            delete qApplication;
+
+            return code;
+        }
+/*
+#ifdef QT_NO_DEBUG // RELEASE
+        stdCout("\n"+AppName+" "+CurrentVersion+" (Ver. " FILE_VERSION ")\n");
+
+        qApplication = new SingleApplication(argc, argv, AppNameId+"-d2sj406hav164hdbc8s9264g");
+#else // DEBUG
+        qApplication = new SingleApplication(argc, argv, AppNameId+"-debug-676fgm5m5l5a4x31bc");
+#endif // QT_NO_DEBUG
+
+        // Se executar o programa, e ele já estiver executando (outro processo),
+        // verificar se existem os argumentos --open-file ou --add-file, caso existam,
+        // enviar uma mensagem para o processo principal, informando se deve abrir
+        // um novo arquivo ou apenas adicionar o arquivo no playlist.
+        if (qApplication->isRunning() && argc > 2 && (strcmp(argv[1], "--open-file") == 0 || strcmp(argv[1], "--add-file") == 0))
         {
             int code;
             char *msg = (char *) malloc(strlen(argv[1]) + strlen(argv[2]) + 10);
@@ -115,68 +163,68 @@ int main(int argc, char **argv)
             sprintf(msg, "%s:%s", argv[1], argv[2]);
 
             // Envia a mensagem pro processo principal, contendo as informações necessárias.
-            if (app->sendMessage(msg))
+            if (qApplication->sendMessage(msg))
                 code = EXIT_SUCCESS;
             else
                 code = EXIT_FAILURE;
 
-            delete app;
+            delete qApplication;
             delete msg;
             return code;
         }
         // Verificar se o programa já está rodando (processo principal), caso esteja, enviar mensagens contendo
         // os parâmetros recebidos pelo processo atual, para o processo principal.
-        else if (app->isRunning())
+        else if (qApplication->isRunning())
         {
             if (argc < 2)
             {
                 // Caso não tenha passado argumentos extras pro programa, será enviada
                 // uma mensagem  pro processo principal, contendo a string --empty.
-                app->sendMessage("--empty");
+                qApplication->sendMessage("--empty");
             }
             else
             {
                 // Caso o programa tenha recebido argumentos, enviar cada um deles separadamente ao processo principal.
                 for (int i = 1; i < argc; i++)
-                    app->sendMessage(argv[i]);
+                    qApplication->sendMessage(argv[i]);
             }
 
             // A mensagem contendo "--end-arguments", é necessária pro processo principal "saber" que
             // todas as mensagens foram enviadas.
-            if (app->sendMessage("--end-arguments"))
+            if (qApplication->sendMessage("--end-arguments"))
             {
-                delete app;
+                delete qApplication;
                 return EXIT_SUCCESS;
             }
 
             // Caso o processo principal tenha quebrado (por algum motivo qualquer), a conexão com
-            // o servidor local continuará existindo e app->isRunning() retornará true.
+            // o servidor local continuará existindo e qApplication->isRunning() retornará true.
             // Nesse caso, por não existir um processo principal (apenas a conexão dele),
             // será criado um novo servidor local e o processo atual se tornará o principal,
             // permitindo que outros processos enviem mensagens para o processo atual.
-            if (!app->createServer())
+            if (!qApplication->createServer())
             {
-                delete app;
+                delete qApplication;
                 return EXIT_FAILURE;
             }
-        }
+        }*/
 
 #ifndef QT_NO_TRANSLATION
         QString translatorFileName = QLatin1String("qt_");
         translatorFileName += QLocale::system().name();
-        QTranslator *translator = new QTranslator(app);
+        QTranslator *translator = new QTranslator(qApplication);
 
         if (translator->load(translatorFileName, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
-            app->installTranslator(translator);
+            qApplication->installTranslator(translator);
 #endif
 
-        app->setStyle(new ProxyStyle);
-        app->setQuitOnLastWindowClosed(false);
-        appMain = new Main;
-        QObject::connect(app, SIGNAL(messageAvailable(QStringList)), appMain, SLOT(receiveMessage(QStringList)));
+        qApplication->setStyle(new ProxyStyle);
+        qApplication->setQuitOnLastWindowClosed(false);
+        app = new Main;
+        QObject::connect(localServer, SIGNAL(messageAvailable(QVector<QString>)), app, SLOT(receiveMessage(QVector<QString>)));
 
         // Verifica se o programa foi iniciado corretamente.
-        if (appMain->init(argc))
+        if (app->init(argc))
         {
 #ifdef QT_NO_DEBUG // RELEASE
             stdCout("The " + AppName + " was initialized correctly.");
@@ -191,12 +239,12 @@ int main(int argc, char **argv)
             break;
         }
 
-        code = app->exec();
+        code = qApplication->exec();
 
-    } while (appMain->continueRunning);
+    } while (app->continueRunning);
 
-    delete appMain;
     delete app;
+    delete qApplication;
 
     return code;
 }

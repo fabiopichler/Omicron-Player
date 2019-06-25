@@ -55,7 +55,7 @@ contains(QMAKE_HOST.arch, x86_64) {
         LIBS += -Wl,-rpath=./lib -Wl,-rpath="/mnt/projects/Frameworks/bass-linux/x64"
 
         LIBS += -L"/mnt/projects/MyFrameworks/C++/OmicronTK11+Lua/linux64/build" -lOmicronTK11_Lua-d
-        LIBS += -L"/mnt/projects/MyFrameworks/C++/OmicronTK11+Qt/linux64/build" -lOmicronTK11+Qt-d -lOmicronTK11+Qt_Lua-d
+        LIBS += -L"/mnt/projects/MyFrameworks/C++/OmicronTK11+Qt/linux64/build" -lOmicronTK11+Qt-d -lOmicronTK11+Qt_Lua-d -lOmicronTK11+Qt_Network-d
         LIBS += -L"/mnt/projects/MyFrameworks/C++/OmicronTK11/linux64/build" -L"/mnt/projects/MyFrameworks/C++/OmicronTK11+SQLite/linux64/build"
     }
 
@@ -93,7 +93,6 @@ win32:RC_FILE = rc/Win.rc
 
 SOURCES += \
     src/Main.cpp \
-    src/Core/SingleApp.cpp \
     src/Core/Update.cpp \
     src/Gui/MusicUi.cpp \
     src/Gui/MusicWindow.cpp \
@@ -125,7 +124,6 @@ HEADERS += \
     src/Gui/RecorderUi.hpp \
     src/Gui/WindowBase.h \
     src/Version.h \
-    src/Core/SingleApp.h \
     src/Core/Update.h \
     src/Gui/MusicWindow.h \
     src/Gui/RadioWindow.h \

@@ -169,8 +169,8 @@ void MusicWindow::createEvents()
     connect(playlist, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showContextMenu(const QPoint &)));
 
-    connect(parentMain, SIGNAL(openMusic(QStringList)), this, SLOT(openMusic(QStringList)));
-    connect(parentMain, SIGNAL(addMusic(QStringList)), this, SLOT(addMusic(QStringList)));
+    connect(parentMain, SIGNAL(openMusic(QVector<QString>)), this, SLOT(openMusic(QVector<QString>)));
+    connect(parentMain, SIGNAL(addMusic(QVector<QString>)), this, SLOT(addMusic(QVector<QString>)));
     connect(this, SIGNAL(filesFromDropArea(QVector<QString>)), parentMain, SLOT(receiveMessage(QVector<QString>)));
 
     connect(this, SIGNAL(showNotification(QString)), parentMain, SLOT(showNotification(QString)));
@@ -232,7 +232,7 @@ void MusicWindow::createEvents()
     connect(musicStream, SIGNAL(pauseButtonEnabled(bool)), m_ui.m_pauseButton, SLOT(setEnabled(bool)));
     connect(musicStream, SIGNAL(stopButtonEnabled(bool)), m_ui.m_stopButton, SLOT(setEnabled(bool)));
     connect(musicStream, SIGNAL(initPlaylist(bool)), this, SLOT(initPlaylist(bool)));
-    connect(musicStream, SIGNAL(playNewMusic(QStringList)), this, SLOT(playNewMusic(QStringList)));
+    connect(musicStream, SIGNAL(playNewMusic(QVector<QString>)), this, SLOT(playNewMusic(QVector<QString>)));
     connect(musicStream, SIGNAL(setTotals(QWORD)), this, SLOT(totals(QWORD)));
     connect(musicStream, SIGNAL(updateValue(MusicStream::Event, QVariant)), this, SLOT(update(MusicStream::Event, QVariant)));
     connect(musicStream, SIGNAL(updateInfo(QWORD, DWORD)), this, SLOT(update(QWORD, DWORD)));
@@ -329,7 +329,7 @@ void MusicWindow::loadPlaylist(int plMode, const bool &disableCdMode, const bool
         Database::setValue("MusicMode", "playlistMode", playlistMode);
 }
 
-QStringList MusicWindow::fileDialog()
+QVector<QString> MusicWindow::fileDialog()
 {
     QFileDialog dialog(this);
 
@@ -340,10 +340,10 @@ QStringList MusicWindow::fileDialog()
     if (dialog.exec())
     {
         Database::setValue("Current", "fileDialog", dialog.directory().absolutePath());
-        return dialog.selectedFiles();
+        return dialog.selectedFiles().toVector();
     }
 
-    return QStringList();
+    return QVector<QString>();
 }
 
 //================================================================================================================
@@ -394,7 +394,7 @@ void MusicWindow::initPlaylist(bool play)
     }
 }
 
-void MusicWindow::playNewMusic(QStringList arg)
+void MusicWindow::playNewMusic(QVector<QString> arg)
 {
     musicStream->setupCDMode(false);
     musicStream->stop();
@@ -420,7 +420,7 @@ void MusicWindow::playNewMusic(QStringList arg)
     musicStream->play();
 }
 
-void MusicWindow::openMusic(QStringList list)
+void MusicWindow::openMusic(QVector<QString> list)
 {
     if (list.isEmpty())
     {
@@ -431,7 +431,7 @@ void MusicWindow::openMusic(QStringList list)
         playNewMusic(list);
 }
 
-void MusicWindow::addMusic(QStringList list)
+void MusicWindow::addMusic(QVector<QString> list)
 {
     if (list.isEmpty())
         list = fileDialog();
