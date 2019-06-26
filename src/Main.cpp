@@ -142,72 +142,6 @@ int main(int argc, char **argv)
 
             return code;
         }
-/*
-#ifdef QT_NO_DEBUG // RELEASE
-        stdCout("\n"+AppName+" "+CurrentVersion+" (Ver. " FILE_VERSION ")\n");
-
-        qApplication = new SingleApplication(argc, argv, AppNameId+"-d2sj406hav164hdbc8s9264g");
-#else // DEBUG
-        qApplication = new SingleApplication(argc, argv, AppNameId+"-debug-676fgm5m5l5a4x31bc");
-#endif // QT_NO_DEBUG
-
-        // Se executar o programa, e ele já estiver executando (outro processo),
-        // verificar se existem os argumentos --open-file ou --add-file, caso existam,
-        // enviar uma mensagem para o processo principal, informando se deve abrir
-        // um novo arquivo ou apenas adicionar o arquivo no playlist.
-        if (qApplication->isRunning() && argc > 2 && (strcmp(argv[1], "--open-file") == 0 || strcmp(argv[1], "--add-file") == 0))
-        {
-            int code;
-            char *msg = (char *) malloc(strlen(argv[1]) + strlen(argv[2]) + 10);
-
-            sprintf(msg, "%s:%s", argv[1], argv[2]);
-
-            // Envia a mensagem pro processo principal, contendo as informações necessárias.
-            if (qApplication->sendMessage(msg))
-                code = EXIT_SUCCESS;
-            else
-                code = EXIT_FAILURE;
-
-            delete qApplication;
-            delete msg;
-            return code;
-        }
-        // Verificar se o programa já está rodando (processo principal), caso esteja, enviar mensagens contendo
-        // os parâmetros recebidos pelo processo atual, para o processo principal.
-        else if (qApplication->isRunning())
-        {
-            if (argc < 2)
-            {
-                // Caso não tenha passado argumentos extras pro programa, será enviada
-                // uma mensagem  pro processo principal, contendo a string --empty.
-                qApplication->sendMessage("--empty");
-            }
-            else
-            {
-                // Caso o programa tenha recebido argumentos, enviar cada um deles separadamente ao processo principal.
-                for (int i = 1; i < argc; i++)
-                    qApplication->sendMessage(argv[i]);
-            }
-
-            // A mensagem contendo "--end-arguments", é necessária pro processo principal "saber" que
-            // todas as mensagens foram enviadas.
-            if (qApplication->sendMessage("--end-arguments"))
-            {
-                delete qApplication;
-                return EXIT_SUCCESS;
-            }
-
-            // Caso o processo principal tenha quebrado (por algum motivo qualquer), a conexão com
-            // o servidor local continuará existindo e qApplication->isRunning() retornará true.
-            // Nesse caso, por não existir um processo principal (apenas a conexão dele),
-            // será criado um novo servidor local e o processo atual se tornará o principal,
-            // permitindo que outros processos enviem mensagens para o processo atual.
-            if (!qApplication->createServer())
-            {
-                delete qApplication;
-                return EXIT_FAILURE;
-            }
-        }*/
 
 #ifndef QT_NO_TRANSLATION
         QString translatorFileName = QLatin1String("qt_");
@@ -243,6 +177,7 @@ int main(int argc, char **argv)
 
     } while (app->continueRunning);
 
+    delete localServer;
     delete app;
     delete qApplication;
 
