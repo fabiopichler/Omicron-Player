@@ -226,7 +226,7 @@ void Stream::setupDSP_EQ()
     BASS_BFX_PEAKEQ eq;
     int i;
     float allBands[] = {35.0f, 50.0f, 75.0f, 100.0f, 150.0f, 200.0f, 400.0f, 600.0f, 800.0f,
-                        1000.0f, 2500.0f, 4000.0f, 6000.0f, 8000.0f, 10000.0f, 12000.0f, 14000.0f, 16000.0f};
+                        1000.0f, 2500.0f, 4000.0f, 6000.0f, 8000.0f, 10000.0f, 12000.0f, 14000.0f, 15999.9f};
 
     fxEQ = BASS_ChannelSetFX(stream, BASS_FX_BFX_PEAKEQ, 0);
     volfx = BASS_ChannelSetFX(stream, BASS_FX_BFX_VOLUME, 0);

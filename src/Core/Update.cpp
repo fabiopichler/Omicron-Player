@@ -162,7 +162,7 @@ void UpdateApp::finishedChecking(QNetworkReply *reply)
             {
                 stdCout("New version available: " + version + "\n");
 
-                if (QMessageBox::warning(nullptr,"Info",QString("<h3>Nova versão disponível</h3>Uma nova versão do <strong>%1</strong> "
+                if (QMessageBox::warning(nullptr,"Info",QString("<h2>Nova versão disponível</h2>Uma nova versão do <strong>%1</strong> "
                                                            "está disponível,<br>é altamente recomendável que instale a atualização,"
                                                            "<br>pois contém várias melhorias e correções de bugs.<br><br>"
                                                            "<strong>Versão instalada:</strong> %2<br>"

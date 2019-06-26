@@ -41,6 +41,7 @@ AboutDialog::AboutDialog(QWidget *parent)
               "<div><strong>Qt:</strong> <a href=\"http://www.qt.io\">http://www.qt.io</a>"
               " <i>[Executando com Qt ").append(qVersion()).append(" (Compilado com Qt ").append(QT_VERSION_STR).append(")]</i><br>"
               "<strong>BASS:</strong> <a href=\"http://www.un4seen.com\">http://www.un4seen.com</a><br>"
+              "<strong>Lua:</strong> <a href=\"https://www.lua.org\">https://www.lua.org</a><br>"
               "<strong>Ícones:</strong> <a href=\"http://flaticons.net\">http://flaticons.net</a> | "
               "<a href=\"http://findicons.com/search/media\">http://findicons.com/search/media</a></div>"));
 
