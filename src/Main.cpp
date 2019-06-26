@@ -116,23 +116,24 @@ int main(int argc, char **argv)
         if (localServer->isRunning())
         {
             OTKQT::LocalSocket localSocket(*localServer);
+            QVector<QString> arguments;
 
             if (argc > 2 && (strcmp(argv[1], "--open-file") == 0 || strcmp(argv[1], "--add-file") == 0))
             {
-                localSocket.sendMessage(argv[1]);
-                localSocket.sendMessage(argv[2]);
+                arguments.push_back(argv[1]);
+                arguments.push_back(argv[2]);
             }
             else if (argc < 2)
             {
-                localSocket.sendMessage("--empty");
+                arguments.push_back("--empty");
             }
             else
             {
                 for (int i = 1; i < argc; i++)
-                    localSocket.sendMessage(argv[i]);
+                    arguments.push_back(argv[i]);
             }
 
-            if (localSocket.sendMessage("--end-arguments"))
+            if (localSocket.sendMessage(arguments))
                 code = EXIT_SUCCESS;
             else
                 code = EXIT_FAILURE;
