@@ -416,11 +416,7 @@ void Database::defaultConfig()
     query.exec("INSERT INTO RecorderMode VALUES "
                "('device', '-1'), "
                "('encoder', '0'), "
-#ifdef Q_OS_WIN
                "('aac', '8'), "
-#else
-               "('aac', '4'), "
-#endif
                "('ogg', '6'), "
                "('mp3', '8')");
 

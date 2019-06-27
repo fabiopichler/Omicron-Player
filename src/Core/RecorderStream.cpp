@@ -28,11 +28,7 @@ RecorderStream::RecorderStream(QWidget *parent)
 
     encoderList[0].name = "AAC";
     encoderList[0].index = Database::value("RecorderMode", "aac").toInt();
-#ifdef Q_OS_WIN
     encoderList[0].bitrate = {32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256};
-#else
-    encoderList[0].bitrate = {32, 40, 48, 56, 64};
-#endif
 
     encoderList[1].name = "OGG";
     encoderList[1].index = Database::value("RecorderMode", "ogg").toInt();
@@ -105,14 +101,16 @@ void RecorderStream::record()
     switch (EncoderList::current)
     {
     case 0:
-#ifdef Q_OS_WIN
-        if (bitrate < 96)
-            cmd = QString(encPath+"enc_aacPlus\" - \""+recordFileName+".aac\" --br %1 --mpeg4aac --he --silent --rawpcm 44100 2 16").arg(bitrate*1000);
-        else
-            cmd = QString(encPath+"enc_aacPlus\" - \""+recordFileName+".aac\" --br %1 --mpeg4aac --high --silent --rawpcm 44100 2 16").arg(bitrate*1000);
-#else
-        cmd = QString(encPath+"aacplusenc\" - \""+recordFileName+".aac\" %1").arg(bitrate);
-#endif
+        {
+            QString profile;
+
+            if (bitrate < 128)
+                profile = "29";
+            else
+                profile = "5";
+
+            cmd = QString(encPath+"fdkaac\" -p "+profile+" -f 2 -b %1 -I -S -R - -o \""+recordFileName+".aac\"").arg(bitrate);
+        }
         break;
 
     case 1:
