@@ -16,76 +16,62 @@
 #
 #-------------------------------------------------
 
+include(./config.pri)
+
 QT = core widgets gui network sql xml
 TEMPLATE = app
 CONFIG += c++11
 
-CONFIG += mobility
-MOBILITY =
-
 CONFIG(debug, debug|release) {
 
-    BUILDDIR = Debug
-    TARGET = "omicron-player-classic-d"
+    BUILDDIR = debug
+    DEBUG = -d
     unix:MAKEFILE = Makefile.debug
 
 } else {
 
-    BUILDDIR = Release
-    TARGET = "omicron-player-classic"
+    BUILDDIR = release
     unix:MAKEFILE = Makefile.release
     RESOURCES += ../qrc/Files.qrc
 
 }
 
+TARGET = "omicron-player-classic$${DEBUG}"
 OBJECTS_DIR = obj/$${BUILDDIR}
 MOC_DIR = moc/$${BUILDDIR}
 RCC_DIR = rcc/$${BUILDDIR}
-!android:DESTDIR = Build
+DESTDIR = build
 
-unix:INCLUDEPATH += "/mnt/projects/Frameworks/bass-linux" "/mnt/projects/MyFrameworks/C++/OmicronTK11+Lua/project/include" "/mnt/projects/MyFrameworks/C++/OmicronTK11+Qt/project/include"
-win32:INCLUDEPATH += "D:/Frameworks/bass"
+unix:INCLUDEPATH += $${BASS_INCLUDE_PATH_UNIX} "$${OTK11_QT_UNIX}/project/include" "$${OTK11_LUA_UNIX}/project/include"
+win32:INCLUDEPATH += $${BASS_INCLUDE_PATH_WIN} "$${OTK11_QT_WIN}\\project\\include" "$${OTK11_LUA_WIN}\\project\\include"
+
+LIBS += -lbass -lbass_fx -lbasscd -lbassenc -ltags
+LIBS += -lOmicronTK11+Qt$${DEBUG} -lOmicronTK11+Qt_Lua$${DEBUG} -lOmicronTK11+Qt_Network$${DEBUG} -lOmicronTK11+Lua$${DEBUG}
+
+linux:LIBS += -Wl,-rpath=./lib -Wl,-rpath="./$${TARGET}"
+win32:LIBS += -lUser32 -lAdvapi32
 
 contains(QMAKE_HOST.arch, x86_64) {
 
-    win32:LIBS += -L"D:/Frameworks/bass/x64" -lbass -lbass_fx -lbasscd -lbassenc -ltags -lUser32 -lAdvapi32
+    unix:LIBS += -L$${BASS_LIB_PATH_UNIX64}
+    win32:LIBS += -L$${BASS_LIB_PATH_WIN64}
 
-    linux:!android {
-        LIBS += -L"/mnt/projects/Frameworks/bass-linux/x64" -lbass -lbass_fx -lbasscd -lbassenc -ltags
-        LIBS += -Wl,-rpath=./lib -Wl,-rpath="/mnt/projects/Frameworks/bass-linux/x64"
+    unix:LIBS += -L"$${OTK11_QT_UNIX}/linux64/build"
+    win32:LIBS += -L"$${OTK11_QT_WIN}/win64/build"
 
-        LIBS += -L"/mnt/projects/MyFrameworks/C++/OmicronTK11+Lua/linux64/build" -lOmicronTK11_Lua-d
-        LIBS += -L"/mnt/projects/MyFrameworks/C++/OmicronTK11+Qt/linux64/build" -lOmicronTK11+Qt-d -lOmicronTK11+Qt_Lua-d -lOmicronTK11+Qt_Network-d
-        LIBS += -L"/mnt/projects/MyFrameworks/C++/OmicronTK11/linux64/build" -L"/mnt/projects/MyFrameworks/C++/OmicronTK11+SQLite/linux64/build"
-    }
+    unix:LIBS += -L"$${OTK11_LUA_UNIX}/linux64/build"
+    win32:LIBS += -L"$${OTK11_LUA_WIN}/win64/build"
 
 } else {
 
-    win32:LIBS += -L"D:/Frameworks/bass" -lbass -lbass_fx -lbasscd -lbassenc -ltags -lUser32 -lAdvapi32
+    unix:LIBS += -L$${BASS_LIB_PATH_UNIX32}
+    win32:LIBS += -L$${BASS_LIB_PATH_WIN32}
 
-    linux:!android {
-        LIBS += -Wl,-rpath=./lib -L"/mnt/projects/Frameworks/bass-linux" -lbass -lbass_fx -lbasscd -lbassenc -ltags
-    }
-}
+    unix:LIBS += -L"$${OTK11_QT_UNIX}/linux32/build"
+    win32:LIBS += -L"$${OTK11_QT_WIN}/win32/build"
 
-contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
-
-    LIBS += -L"/home/Frameworks/bass/android-arm" -lbass -lbass_fx -ltags
-
-    ANDROID_EXTRA_LIBS = \
-        /home/Frameworks/bass/android-arm/libbass_fx.so \
-        /home/Frameworks/bass/android-arm/libbass.so \
-        /home/Frameworks/bass/android-arm/libtags.so
-}
-
-contains(ANDROID_TARGET_ARCH,x86) {
-
-    LIBS += -L"/home/Frameworks/bass/android-x86" -lbass -lbass_fx -ltags
-
-    ANDROID_EXTRA_LIBS = \
-        /home/Frameworks/bass/android-x86/libbass_fx.so \
-        /home/Frameworks/bass/android-x86/libbass.so \
-        /home/Frameworks/bass/android-x86/libtags.so
+    unix:LIBS += -L"$${OTK11_LUA_UNIX}/linux32/build"
+    win32:LIBS += -L"$${OTK11_LUA_WIN}/win32/build"
 
 }
 
