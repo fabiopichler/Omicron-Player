@@ -25,12 +25,12 @@
 
 #include "Gui/AboutDialog.hpp"
 
-#include <OmicronTK11/Qt/AppInfo.hpp>
-#include <OmicronTK11/Qt/Theme.hpp>
-#include <OmicronTK11/Qt/Network/LocalServer.hpp>
-#include <OmicronTK11/Qt/Network/LocalSocket.hpp>
+#include <OmicronTK/Qt/AppInfo.hpp>
+#include <OmicronTK/Qt/Theme.hpp>
+#include <OmicronTK/Qt/Network/LocalServer.hpp>
+#include <OmicronTK/Qt/Network/LocalSocket.hpp>
 
-using namespace OmicronTK11;
+using namespace OmicronTK;
 
 // Classe responsável por retirar o efeito de "foco" do QTreeView.
 class ProxyStyle : public QProxyStyle

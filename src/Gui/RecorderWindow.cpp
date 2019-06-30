@@ -15,13 +15,13 @@
 
 #include <QDesktopServices>
 
-#include <OmicronTK11/Qt/ErrorWindow.hpp>
-#include <OmicronTK11/Qt/ComboBox.hpp>
-#include <OmicronTK11/Qt/Label.hpp>
+#include <OmicronTK/Qt/ErrorWindow.hpp>
+#include <OmicronTK/Qt/ComboBox.hpp>
+#include <OmicronTK/Qt/Label.hpp>
 
 #include <QComboBox>
 
-using namespace OmicronTK11;
+using namespace OmicronTK;
 
 RecorderWindow::RecorderWindow(QObject *parentMain)
     : WindowBase(parentMain),

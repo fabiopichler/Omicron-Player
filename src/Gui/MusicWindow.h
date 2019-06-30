@@ -20,8 +20,8 @@
 
 #include "WindowBase.h"
 
-#include <OmicronTK11/Qt/DropArea.hpp>
-#include <OmicronTK11/Qt/VolumeControl.hpp>
+#include <OmicronTK/Qt/DropArea.hpp>
+#include <OmicronTK/Qt/VolumeControl.hpp>
 
 #include <QPushButton>
 #include <QHBoxLayout>

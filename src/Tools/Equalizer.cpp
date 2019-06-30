@@ -1,7 +1,7 @@
 #include "Equalizer.h"
 #include "../Core/Database.h"
 
-using namespace OmicronTK11;
+using namespace OmicronTK;
 
 Equalizer::Equalizer(QWidget *parent, std::vector<int> &values) : OTKQT::Equalizer(parent, values)
 {

@@ -18,15 +18,15 @@ BASS_LIB_PATH_WIN64 = "D:/Frameworks/bass/x64"
 BASS_LIB_PATH_WIN32 = "D:/Frameworks/bass"
 
 #-------------------------------------------------------
-# OmicronTK11+Qt path
+# OmicronTK+Qt path
 #-------------------------------------------------------
-OTK11_QT_UNIX = "/mnt/projects/MyFrameworks/C++/OmicronTK11+Qt"
+OTKQT_UNIX = "/mnt/projects/MyFrameworks/C++/OmicronTK+Qt"
 
-OTK11_QT_WIN = "F:\\MyFrameworks\\C++\\OmicronTK11+Qt"
+OTKQT_WIN = "F:\\MyFrameworks\\C++\\OmicronTK+Qt"
 
 #-------------------------------------------------------
-# OmicronTK11+Lua path
+# OmicronTK+Lua path
 #-------------------------------------------------------
-OTK11_LUA_UNIX = "/mnt/projects/MyFrameworks/C++/OmicronTK11+Lua"
+OTKLUA_UNIX = "/mnt/projects/MyFrameworks/C++/OmicronTK+Lua"
 
-OTK11_LUA_WIN = "F:\\MyFrameworks\\C++\\OmicronTK11+Lua"
+OTKLUA_WIN = "F:\\MyFrameworks\\C++\\OmicronTK+Lua"

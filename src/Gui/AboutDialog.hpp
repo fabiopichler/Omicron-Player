@@ -1,8 +1,8 @@
 #pragma once
 
-#include <OmicronTK11/Qt/Dialog.hpp>
+#include <OmicronTK/Qt/Dialog.hpp>
 
-class AboutDialog : public OmicronTK11::OTKQT::Dialog
+class AboutDialog : public OmicronTK::OTKQT::Dialog
 {
 public:
     AboutDialog(QWidget *parent = nullptr);

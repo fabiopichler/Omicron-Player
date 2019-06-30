@@ -14,17 +14,17 @@
 
 #include "../Core/Global.h"
 
-#include <OmicronTK11/Qt/DropArea.hpp>
+#include <OmicronTK/Qt/DropArea.hpp>
 
 class QVBoxLayout;
 
-namespace OmicronTK11 {
+namespace OmicronTK {
 namespace OTKQT {
     class ErrorWindow;
 }
 }
 
-class WindowBase : public OmicronTK11::OTKQT::DropArea
+class WindowBase : public OmicronTK::OTKQT::DropArea
 {
     Q_OBJECT
     Q_PROPERTY(QColor linkColor READ linkColor WRITE setLinkColor)
@@ -65,7 +65,7 @@ private:
 
 protected:
     QObject *appMain;
-    OmicronTK11::OTKQT::ErrorWindow *m_errorWindow;
+    OmicronTK::OTKQT::ErrorWindow *m_errorWindow;
     QString mode;
 
 private:

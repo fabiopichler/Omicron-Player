@@ -1,9 +1,9 @@
 #pragma once
 
 #include "../Core/Global.h"
-#include <OmicronTK11/Qt/Equalizer.hpp>
+#include <OmicronTK/Qt/Equalizer.hpp>
 
-class Equalizer : public OmicronTK11::OTKQT::Equalizer
+class Equalizer : public OmicronTK::OTKQT::Equalizer
 {
 public:
     Equalizer(QWidget *, std::vector<int> &values);

@@ -12,11 +12,11 @@
 
 #include "ConfigDialog.h"
 
-#include <OmicronTK11/Qt/AppInfo.hpp>
+#include <OmicronTK/Qt/AppInfo.hpp>
 
 #include <QtWidgets>
 
-using namespace OmicronTK11;
+using namespace OmicronTK;
 
 int ConfigDialog::lastPage = 0;
 

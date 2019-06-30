@@ -14,14 +14,14 @@
 #include "../Core/RadioStream.h"
 #include "../Core/MusicStream.h"
 
-#include <OmicronTK11/Qt/TitleBar.hpp>
+#include <OmicronTK/Qt/TitleBar.hpp>
 
-#include <OmicronTK11/Qt/Theme.hpp>
+#include <OmicronTK/Qt/Theme.hpp>
 
 #include <QtWidgets>
 #include <bass.h>
 
-using namespace OmicronTK11;
+using namespace OmicronTK;
 
 //================================================================================================================
 // GeneralPage

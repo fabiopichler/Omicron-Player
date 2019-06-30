@@ -12,12 +12,12 @@
 
 #include "MusicWindow.h"
 
-#include <OmicronTK11/Qt/DirectoryDialog.hpp>
-#include <OmicronTK11/Qt/ComboBox.hpp>
-#include <OmicronTK11/Qt/ErrorWindow.hpp>
-#include <OmicronTK11/Qt/Slider.hpp>
+#include <OmicronTK/Qt/DirectoryDialog.hpp>
+#include <OmicronTK/Qt/ComboBox.hpp>
+#include <OmicronTK/Qt/ErrorWindow.hpp>
+#include <OmicronTK/Qt/Slider.hpp>
 
-using namespace OmicronTK11;
+using namespace OmicronTK;
 
 MusicWindow::MusicWindow(QObject *parentMain)
     : WindowBase(parentMain),

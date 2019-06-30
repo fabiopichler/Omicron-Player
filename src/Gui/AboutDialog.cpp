@@ -6,7 +6,7 @@
 #include <QBoxLayout>
 #include <QDebug>
 
-using namespace OmicronTK11;
+using namespace OmicronTK;
 
 int AboutDialog::s_rand = -1;
 

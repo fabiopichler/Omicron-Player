@@ -20,8 +20,8 @@
 #include "WindowBase.h"
 #include "RadioUi.hpp"
 
-#include <OmicronTK11/Qt/Dialog.hpp>
-#include <OmicronTK11/Qt/VolumeControl.hpp>
+#include <OmicronTK/Qt/Dialog.hpp>
+#include <OmicronTK/Qt/VolumeControl.hpp>
 
 #include <QPushButton>
 #include <QHBoxLayout>
@@ -81,7 +81,7 @@ private:
     bool showLoader;
 };
 
-class ShowRadioInfo : public OmicronTK11::OTKQT::Dialog
+class ShowRadioInfo : public OmicronTK::OTKQT::Dialog
 {
     Q_OBJECT
 

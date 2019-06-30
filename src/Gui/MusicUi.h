@@ -12,17 +12,13 @@
 
 #pragma once
 
-#include <OmicronTK11/Lua/LuaState.hpp>
+#include <OmicronTK/Lua/LuaState.hpp>
 
-namespace OmicronTK11 {
+namespace OmicronTK {
 
 namespace OTKQT {
     class VolumeControl;
     class Slider;
-}
-
-namespace OTK11 {
-class Playlist;
 }
 
 }
@@ -99,8 +95,8 @@ class MusicUi
         *m_randomButton,
         *m_playlistManagerButton;
 
-    OmicronTK11::OTKQT::Slider *m_timeSlider;
-    OmicronTK11::OTKQT::VolumeControl *m_volumeControl;
+    OmicronTK::OTKQT::Slider *m_timeSlider;
+    OmicronTK::OTKQT::VolumeControl *m_volumeControl;
     QProgressBar *m_leftChProgressBar,
         *m_rightChProgressBar;
 
@@ -110,5 +106,5 @@ class MusicUi
     QPushButton *m_playlistTabButton;
     QPushButton *m_favoritesTabButton;
 
-    OmicronTK11::OTK11::LuaState m_luaState;
+    OmicronTK::OTKLUA::LuaState m_luaState;
 };

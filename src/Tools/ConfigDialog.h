@@ -14,12 +14,12 @@
 
 #include "ConfigPages.h"
 
-#include <OmicronTK11/Qt/Dialog.hpp>
+#include <OmicronTK/Qt/Dialog.hpp>
 
 #include <QListWidgetItem>
 #include <QStackedWidget>
 
-class ConfigDialog : public OmicronTK11::OTKQT::Dialog
+class ConfigDialog : public OmicronTK::OTKQT::Dialog
 {
     Q_OBJECT
 
@@ -41,7 +41,7 @@ signals:
 private:
     QObject *parentMain;
     QWidget *parent;
-    OmicronTK11::OTKQT::Widget *contentsWidget;
+    OmicronTK::OTKQT::Widget *contentsWidget;
     QListWidget *contentsListWidget;
     QStackedWidget *pagesWidget;
     QLabel *contentsTitle;

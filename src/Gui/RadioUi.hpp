@@ -12,17 +12,13 @@
 
 #pragma once
 
-#include <OmicronTK11/Lua/LuaState.hpp>
+#include <OmicronTK/Lua/LuaState.hpp>
 
-namespace OmicronTK11 {
+namespace OmicronTK {
 
 namespace OTKQT {
     class VolumeControl;
     class Label;
-}
-
-namespace OTK11 {
-class Playlist;
 }
 
 }
@@ -54,7 +50,7 @@ class RadioUi
     RadioWindow *m_radioWindow;
     RadioPlaylist *m_playlistView;
 
-    OmicronTK11::OTK11::LuaState m_luaState;
+    OmicronTK::OTKLUA::LuaState m_luaState;
 
     QWidget *m_centralWidget;
 
@@ -90,12 +86,12 @@ class RadioUi
         *m_statusLabel,
         *m_nameLabel;
 
-    OmicronTK11::OTKQT::Label *m_streamTitleLabel;
+    OmicronTK::OTKQT::Label *m_streamTitleLabel;
     QMovie *m_loaderMovie;
     QProgressBar *m_leftChProgressBar,
         *m_rightChProgressBar,
         *m_bufferProgressBar;
 
     QLineEdit *m_searchLineEdit;
-    OmicronTK11::OTKQT::VolumeControl *m_volumeControl;
+    OmicronTK::OTKQT::VolumeControl *m_volumeControl;
 };

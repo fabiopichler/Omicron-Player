@@ -6,23 +6,23 @@
 
 #include "RadioWindow.h"
 
-#include <OmicronTK11/Qt/AppInfo.hpp>
-#include <OmicronTK11/Qt/ErrorWindow.hpp>
-#include <OmicronTK11/Qt/Theme.hpp>
-#include <OmicronTK11/Qt/DirectoryDialog.hpp>
-#include <OmicronTK11/Qt/VolumeControl.hpp>
-#include <OmicronTK11/Qt/Slider.hpp>
-#include <OmicronTK11/Qt/ComboBox.hpp>
-#include <OmicronTK11/Qt/TitleBarWidget.hpp>
-#include <OmicronTK11/Qt/Label.hpp>
+#include <OmicronTK/Qt/AppInfo.hpp>
+#include <OmicronTK/Qt/ErrorWindow.hpp>
+#include <OmicronTK/Qt/Theme.hpp>
+#include <OmicronTK/Qt/DirectoryDialog.hpp>
+#include <OmicronTK/Qt/VolumeControl.hpp>
+#include <OmicronTK/Qt/Slider.hpp>
+#include <OmicronTK/Qt/ComboBox.hpp>
+#include <OmicronTK/Qt/TitleBarWidget.hpp>
+#include <OmicronTK/Qt/Label.hpp>
 
-#include <OmicronTK11/Qt/Lua/LuaObject.hpp>
-#include <OmicronTK11/Qt/Lua/LuaWidget.hpp>
-#include <OmicronTK11/Qt/Lua/LuaLabel.hpp>
-#include <OmicronTK11/Qt/Lua/LuaPushButton.hpp>
-#include <OmicronTK11/Qt/Lua/LuaProgressBar.hpp>
-#include <OmicronTK11/Qt/Lua/LuaLineEdit.hpp>
-#include <OmicronTK11/Qt/Lua/LuaLayout.hpp>
+#include <OmicronTK/Qt/Lua/LuaObject.hpp>
+#include <OmicronTK/Qt/Lua/LuaWidget.hpp>
+#include <OmicronTK/Qt/Lua/LuaLabel.hpp>
+#include <OmicronTK/Qt/Lua/LuaPushButton.hpp>
+#include <OmicronTK/Qt/Lua/LuaProgressBar.hpp>
+#include <OmicronTK/Qt/Lua/LuaLineEdit.hpp>
+#include <OmicronTK/Qt/Lua/LuaLayout.hpp>
 
 #include <QMenu>
 #include <QMenuBar>
@@ -39,7 +39,7 @@
 
 #include <QBoxLayout>
 
-using namespace OmicronTK11;
+using namespace OmicronTK;
 
 RadioUi::RadioUi(RadioWindow *musicWindow)
     : m_radioWindow(musicWindow)

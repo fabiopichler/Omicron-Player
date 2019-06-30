@@ -16,8 +16,8 @@
 #include "../Core/Global.h"
 #include "../Tools/Equalizer.h"
 
-#include <OmicronTK11/Qt/Slider.hpp>
-#include <OmicronTK11/Qt/Widget.hpp>
+#include <OmicronTK/Qt/Slider.hpp>
+#include <OmicronTK/Qt/Widget.hpp>
 
 #include "WindowBase.h"
 #include "RecorderUi.hpp"

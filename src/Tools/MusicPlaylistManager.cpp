@@ -13,14 +13,14 @@
 #include "MusicPlaylistManager.h"
 #include "../Core/Global.h"
 
-#include <OmicronTK11/Qt/DirectoryDialog.hpp>
+#include <OmicronTK/Qt/DirectoryDialog.hpp>
 
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QKeyEvent>
 #include <QLabel>
 
-using namespace OmicronTK11;
+using namespace OmicronTK;
 
 MusicPlaylistManager::MusicPlaylistManager(QWidget *parent) : OTKQT::Dialog(parent)
 {

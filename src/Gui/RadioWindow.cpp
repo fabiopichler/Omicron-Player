@@ -13,11 +13,11 @@
 #include "RadioWindow.h"
 #include <QDesktopServices>
 
-#include <OmicronTK11/Qt/ErrorWindow.hpp>
-#include <OmicronTK11/Qt/Label.hpp>
-#include <OmicronTK11/Qt/AppInfo.hpp>
+#include <OmicronTK/Qt/ErrorWindow.hpp>
+#include <OmicronTK/Qt/Label.hpp>
+#include <OmicronTK/Qt/AppInfo.hpp>
 
-using namespace OmicronTK11;
+using namespace OmicronTK;
 
 RadioWindow::RadioWindow(QObject *parentMain)
     : WindowBase(parentMain),

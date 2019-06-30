@@ -12,9 +12,9 @@
 
 #pragma once
 
-#include <OmicronTK11/Lua/LuaState.hpp>
+#include <OmicronTK/Lua/LuaState.hpp>
 
-namespace OmicronTK11 {
+namespace OmicronTK {
 
 namespace OTKQT {
     class Label;
@@ -50,7 +50,7 @@ class RecorderUi
     RecorderWindow *m_recorderWindow;
     RecordList *m_playlistView;
 
-    OmicronTK11::OTK11::LuaState m_luaState;
+    OmicronTK::OTKLUA::LuaState m_luaState;
 
     QWidget *m_centralWidget;
 
@@ -71,7 +71,7 @@ class RecorderUi
     QProgressBar *m_leftChProgressBar,
         *m_rightChProgressBar;
 
-    OmicronTK11::OTKQT::Label *m_timeLabel,
+    OmicronTK::OTKQT::Label *m_timeLabel,
         *m_statusLabel;
 
     QPushButton *m_recordButton,
@@ -79,9 +79,9 @@ class RecorderUi
         *m_playButton,
         *m_deleteButton;
 
-    OmicronTK11::OTKQT::ComboBox *m_deviceComboBox,
+    OmicronTK::OTKQT::ComboBox *m_deviceComboBox,
         *m_encoderComboBox,
         *m_bitrateComboBox;
 
-    OmicronTK11::OTKQT::Slider *m_timeSlider;
+    OmicronTK::OTKQT::Slider *m_timeSlider;
 };

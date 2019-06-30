@@ -15,8 +15,8 @@
 #include "../Core/Global.h"
 #include "../Core/Database.h"
 
-#include <OmicronTK11/Qt/Widget.hpp>
-#include <OmicronTK11/Qt/ComboBox.hpp>
+#include <OmicronTK/Qt/Widget.hpp>
+#include <OmicronTK/Qt/ComboBox.hpp>
 
 #include <QWidget>
 #include <QGroupBox>
@@ -24,7 +24,7 @@
 //================================================================================================================
 // GeneralPage
 //================================================================================================================
-class GeneralPage : public OmicronTK11::OTKQT::Widget
+class GeneralPage : public OmicronTK::OTKQT::Widget
 {
     Q_OBJECT
 
@@ -35,13 +35,13 @@ private slots:
     void changeError(int);
 
 private:
-    OmicronTK11::OTKQT::ComboBox *errorCombo;
+    OmicronTK::OTKQT::ComboBox *errorCombo;
 };
 
 //================================================================================================================
 // InterfacePage
 //================================================================================================================
-class InterfacePage : public OmicronTK11::OTKQT::Widget
+class InterfacePage : public OmicronTK::OTKQT::Widget
 {
     Q_OBJECT
 
@@ -60,14 +60,14 @@ signals:
     void restartApp();
 
 private:
-    OmicronTK11::OTKQT::ComboBox *themeCombo, *styleCombo;
+    OmicronTK::OTKQT::ComboBox *themeCombo, *styleCombo;
     int currentTheme;
 };
 
 //================================================================================================================
 // MusicPage
 //================================================================================================================
-class MusicPage : public OmicronTK11::OTKQT::Widget
+class MusicPage : public OmicronTK::OTKQT::Widget
 {
     Q_OBJECT
 
@@ -81,7 +81,7 @@ private:
 //================================================================================================================
 // WebRadioPage
 //================================================================================================================
-class WebRadioPage : public OmicronTK11::OTKQT::Widget
+class WebRadioPage : public OmicronTK::OTKQT::Widget
 {
     Q_OBJECT
 
@@ -94,7 +94,7 @@ public slots:
     void modeChanged();
 
 private:
-    OmicronTK11::OTKQT::ComboBox *readtimeoutCombo, *timeoutCombo, *modeCombo;
+    OmicronTK::OTKQT::ComboBox *readtimeoutCombo, *timeoutCombo, *modeCombo;
 };
 
 //================================================================================================================
@@ -125,7 +125,7 @@ private:
     QWidget *parent;
 };
 
-class FileTypePage : public OmicronTK11::OTKQT::Widget
+class FileTypePage : public OmicronTK::OTKQT::Widget
 {
     Q_OBJECT
 
@@ -146,7 +146,7 @@ private:
 //================================================================================================================
 // AudioPage
 //================================================================================================================
-class AudioPage : public OmicronTK11::OTKQT::Widget
+class AudioPage : public OmicronTK::OTKQT::Widget
 {
     Q_OBJECT
 
@@ -166,7 +166,7 @@ private:
 //================================================================================================================
 // RecordingsPage
 //================================================================================================================
-class RecordingsPage : public OmicronTK11::OTKQT::Widget
+class RecordingsPage : public OmicronTK::OTKQT::Widget
 {
     Q_OBJECT
 
@@ -184,7 +184,7 @@ private:
 //================================================================================================================
 // NetworkPage
 //================================================================================================================
-class NetworkPage : public OmicronTK11::OTKQT::Widget
+class NetworkPage : public OmicronTK::OTKQT::Widget
 {
     Q_OBJECT
 
@@ -198,7 +198,7 @@ private:
 //================================================================================================================
 // UpdatePage
 //================================================================================================================
-class UpdatePage : public OmicronTK11::OTKQT::Widget
+class UpdatePage : public OmicronTK::OTKQT::Widget
 {
     Q_OBJECT
 

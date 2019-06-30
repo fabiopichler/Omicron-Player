@@ -32,7 +32,7 @@ CONFIG(debug, debug|release) {
 
     BUILDDIR = release
     unix:MAKEFILE = Makefile.release
-    RESOURCES += ../qrc/Files.qrc
+    RESOURCES += qrc/Files.qrc
 
 }
 
@@ -42,11 +42,11 @@ MOC_DIR = moc/$${BUILDDIR}
 RCC_DIR = rcc/$${BUILDDIR}
 DESTDIR = build
 
-unix:INCLUDEPATH += $${BASS_INCLUDE_PATH_UNIX} "$${OTK11_QT_UNIX}/project/include" "$${OTK11_LUA_UNIX}/project/include"
-win32:INCLUDEPATH += $${BASS_INCLUDE_PATH_WIN} "$${OTK11_QT_WIN}\\project\\include" "$${OTK11_LUA_WIN}\\project\\include"
+unix:INCLUDEPATH += $${BASS_INCLUDE_PATH_UNIX} "$${OTKQT_UNIX}/project/include" "$${OTKLUA_UNIX}/project/include"
+win32:INCLUDEPATH += $${BASS_INCLUDE_PATH_WIN} "$${OTKQT_WIN}\\project\\include" "$${OTKLUA_WIN}\\project\\include"
 
 LIBS += -lbass -lbass_fx -lbasscd -lbassenc -ltags
-LIBS += -lOmicronTK11+Qt$${DEBUG} -lOmicronTK11+Qt_Lua$${DEBUG} -lOmicronTK11+Qt_Network$${DEBUG} -lOmicronTK11+Lua$${DEBUG}
+LIBS += -lOmicronTK+Qt$${DEBUG} -lOmicronTK+Qt_Lua$${DEBUG} -lOmicronTK+Qt_Network$${DEBUG} -lOmicronTK+Lua$${DEBUG}
 
 linux:LIBS += -Wl,-rpath=./lib -Wl,-rpath="./$${TARGET}"
 win32:LIBS += -lUser32 -lAdvapi32
@@ -56,22 +56,22 @@ contains(QMAKE_HOST.arch, x86_64) {
     unix:LIBS += -L$${BASS_LIB_PATH_UNIX64}
     win32:LIBS += -L$${BASS_LIB_PATH_WIN64}
 
-    unix:LIBS += -L"$${OTK11_QT_UNIX}/linux64/build"
-    win32:LIBS += -L"$${OTK11_QT_WIN}/win64/build"
+    unix:LIBS += -L"$${OTKQT_UNIX}/linux64/build"
+    win32:LIBS += -L"$${OTKQT_WIN}/win64/build"
 
-    unix:LIBS += -L"$${OTK11_LUA_UNIX}/linux64/build"
-    win32:LIBS += -L"$${OTK11_LUA_WIN}/win64/build"
+    unix:LIBS += -L"$${OTKLUA_UNIX}/linux64/build"
+    win32:LIBS += -L"$${OTKLUA_WIN}/win64/build"
 
 } else {
 
     unix:LIBS += -L$${BASS_LIB_PATH_UNIX32}
     win32:LIBS += -L$${BASS_LIB_PATH_WIN32}
 
-    unix:LIBS += -L"$${OTK11_QT_UNIX}/linux32/build"
-    win32:LIBS += -L"$${OTK11_QT_WIN}/win32/build"
+    unix:LIBS += -L"$${OTKQT_UNIX}/linux32/build"
+    win32:LIBS += -L"$${OTKQT_WIN}/win32/build"
 
-    unix:LIBS += -L"$${OTK11_LUA_UNIX}/linux32/build"
-    win32:LIBS += -L"$${OTK11_LUA_WIN}/win32/build"
+    unix:LIBS += -L"$${OTKLUA_UNIX}/linux32/build"
+    win32:LIBS += -L"$${OTKLUA_WIN}/win32/build"
 
 }
 

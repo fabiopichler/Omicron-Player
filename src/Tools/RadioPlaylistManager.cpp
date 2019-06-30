@@ -18,7 +18,7 @@
 #include <QVBoxLayout>
 #include <QKeyEvent>
 
-using namespace OmicronTK11;
+using namespace OmicronTK;
 
 RadioPlaylistManager::RadioPlaylistManager(QWidget *parent) : OTKQT::Dialog(parent)
 {

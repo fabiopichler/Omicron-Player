@@ -12,8 +12,8 @@
 #include "../Tools/ConfigDialog.h"
 #include "AboutDialog.hpp"
 
-#include <OmicronTK11/Qt/AppInfo.hpp>
-#include <OmicronTK11/Qt/ErrorWindow.hpp>
+#include <OmicronTK/Qt/AppInfo.hpp>
+#include <OmicronTK/Qt/ErrorWindow.hpp>
 
 #include <QBoxLayout>
 #include <QIcon>
@@ -27,7 +27,7 @@
 #include <iostream>
 #include <vector>
 
-using namespace OmicronTK11;
+using namespace OmicronTK;
 
 WindowBase::WindowBase(QObject *appMain)
     : appMain(appMain)
