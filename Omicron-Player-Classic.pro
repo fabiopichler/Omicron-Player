@@ -42,6 +42,8 @@ MOC_DIR = moc/$${BUILDDIR}
 RCC_DIR = rcc/$${BUILDDIR}
 DESTDIR = build
 
+DEFINES += TARGET=\\\"$${TARGET}\\\"
+
 unix:INCLUDEPATH += $${BASS_INCLUDE_PATH_UNIX} "$${OTKQT_UNIX}/project/include" "$${OTKLUA_UNIX}/project/include"
 win32:INCLUDEPATH += $${BASS_INCLUDE_PATH_WIN} "$${OTKQT_WIN}\\project\\include" "$${OTKLUA_WIN}\\project\\include"
 
@@ -81,7 +83,7 @@ contains(QMAKE_HOST.arch, x86_64) {
 }
 
 unix {
-    DEFINES += TARGET=\\\"$${TARGET}\\\" ARCHITECTURE=\\\"$${ARCHITECTURE}\\\" ARCHITECTURE_DEB=\\\"$${ARCHITECTURE_DEB}\\\"
+    DEFINES += ARCHITECTURE=\\\"$${ARCHITECTURE}\\\" ARCHITECTURE_DEB=\\\"$${ARCHITECTURE_DEB}\\\"
     QMAKE_LFLAGS += '-Wl,-rpath,\'\$$ORIGIN/../$${ARCHITECTURE}/$${TARGET}/lib\',-z,origin' '-Wl,-rpath,\'\$$ORIGIN/../$${ARCHITECTURE_DEB}/$${TARGET}/lib\',-z,origin'
 }
 

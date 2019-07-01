@@ -52,21 +52,21 @@ int main(int argc, char **argv)
     OTKQT::LocalServer *localServer = nullptr;
     Main *app = nullptr;
 
-#ifdef Q_OS_UNIX
-    QString execPath = QFileInfo(QString::fromUtf8(argv[0])).absolutePath();
-#else
-    QString execPath = QFileInfo(QString::fromLocal8Bit(argv[0])).absolutePath();
-#endif
-
+    QString execPath = QFileInfo(ToQString(argv[0])).absolutePath();
     QString pluginPath = execPath + "/../";
 
 #ifdef QT_NO_DEBUG // RELEASE
-    OTKQT::AppInfo::setSharePath(execPath + "/../share/" TARGET);
+    #ifdef Q_OS_UNIX
+        OTKQT::AppInfo::setSharePath(execPath + "/../share/" TARGET);
 
-    if (QDir().exists(execPath + "/../" ARCHITECTURE_DEB "/" TARGET))
-        pluginPath += ARCHITECTURE_DEB "/" TARGET "/plugins";
-    else
-        pluginPath += ARCHITECTURE "/" TARGET "/plugins";
+        if (QDir().exists(execPath + "/../" ARCHITECTURE_DEB "/" TARGET))
+            pluginPath += ARCHITECTURE_DEB "/" TARGET "/plugins";
+        else
+            pluginPath += ARCHITECTURE "/" TARGET "/plugins";
+    #else
+        OTKQT::AppInfo::setSharePath(execPath);
+        pluginPath = execPath + "/plugins";
+    #endif
 
 #else // DEBUG
     pluginPath = execPath + "/plugins";
@@ -89,7 +89,7 @@ int main(int argc, char **argv)
     if (argc == 2 && strcmp(argv[1], "--uninstall-app") == 0)
     {
         Global::setupSupportedFiles();
-        FileAssociation(Global::cStrToQString(argv[0])).remove(Global::supportedFiles);
+        FileAssociation(ToQString(argv[0])).remove(Global::supportedFiles);
 
         QString configPath = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation);
 
@@ -138,8 +138,8 @@ int main(int argc, char **argv)
 
             if (argc > 2 && (strcmp(argv[1], "--open-file") == 0 || strcmp(argv[1], "--add-file") == 0))
             {
-                arguments.push_back(argv[1]);
-                arguments.push_back(argv[2]);
+                arguments.push_back(ToQString(argv[1]));
+                arguments.push_back(ToQString(argv[2]));
             }
             else if (argc < 2)
             {
@@ -148,7 +148,7 @@ int main(int argc, char **argv)
             else
             {
                 for (int i = 1; i < argc; i++)
-                    arguments.push_back(argv[i]);
+                    arguments.push_back(ToQString(argv[i]));
             }
 
             if (localSocket.sendMessage(arguments))

@@ -109,7 +109,7 @@ statusLabel:setToolTip("")
 nameLabel:setToolTip("")
 streamTitleLabel:setToolTip("")
 
-loaderMovie:setToolTip("")
+--loaderMovie:setToolTip("")
 
 leftChProgressBar:setToolTip("")
 rightChProgressBar:setToolTip("")

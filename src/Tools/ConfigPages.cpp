@@ -449,7 +449,7 @@ void FileTypeTree::selectAllRows()
 
 //------------------------------------------------------------------------------------------
 
-FileTypePage::FileTypePage(QWidget *parent) : MyWidget(parent)
+FileTypePage::FileTypePage(QWidget *parent) : OTKQT::Widget(parent)
 {
     setObjectName("configPagesWidget");
 

@@ -28,9 +28,11 @@
 #ifdef Q_OS_WIN
     #define strncasecmp _strnicmp
     #define stdCout(str) std::wcout << QString(str).toStdWString() << std::endl
+    #define ToQString(str) QString::fromLocal8Bit(str)
 #else
     #define _strdup strdup
     #define stdCout(str) std::cout << QString(str).toStdString() << std::endl
+    #define ToQString(str) QString::fromUtf8(str)
 #endif
 
 enum
