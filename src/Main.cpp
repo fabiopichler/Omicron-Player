@@ -45,25 +45,43 @@ public:
     }
 };
 
-// Função main() (meio óbvio, né?)
 int main(int argc, char **argv)
 {
     int code = EXIT_SUCCESS;
     QApplication *qApplication = nullptr;
     OTKQT::LocalServer *localServer = nullptr;
     Main *app = nullptr;
-    QStringList libraryPaths;
 
-    // Se estiver em desenvolvimento, acrescentar a pasta de plugins do sistema.
-    // Nota: Definir Global::inDevelopment como false, antes de compilar para o lançamento.
-    if (Global::inDevelopment)
-    {
-        QStringList list = QApplication::libraryPaths();
-        if (!list.isEmpty())
-            libraryPaths << list[0]; // Para o desenvolvimento
-    }
-    libraryPaths << QFileInfo(Global::cStrToQString(argv[0])).absolutePath() + "/plugins";
+#ifdef Q_OS_UNIX
+    QString execPath = QFileInfo(QString::fromUtf8(argv[0])).absolutePath();
+#else
+    QString execPath = QFileInfo(QString::fromLocal8Bit(argv[0])).absolutePath();
+#endif
+
+    QString pluginPath = execPath + "/../";
+
+#ifdef QT_NO_DEBUG // RELEASE
+    OTKQT::AppInfo::setSharePath(execPath + "/../share/" TARGET);
+
+    if (QDir().exists(execPath + "/../" ARCHITECTURE_DEB "/" TARGET))
+        pluginPath += ARCHITECTURE_DEB "/" TARGET "/plugins";
+    else
+        pluginPath += ARCHITECTURE "/" TARGET "/plugins";
+
+#else // DEBUG
+    pluginPath = execPath + "/plugins";
+
+    OTKQT::AppInfo::setSharePath(execPath + "/../../project");
+    OTKQT::AppInfo::setPluginsPath(pluginPath);
+
+#endif // QT_NO_DEBUG
+
+    QStringList libraryPaths = QApplication::libraryPaths();
+
+    libraryPaths <<  pluginPath;
+
     QApplication::setLibraryPaths(libraryPaths);
+    OTKQT::AppInfo::setPluginsPath(pluginPath);
 
 #ifdef Q_OS_WIN // Windows
     // Se desinstalar o programa (no Windows), iniciá-lo e passar o argumento --uninstall-app para
@@ -209,7 +227,6 @@ Main::~Main()
     OTKQT::Theme::free();
     Database::free();
     Stream::free();
-    QFontDatabase::removeAllApplicationFonts();
 }
 
 //! Método para inicializar o programa.
@@ -231,12 +248,7 @@ bool Main::init(const int &argc)
     if (!QDir().exists(Global::getConfigPath("themes")))
         QDir().mkpath(Global::getConfigPath("themes"));
 
-    OTKQT::AppInfo::setSharePath("/mnt/projects/Desktop/C++/omicron-player-classic/project");
-    OTKQT::AppInfo::setConfigPath(Global::getConfigPath().toStdString().c_str());
-
-    // Carregar as fontes pro programa.
-    QFontDatabase::addApplicationFont(Global::getQrcPath("fonts/verdana.ttf"));
-    QFontDatabase::addApplicationFont(Global::getQrcPath("fonts/verdanab.ttf"));
+    OTKQT::AppInfo::setConfigPath(Global::getConfigPath());
 
     // Inicializar a conexão com o banco de dados.
     if (Database::init(Global::getConfigPath("Config.db")))

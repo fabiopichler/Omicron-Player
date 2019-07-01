@@ -43,8 +43,7 @@ const QString AppName = APP_NAME,
               CurrentReleaseDate = CURRENT_RELEASE_DATE,
               FileRadiolist = FILE_RADIOLIST,
               FileRadiolistDate = FILE_RADIOLIST_DATE,
-              PathAudioPlugins = "plugins/audio/",
-              AppConfigDir = "Omicron-Player-Classic",
+              AppConfigDir = TARGET,
               AppNameId = "Omicron-Player-Classic",
               PlaylistExt = "fpmp",
               RadioPlaylistExt = "fprp",
@@ -102,7 +101,6 @@ public:
     static void setRadiolistName(const QString &);
 
     static int argc;
-    static bool inDevelopment;
     static std::vector<int> equalizerValues;
     static QList<QStringList> supportedFiles;
 

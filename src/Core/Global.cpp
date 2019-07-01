@@ -16,7 +16,6 @@
 #include <bass.h>
 
 int Global::argc;
-bool Global::inDevelopment = true;
 std::vector<int> Global::equalizerValues;
 QList<QStringList> Global::supportedFiles;
 

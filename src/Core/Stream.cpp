@@ -13,7 +13,11 @@
 #include "Stream.h"
 #include "Database.h"
 
+#include <OmicronTK/Qt/AppInfo.hpp>
+
 #include <bass_fx.h>
+
+using namespace OmicronTK;
 
 int EncoderList::current = 0;
 
@@ -67,27 +71,29 @@ bool Stream::init()
         }
     }
 
+    QString path = OTKQT::AppInfo::pluginsPath() + "/audio/";
+
 #ifndef Q_OS_ANDROID // Desativar os plugins no Android, apenas para os testes (ainda não funciona nele).
-    if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+bass_aac).toLocal8Bit().constData(),0))
+    if (!BASS_PluginLoad(QString(path+bass_aac).toLocal8Bit().constData(),0))
         QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+bass_aac));
 
-    if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+bass_ac3).toLocal8Bit().constData(),0))
+    if (!BASS_PluginLoad(QString(path+bass_ac3).toLocal8Bit().constData(),0))
         QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+bass_ac3));
 
-    if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+bass_ape).toLocal8Bit().constData(),0))
+    if (!BASS_PluginLoad(QString(path+bass_ape).toLocal8Bit().constData(),0))
         QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+bass_ape));
 
-    if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+bassflac).toLocal8Bit().constData(),0))
+    if (!BASS_PluginLoad(QString(path+bassflac).toLocal8Bit().constData(),0))
         QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+bassflac));
 
-    if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+basswv).toLocal8Bit().constData(),0))
+    if (!BASS_PluginLoad(QString(path+basswv).toLocal8Bit().constData(),0))
         QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+basswv));
 
-    if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+bassopus).toLocal8Bit().constData(),0))
+    if (!BASS_PluginLoad(QString(path+bassopus).toLocal8Bit().constData(),0))
         QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+bassopus));
 #endif
 #ifdef Q_OS_WIN
-    if (!BASS_PluginLoad(Global::getAppPath(PathAudioPlugins+basswma).toLocal8Bit().constData(),0))
+    if (!BASS_PluginLoad(QString(path+basswma).toLocal8Bit().constData(),0))
         QMessageBox::warning(nullptr,"Erro",Global::getErrorHtml("Houve um erro com o arquivo: "+basswma));
 #endif // Q_OS_WIN
 

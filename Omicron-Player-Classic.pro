@@ -48,10 +48,12 @@ win32:INCLUDEPATH += $${BASS_INCLUDE_PATH_WIN} "$${OTKQT_WIN}\\project\\include"
 LIBS += -lbass -lbass_fx -lbasscd -lbassenc -ltags
 LIBS += -lOmicronTK+Qt$${DEBUG} -lOmicronTK+Qt_Lua$${DEBUG} -lOmicronTK+Qt_Network$${DEBUG} -lOmicronTK+Lua$${DEBUG}
 
-linux:LIBS += -Wl,-rpath=./lib -Wl,-rpath="./$${TARGET}"
 win32:LIBS += -lUser32 -lAdvapi32
 
 contains(QMAKE_HOST.arch, x86_64) {
+
+    unix:ARCHITECTURE = "lib64"
+    unix:ARCHITECTURE_DEB = "lib/x86_64-linux-gnu"
 
     unix:LIBS += -L$${BASS_LIB_PATH_UNIX64}
     win32:LIBS += -L$${BASS_LIB_PATH_WIN64}
@@ -64,6 +66,9 @@ contains(QMAKE_HOST.arch, x86_64) {
 
 } else {
 
+    unix:ARCHITECTURE = "lib"
+    unix:ARCHITECTURE_DEB = "lib/i386-linux-gnu"
+
     unix:LIBS += -L$${BASS_LIB_PATH_UNIX32}
     win32:LIBS += -L$${BASS_LIB_PATH_WIN32}
 
@@ -73,6 +78,11 @@ contains(QMAKE_HOST.arch, x86_64) {
     unix:LIBS += -L"$${OTKLUA_UNIX}/linux32/build"
     win32:LIBS += -L"$${OTKLUA_WIN}/win32/build"
 
+}
+
+unix {
+    DEFINES += TARGET=\\\"$${TARGET}\\\" ARCHITECTURE=\\\"$${ARCHITECTURE}\\\" ARCHITECTURE_DEB=\\\"$${ARCHITECTURE_DEB}\\\"
+    QMAKE_LFLAGS += '-Wl,-rpath,\'\$$ORIGIN/../$${ARCHITECTURE}/$${TARGET}/lib\',-z,origin' '-Wl,-rpath,\'\$$ORIGIN/../$${ARCHITECTURE_DEB}/$${TARGET}/lib\',-z,origin'
 }
 
 win32:RC_FILE = rc/Win.rc
