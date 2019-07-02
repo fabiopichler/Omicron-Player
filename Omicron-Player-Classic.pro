@@ -16,7 +16,11 @@
 #
 #-------------------------------------------------
 
-include(./config.pri)
+exists(./config.local.pri) {
+    include(./config.local.pri)
+} else {
+    include(./config.pri)
+}
 
 QT = core widgets gui network sql xml
 TEMPLATE = app
