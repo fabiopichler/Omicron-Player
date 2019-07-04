@@ -7,13 +7,14 @@
 #define MyAppVersion PRODUCT_VERSION_STR
 #define MyAppPublisher "Fábio Pichler"
 #define MyAppURL OFFICIAL_WEBSITE
+#define MyDefaultDirName "Omicron Player Classic"
 #define MyAppExeName "Omicron-Player-Classic.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{EC1969F1-99B6-4BF6-9E4B-3383B50C8FE7}
+AppId={{147786F9-46AA-4CB2-8490-D076BE1C3893}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -21,17 +22,14 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\Omicron Player 3
+DefaultDirName={pf}\{#MyDefaultDirName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 LicenseFile=LICENSE.txt
 OutputDir=output
-OutputBaseFilename=Omicron-Player-Classic-{#PRODUCT_VERSION_STR}-setup-Windows-x64
+OutputBaseFilename=Omicron-Player-Classic-{#PRODUCT_VERSION_STR}-Setup-Windows-win32
 Compression=lzma2
 SolidCompression=yes
-
-ArchitecturesAllowed=x64
-ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -43,9 +41,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "files-x64\Omicron-Player-Classic.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "files-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+Source: "files-x86\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "files-x86\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
@@ -61,4 +58,4 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 Filename: "{app}\{#MyAppExeName}"; Parameters: "--uninstall-app"
 
 [InstallDelete]
-Type: filesandordirs; Name: "{pf}\Omicron Player 3"
+Type: filesandordirs; Name: "{pf}\{#MyDefaultDirName}"
