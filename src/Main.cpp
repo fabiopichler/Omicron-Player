@@ -52,7 +52,9 @@ int main(int argc, char **argv)
     OTKQT::LocalServer *localServer = nullptr;
     Main *app = nullptr;
 
-    QString execPath = QFileInfo(ToQString(argv[0])).absolutePath();
+    Global::initAppPath();
+
+    QString execPath = Global::getAppPath();
     QString pluginPath = execPath + "/../";
 
 #ifdef QT_NO_DEBUG // RELEASE

@@ -87,6 +87,7 @@ const QString AppName = APP_NAME,
 class Global
 {
 public:
+    static bool initAppPath();
     static bool init(const int &);
     static void setupSupportedFiles();
 

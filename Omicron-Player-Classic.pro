@@ -54,7 +54,7 @@ win32:INCLUDEPATH += $${BASS_INCLUDE_PATH_WIN} "$${OTKQT_WIN}\\project\\include"
 LIBS += -lbass -lbass_fx -lbasscd -lbassenc -ltags
 LIBS += -lOmicronTK+Qt$${DEBUG} -lOmicronTK+Qt_Lua$${DEBUG} -lOmicronTK+Qt_Network$${DEBUG} -lOmicronTK+Lua$${DEBUG}
 
-win32:LIBS += -lUser32 -lAdvapi32
+win32:LIBS += -lUser32 -lAdvapi32 -lShlwapi
 
 contains(QMAKE_HOST.arch, x86_64) {
 

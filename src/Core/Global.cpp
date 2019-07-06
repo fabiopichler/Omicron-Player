@@ -15,6 +15,19 @@
 #include <QDirIterator>
 #include <bass.h>
 
+#if defined(__unix)
+# include <unistd.h>
+# include <libgen.h>
+
+static const int MAX_PATH = 1024;
+
+#elif defined(_WIN32)
+# include <windows.h>
+# include <shlobj.h>
+# include <Shlwapi.h>
+#endif
+
+
 int Global::argc;
 std::vector<int> Global::equalizerValues;
 QList<QStringList> Global::supportedFiles;
@@ -24,10 +37,48 @@ QString Global::appPath;
 QString Global::qrcPath;
 QString Global::radiolistPath;
 
+bool Global::initAppPath()
+{
+#if defined(__unix)
+    char execpath[MAX_PATH];
+    ssize_t count = readlink("/proc/self/exe", execpath, MAX_PATH);
+
+    if (count != -1)
+        appPath = QString::fromUtf8(dirname(execpath));
+    else
+        return false;
+
+#elif defined(_WIN32)
+    wchar_t execpath[MAX_PATH];
+
+    if (GetModuleFileNameW(nullptr, execpath, MAX_PATH))
+    {
+//#if (NTDDI_VERSION >= NTDDI_WIN8)
+//        PathCchRemoveFileSpec(execpath, MAX_PATH);
+//#else
+        PathRemoveFileSpecW(execpath);
+//#endif
+        size_t len = wcslen(execpath);
+
+        for (size_t i = 0; i < len; ++i)
+            if (execpath[i] == L'\\')
+                execpath[i] = L'/';
+
+        appPath = QString::fromStdWString(execpath);
+    }
+    else
+    {
+        return false;
+    }
+#endif
+
+    return true;
+}
+
 bool Global::init(const int &_argc)
 {
     argc = _argc;
-    appPath = QApplication::applicationDirPath();
+    //appPath = QApplication::applicationDirPath();
     configPath = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation);
 
     if (appPath.isEmpty() || configPath.isEmpty())
