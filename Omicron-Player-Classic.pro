@@ -88,6 +88,7 @@ contains(QMAKE_HOST.arch, x86_64) {
 
 unix {
     DEFINES += ARCHITECTURE=\\\"$${ARCHITECTURE}\\\" ARCHITECTURE_DEB=\\\"$${ARCHITECTURE_DEB}\\\"
+    QMAKE_LFLAGS_RPATH=
     QMAKE_LFLAGS += '-Wl,-rpath,\'\$$ORIGIN/../$${ARCHITECTURE}/$${TARGET}/lib\',-z,origin' '-Wl,-rpath,\'\$$ORIGIN/../$${ARCHITECTURE_DEB}/$${TARGET}/lib\',-z,origin'
 }
 
