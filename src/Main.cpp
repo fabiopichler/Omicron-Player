@@ -251,6 +251,7 @@ bool Main::init(const int &argc)
         QDir().mkpath(Global::getConfigPath("themes"));
 
     OTKQT::AppInfo::setConfigPath(Global::getConfigPath());
+    OTKQT::AppInfo::setAppName(AppName);
 
     // Inicializar a conexão com o banco de dados.
     if (Database::init(Global::getConfigPath("Config.db")))

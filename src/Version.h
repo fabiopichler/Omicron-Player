@@ -28,16 +28,16 @@
 #define PRODUCT_VERSION 3,0,0,0
 
 ;// Versão do Produto em string
-#define PRODUCT_VERSION_STR "3.0-RC1"
+#define PRODUCT_VERSION_STR "3.0.0"
 
 ;// Versão do arquivo
-#define FILE_VERSION "3.0-RC1"
+#define FILE_VERSION "3.0.0"
 
 ;// Data de lançamento atual
-#define CURRENT_RELEASE_DATE "06/11/2016"
+#define CURRENT_RELEASE_DATE "09/07/2019"
 
 ;// Nome do arquivo da lista de rádios
-#define FILE_RADIOLIST "RadioList_2016-11-05.fprp"
+#define FILE_RADIOLIST "RadioList_2019-07-09.fprp"
 
 ;// Data de lançamento da lista de rádios
-#define FILE_RADIOLIST_DATE "2016-11-05"
+#define FILE_RADIOLIST_DATE "2019-07-09"

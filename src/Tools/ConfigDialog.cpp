@@ -31,7 +31,7 @@ ConfigDialog::ConfigDialog(QObject *parentMain, QWidget *parent) : OTKQT::Dialog
     createLayouts();
     createEvents();
     setWindowTitle("Configurações do "+AppName);
-    setMinimumSize(600, 485);
+    setMinimumSize(600, 489);
 }
 
 //================================================================================================================

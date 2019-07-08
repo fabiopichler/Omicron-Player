@@ -395,7 +395,7 @@ void Database::defaultConfig()
     query.exec("CREATE TABLE MusicMode (id TEXT PRIMARY KEY, value TEXT)");
     query.exec("INSERT INTO MusicMode VALUES "
                "('playlist', ''), "
-               "('playlistMode', '0'), "
+               "('playlistMode', '1'), "
                "('indexPlaylist', '0'), "
                "('indexMusics', '0'), "
                "('indexFavorites', '0'), "
