@@ -18,7 +18,6 @@
 #include "Gui/RadioWindow.h"
 #include "Gui/RecorderWindow.h"
 
-
 #include <iostream>
 #include <QProxyStyle>
 #include <QMenu>
@@ -422,13 +421,29 @@ void Main::restart()
 //! Configura a lista de rádios.
 void Main::setupRadiolist()
 {
-    if (iniSettings->value("Radiolist/FileName").toString().isEmpty())
-        iniSettings->setValue("Radiolist/FileName", FileRadiolist);
+    if (iniSettings->value("Radiolist/FileName").toString().isEmpty()
+            || iniSettings->value("Radiolist/Date").toString().isEmpty())
+    {
+        QString args("\"");
+        args.append(OTKQT::AppInfo::pluginsPath())
+                .append("/7-Zip/7zr\" x -y \"")
+                .append(OTKQT::AppInfo::sharePath())
+                .append("/RadioList.7z")
+                .append("\" -o\"")
+                .append(Global::getConfigPath())
+                .append("\"");
 
-    if (iniSettings->value("Radiolist/Date").toString().isEmpty())
-        iniSettings->setValue("Radiolist/Date", FileRadiolistDate);
-
-    if (!iniSettings->value("Radiolist/NewFileName").toString().isEmpty()
+        if (QProcess::execute(args) == 0)
+        {
+            iniSettings->setValue("Radiolist/FileName", FileRadiolist);
+            iniSettings->setValue("Radiolist/Date", FileRadiolistDate);
+        }
+        else
+        {
+            qDebug() << "Erro ao Extrair o RadioList padrão";
+        }
+    }
+    else if (!iniSettings->value("Radiolist/NewFileName").toString().isEmpty()
                        && QFile::exists(Global::getConfigPath(iniSettings->value("Radiolist/NewFileName").toString())))
     {
         if (QFile::remove(Global::getConfigPath(iniSettings->value("Radiolist/FileName").toString())))
@@ -441,15 +456,6 @@ void Main::setupRadiolist()
     }
 
     Global::setRadiolistName(iniSettings->value("Radiolist/FileName").toString());
-
-    if (iniSettings->value("Radiolist/FileName").toString() == FileRadiolist
-                                 && !QFile::exists(Global::getConfigPath(FileRadiolist)))
-    {
-        QFile::copy(Global::getQrcPath("RadioList."+RadioPlaylistExt), Global::getConfigPath(FileRadiolist));
-        QFile::setPermissions(Global::getConfigPath(FileRadiolist),
-                              QFile::ReadOwner|QFile::WriteOwner|QFile::ExeOwner|QFile::ReadGroup
-                              |QFile::ExeGroup|QFile::ReadOther|QFile::ExeOther);
-    }
 }
 
 //! Atualiza o menu (e seus ícones) da bandeja do sistema.

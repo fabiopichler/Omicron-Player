@@ -12,9 +12,15 @@
 
 #include "Update.h"
 #include "../Core/Database.h"
+
+#include <OmicronTK/Qt/AppInfo.hpp>
+
 #include <iostream>
+
 #include <QFileInfo>
 #include <QProcess>
+
+using namespace OmicronTK;
 
 UpdateApp::UpdateApp(QObject *parent, QSettings *iniSettings) : QObject(parent)
 {
@@ -201,8 +207,14 @@ void UpdateApp::downloadFinished()
 
     if (!requestAborted && downloadReply->error() == QNetworkReply::NoError)
     {
-        QString args("\""+Global::getAppPath()+"7zr\" x -y \""+playlistFile->fileName()
-                     +"\" -o\""+Global::getConfigPath()+"\"");
+        QString args("\"");
+
+        args.append(OTKQT::AppInfo::pluginsPath())
+                .append("/7-Zip/7zr\" x -y \"")
+                .append(playlistFile->fileName())
+                .append("\" -o\"")
+                .append(Global::getConfigPath())
+                .append("\"");
 
         if (QProcess::execute(args) == 0)
         {
