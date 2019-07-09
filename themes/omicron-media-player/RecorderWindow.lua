@@ -40,24 +40,24 @@
 -- new() --
 -------------------------------------------------------------------------------
 
-mainWindow = Widget.new(m_mainWindow)--
-titleBarWidget = Widget.new(m_titleBar)--
-local centralWidget = Widget.new(m_centralWidget)--
+mainWindow = Widget.new(m_mainWindow)
+titleBarWidget = Widget.new(m_titleBar)
+local centralWidget = Widget.new(m_centralWidget)
 local statusWidget = Widget.new()
 
-local menuBar = Widget.new(m_menuBar)--
+local menuBar = Widget.new(m_menuBar)
 
-local playlistView = Widget.new(m_playlistView)--
+local playlistView = Widget.new(m_playlistView)
 
-local playButton = PushButton.new(m_playButton)--
-local stopButton = PushButton.new(m_stopButton)--
-local recordButton = PushButton.new(m_recordButton)--
+local playButton = PushButton.new(m_playButton)
+local stopButton = PushButton.new(m_stopButton)
+local recordButton = PushButton.new(m_recordButton)
 
-local timeLabel = Label.new(m_timeLabel)--
-local statusLabel = Label.new(m_statusLabel)--
+local timeLabel = Label.new(m_timeLabel)
+local statusLabel = Label.new(m_statusLabel)
 
-local leftChProgressBar = ProgressBar.new(m_leftChProgressBar)--
-local rightChProgressBar = ProgressBar.new(m_rightChProgressBar)--
+local leftChProgressBar = ProgressBar.new(m_leftChProgressBar)
+local rightChProgressBar = ProgressBar.new(m_rightChProgressBar)
 
 local timeSlider = Slider.new(m_timeSlider)
 local deviceComboBox = ComboBox.new(m_deviceComboBox)
@@ -118,7 +118,7 @@ rightChProgressBar:setToolTip("")
 -------------------------------------------------------------------------------
 
 timeLabel:setText("--:--:--")
-statusLabel:setText("KKKK---")
+statusLabel:setText("---")
 
 -------------------------------------------------------------------------------
 -- setEnabled() --
@@ -154,11 +154,6 @@ timeSlider:setOrientation(Orientation.Horizontal)
 -------------------------------------------------------------------------------
 
 leftChProgressBar:setInvertedAppearance(true)
-
--------------------------------------------------------------------------------
--- setPlaceholderText() --
--------------------------------------------------------------------------------
-
 
 -------------------------------------------------------------------------------
 -- setMaximumHeight() --

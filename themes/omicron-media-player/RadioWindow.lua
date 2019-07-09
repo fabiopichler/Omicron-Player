@@ -161,7 +161,7 @@ volumeControl:setToolTip("")
 -------------------------------------------------------------------------------
 
 timeLabel:setText("--:--:--")
-statusLabel:setText("KKKK---")
+statusLabel:setText("---")
 
 allPlaylistsModeButton:setText("Todos")
 customPlaylistModeButton:setText("Personalizados")
