@@ -43,7 +43,7 @@ AboutDialog::AboutDialog(QWidget *parent)
               "<strong>BASS:</strong> <a href=\"http://www.un4seen.com\">http://www.un4seen.com</a><br>"
               "<strong>Lua:</strong> <a href=\"https://www.lua.org\">https://www.lua.org</a><br>"
               "<strong>Ícones:</strong> <a href=\"http://flaticons.net\">http://flaticons.net</a> | "
-              "<a href=\"http://findicons.com/search/media\">http://findicons.com/search/media</a></div>"));
+              "<a href=\"http://findicons.com\">http://findicons.com</a></div>"));
 
     rightLabel->setOpenExternalLinks(true);
 
