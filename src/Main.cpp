@@ -139,7 +139,6 @@ int main(int argc, char **argv)
     // Loop que mantém o programa aberto, caso reinicie-o.
     do
     {
-        // Deletar os objetos das classes SingleApplication e Main, caso reinicie o programa.
         delete localServer;
         delete app;
         delete qApplication;
@@ -154,10 +153,6 @@ int main(int argc, char **argv)
         localServer = new OTKQT::LocalServer(1000, AppNameId + "-debug-an50xg24ng64lnv7");
 #endif // QT_NO_DEBUG
 
-        // Se executar o programa, e ele já estiver executando (outro processo),
-        // verificar se existem os argumentos --open-file ou --add-file, caso existam,
-        // enviar uma mensagem para o processo principal, informando se deve abrir
-        // um novo arquivo ou apenas adicionar o arquivo no playlist.
         if (localServer->isRunning())
         {
             OTKQT::LocalSocket localSocket(*localServer);
@@ -203,7 +198,6 @@ int main(int argc, char **argv)
         app = new Main;
         QObject::connect(localServer, SIGNAL(messageAvailable(QVector<QString>)), app, SLOT(receiveMessage(QVector<QString>)));
 
-        // Verifica se o programa foi iniciado corretamente.
         if (app->init(argc))
         {
 #ifdef QT_NO_DEBUG // RELEASE
@@ -212,8 +206,6 @@ int main(int argc, char **argv)
         }
         else
         {
-            // Caso o programa não tenha sido iniciado corretamente, o loop será quebrado e o processo encerrado.
-
             stdCout("Error! Could not initialize.");
             code = EXIT_FAILURE;
             break;
@@ -263,27 +255,20 @@ Main::~Main()
 */
 bool Main::init(const int &argc)
 {
-    // Inicializar a classe Global.
     if (!Global::init(argc))
         return false;
 
-    // Criar o diretório pras configurações, caso não exista.
     if (!QDir().exists(Global::getConfigPath()))
         QDir().mkpath(Global::getConfigPath());
 
-    // Criar o diretório pros temas instalados pelo usuário, caso não exista.
     if (!QDir().exists(Global::getConfigPath("themes")))
         QDir().mkpath(Global::getConfigPath("themes"));
 
     OTKQT::AppInfo::setConfigPath(Global::getConfigPath());
     OTKQT::AppInfo::setAppName(AppName);
 
-    // Inicializar a conexão com o banco de dados.
     if (Database::init(Global::getConfigPath("Config.db")))
     {
-        // Verificar se a versão do programa continua a mesma.
-        // Caso tenha mudado, dar um upgrade nas configurações (tabelas do banco de dados,
-        // registro do Windows e etc.).
         if (Database::value("Version", "current").toString() != CurrentVersion)
         {
             Database::upgrade();
@@ -298,27 +283,21 @@ bool Main::init(const int &argc)
     }
     else
     {
-        // Mostrar uma mensagem e encerrar o programa,
-        // caso não seja possível abrir uma conexão com o banco de dados.
         QMessageBox::critical(nullptr, "Erro", "Ops! Algo deu errado...\n"
                               "Não foi possível criar ou configurar o Banco de Dados.");
         return false;
     }
 
-    // Criar um arquivo extra de configurações.
     iniSettings = new QSettings(Global::getConfigPath("Settings.ini"), QSettings::IniFormat);
     iniSettings->setIniCodec("UTF-8");
 
-    // Criar o ícone na bandeja do sistema.
     trayIcon = new QSystemTrayIcon(QIcon(Global::getQrcPath("tray-icons/icon-1.png")), 0);
     trayIcon->show();
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
                                                this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 
-    // Configurar a lista de rádios.
     setupRadiolist();
 
-    // Inicializar a classe responsável pelo tema visual do programa.
     OTKQT::Theme::s_setThemeValue = [](const QString &name) { return Database::setValue("Config", "theme", name); };
     OTKQT::Theme::s_setStyleValue = [](const QString &name) { return Database::setValue("Config", "style", name); };
     OTKQT::Theme::s_themeValue = [] { return Database::value("Config", "theme").toString(); };
@@ -327,22 +306,17 @@ bool Main::init(const int &argc)
     if (!OTKQT::Theme::init("app:omicron-media-player"))
         return false;
 
-    // Carregar o tema visual do programa. Caso houver algum erro no processo, retornará false.
     if (!OTKQT::Theme::load())
         return false;
 
-    // Instanciar a classe para conectar à internet e verificar se existem novas versões do programa.
     updateApp = new UpdateApp(this, iniSettings);
 
-    // Carrega o equalizador do banco de dados para Global::equalizerValues.
     Equalizer::loadValues(Global::equalizerValues);
 
-    // Configura o diretório de gravações no banco de dados, caso não esteja configurado.
     if (Database::value("RadioConfig", "recordPath").toString().isEmpty())
         Database::setValue("RadioConfig", "recordPath",
                            QStandardPaths::writableLocation(QStandardPaths::MusicLocation)+"/"+AppName+" Recordings/");
 
-    // Inicializa a biblioteca BASS e seus plugins. Caso haja algum erro, retorna false.
     if (!Stream::init())
         return false;
 
@@ -350,7 +324,6 @@ bool Main::init(const int &argc)
 
     try
     {
-        // Verifica qual o modo que deve ser inicializado (Modo Radio, Modo Recorder, Modo Server ou Modo Music).
         if (mode == "Radio" && argc < 2)
             startRadioMode();
 
@@ -495,7 +468,6 @@ void Main::updateTrayIconMenu()
     else// if (window->currentMode() == "Radio")
         titles << "Reproduzir Rádio" << "" << "Parar Rádio atual" << "Rádio anterior" << "Próxima rádio";
 
-    // Oculta ou exibe a interface gráfica.
     connect(trayIconMenu->addAction("Ocultar/Exibir Interface"), &QAction::triggered, [=]() {
         if (window->isHidden())
         {
@@ -584,7 +556,6 @@ void Main::checkUpdate()
 */
 void Main::receiveMessage(QVector<QString> arg)
 {
-    // Se o parâmentro --empty foi passado, apenas ativar a janela do programa.
     if (!arg.isEmpty() && arg[0] == "--empty")
     {
         window->hide();
