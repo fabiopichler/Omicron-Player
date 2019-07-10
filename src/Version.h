@@ -60,7 +60,7 @@
 #define FILE_VERSION "3.0.0"
 
 ;// Data de lançamento atual
-#define CURRENT_RELEASE_DATE "09/07/2019"
+#define CURRENT_RELEASE_DATE "10/07/2019"
 
 ;// Nome do arquivo da lista de rádios
 #define FILE_RADIOLIST "RadioList_2019-07-09.fprp"
