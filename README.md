@@ -9,7 +9,7 @@ O Omicron Player Classic é um software de código aberto (open source) e está 
 
 Futuramente, o player contará com novas funcionalidades úteis.
 
-Website oficial: http://fabiopichler.net/fpm-player/
+Website oficial: https://fabiopichler.net/omicron-player
 
 
 ## Versão "clássica"
@@ -28,7 +28,7 @@ Em outras palavras, não aceito que me enviem códigos, e que não façam por mi
 
 
 ## Baixar
-Acesse: http://fabiopichler.net/download/fpm-player/
+Acesse: https://fabiopichler.net/download/omicron-player
 
 Ou: https://github.com/fabiopichler/Omicron-Player-Classic/releases
 
@@ -36,7 +36,7 @@ Ou: https://github.com/fabiopichler/Omicron-Player-Classic/releases
 ## Web Rádios
 A versão atual, possui, aproximadamente, 80 Web Rádios (brasileiras), pré configuradas.
 
-![Rádios](https://i.imgur.com/G6z01bt.png)
+![Rádios](https://projects.fabiopichler.net/omicron-player-classic/galeria/001.png)
 
 
 ## Músicas
@@ -44,14 +44,20 @@ Atualmente, é possível reproduzir os seguintes formatos de arquivos: mp3, wma,
 
 Em sistemas Linux, não é possível reproduzir WMA.
 
-![Músicas](https://i.imgur.com/dB1PVZ2.png)
+![Músicas](https://projects.fabiopichler.net/omicron-player-classic/galeria/002.png)
 
 
 ## Outras imagens
-Veja uma galeria com imagens do programa: http://software.fabiopichler.net/fpm-player/images/
+Veja uma galeria com imagens do programa: https://projects.fabiopichler.net/omicron-player-classic/galeria/
 
-![Configurações](https://i.imgur.com/4sCc6Ra.png)
+![Configurações](https://projects.fabiopichler.net/omicron-player-classic/galeria/003.png)
+
+![Configurações](https://projects.fabiopichler.net/omicron-player-classic/galeria/004.png)
+
+![Configurações](https://projects.fabiopichler.net/omicron-player-classic/galeria/005.png)
+
+![Configurações](https://projects.fabiopichler.net/omicron-player-classic/galeria/006.png)
 
 
-## Créditos
+## Créditos / Autoria
 Créditos a [Fábio Pichler](http://fabiopichler.net), por criar e disponibilizar o Omicron Player Classic para Windows e Linux.
