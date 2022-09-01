@@ -36,7 +36,7 @@ Ou: https://github.com/fabiopichler/Omicron-Player-Classic/releases
 ## Web Rádios
 A versão atual, possui, aproximadamente, 80 Web Rádios (brasileiras), pré configuradas.
 
-![Rádios](https://projects.fabiopichler.net/omicron-player-classic/galeria/001.png)
+![Rádios](/screenshots/screenshot-001.png?raw=true)
 
 
 ## Músicas
@@ -44,19 +44,19 @@ Atualmente, é possível reproduzir os seguintes formatos de arquivos: mp3, wma,
 
 Em sistemas Linux, não é possível reproduzir WMA.
 
-![Músicas](https://projects.fabiopichler.net/omicron-player-classic/galeria/002.png)
+![Músicas](/screenshots/screenshot-002.png?raw=true)
 
 
 ## Outras imagens
 Veja uma galeria com imagens do programa: https://projects.fabiopichler.net/omicron-player-classic/galeria/
 
-![Configurações](https://projects.fabiopichler.net/omicron-player-classic/galeria/003.png)
+![Gravador](/screenshots/screenshot-003.png?raw=true)
 
-![Configurações](https://projects.fabiopichler.net/omicron-player-classic/galeria/004.png)
+![Sobre](/screenshots/screenshot-004.png?raw=true)
 
-![Configurações](https://projects.fabiopichler.net/omicron-player-classic/galeria/005.png)
+![Equalizador](/screenshots/screenshot-005.png?raw=true)
 
-![Configurações](https://projects.fabiopichler.net/omicron-player-classic/galeria/006.png)
+![Configurações](/screenshots/screenshot-006.png?raw=true)
 
 
 ## Créditos / Autoria
